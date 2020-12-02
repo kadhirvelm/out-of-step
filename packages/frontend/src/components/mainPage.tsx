@@ -1,4 +1,4 @@
-import { IStock, StocksFrontendService } from "@out-of-step/api";
+import { IStock, StocksFrontendService } from "@stochastic-exchange/api";
 import * as React from "react";
 
 export const MainPage: React.FC = () => {

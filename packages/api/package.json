@@ -1,10 +1,10 @@
 {
-  "name": "@out-of-step/api",
+  "name": "@stochastic-exchange/api",
   "version": "0.1.0",
-  "description": "The API to out of step.",
+  "description": "The API to stochastic exchange.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "repository": "https://github.com/kadhirvelm/out-of-step",
+  "repository": "https://github.com/kadhirvelm/stochastic-exchange",
   "license": "MIT",
   "type": "module",
   "dependencies": {

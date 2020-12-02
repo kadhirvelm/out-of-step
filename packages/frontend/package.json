@@ -1,7 +1,7 @@
 {
-  "name": "@out-of-step/frontend",
+  "name": "@stochastic-exchange/frontend",
   "version": "1.0.0",
-  "description": "Frontend for out of step",
+  "description": "Frontend for stochastic exchange",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "style": "dist/main.css",
@@ -15,16 +15,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kadhirvelm/out-of-step"
+    "url": "git+https://github.com/kadhirvelm/stochastic-exchange"
   },
   "author": "kadhirvelm",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kadhirvelm/out-of-step/issues"
+    "url": "https://github.com/kadhirvelm/stochastic-exchange/issues"
   },
-  "homepage": "https://github.com/kadhirvelm/out-of-step#readme",
+  "homepage": "https://github.com/kadhirvelm/stochastic-exchange#readme",
   "dependencies": {
-    "@out-of-step/api": "^0.1.0",
+    "@stochastic-exchange/api": "^0.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },

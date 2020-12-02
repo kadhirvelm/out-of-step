@@ -1,5 +1,5 @@
 {
-  "name": "out-of-step",
+  "name": "stochastic-exchange",
   "version": "0.1.0",
   "description": "A fake stock market simulator",
   "dependencies": {},
@@ -33,12 +33,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kadhirvelm/out-of-step.git"
+    "url": "git+https://github.com/kadhirvelm/stochastic-exchange.git"
   },
   "author": "kadhirvelm",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kadhirvelm/out-of-step/issues"
+    "url": "https://github.com/kadhirvelm/stochastic-exchange/issues"
   },
-  "homepage": "https://github.com/kadhirvelm/out-of-step#readme"
+  "homepage": "https://github.com/kadhirvelm/stochastic-exchange#readme"
 }
