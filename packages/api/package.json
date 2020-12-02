@@ -1,0 +1,19 @@
+{
+  "name": "@out-of-step/api",
+  "version": "0.1.0",
+  "description": "The API to out of step.",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "repository": "https://github.com/kadhirvelm/out-of-step",
+  "license": "MIT",
+  "dependencies": {},
+  "scripts": {
+    "build": "tsc -d",
+    "dev": "tsc -d --watch",
+    "dev:mobile": "tsc -d --watch",
+    "lint": "eslint . --ext .ts,.tsx"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.3"
+  }
+}

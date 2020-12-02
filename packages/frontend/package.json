@@ -1,0 +1,50 @@
+{
+  "name": "@out-of-step/frontend",
+  "version": "1.0.0",
+  "description": "Frontend for out of step",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "style": "dist/main.css",
+  "scripts": {
+    "dev": "webpack-dev-server",
+    "lint": "eslint . --ext .ts,.tsx",
+    "build": "webpack"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kadhirvelm/out-of-step"
+  },
+  "author": "kadhirvelm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kadhirvelm/out-of-step/issues"
+  },
+  "homepage": "https://github.com/kadhirvelm/out-of-step#readme",
+  "dependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "@types/webpack-env": "^1.15.3",
+    "compression-webpack-plugin": "^6.0.3",
+    "css-loader": "^5.0.0",
+    "file-loader": "^6.1.1",
+    "html-webpack-plugin": "^4.5.0",
+    "mini-css-extract-plugin": "^1.1.1",
+    "node-sass": "^4.13.0",
+    "react-hot-loader": "^4.13.0",
+    "sass": "^1.27.0",
+    "sass-loader": "^10.0.3",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4",
+    "webpack": "4.44.2",
+    "webpack-bundle-analyzer": "^3.9.0",
+    "webpack-cli": "^3.3.8",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
