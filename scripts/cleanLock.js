@@ -11,7 +11,9 @@ function testBasicCleanLock() {
         return;
     }
 
-    console.log("The lockfile has changed, please run 'yarn' in the root folder, then 'yarn clean:lock' and commit the changes.");
+    console.log(
+        "The lockfile has changed, please run 'yarn' in the root folder, then 'yarn clean:lock' and commit the changes.",
+    );
     throw new Error("The lockfile is not clean.");
 }
 
