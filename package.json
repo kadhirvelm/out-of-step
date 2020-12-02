@@ -1,7 +1,7 @@
 {
   "name": "out-of-step",
   "version": "0.1.0",
-  "description": "A collaborative virtual puzzle room",
+  "description": "A fake stock market simulator",
   "dependencies": {},
   "private": true,
   "devDependencies": {
@@ -21,8 +21,7 @@
     "typescript": "^3.7.2"
   },
   "workspaces": [
-    "packages/*",
-    "packages/puzzles/*"
+    "packages/*"
   ],
   "scripts": {
     "build": "lerna run build",
