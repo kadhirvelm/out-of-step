@@ -1,4 +1,4 @@
-import { ORIGIN, PORT } from "@out-of-step/api";
+import { ORIGIN, PORT } from "@stochastic-exchange/api";
 import compression from "compression";
 import express from "express";
 import { createServer } from "http";

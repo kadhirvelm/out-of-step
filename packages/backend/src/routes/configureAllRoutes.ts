@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 
-import { IHistoricalPricePointsId, IPricePointId, IStockId, IVolumeId, StocksBackendService } from "@out-of-step/api";
+import { IHistoricalPricePointsId, IPricePointId, IStockId, IVolumeId, StocksBackendService } from "@stochastic-exchange/api";
 import Express from "express";
 
 export function configureAllRoutes(app: Express.Express) {

@@ -63,7 +63,7 @@ module.exports = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     {
-                        loader: require.resolve("@out-of-step/scss-modules"),
+                        loader: require.resolve("@stochastic-exchange/scss-modules"),
                     },
                     {
                         loader: "css-loader",
@@ -125,10 +125,10 @@ module.exports = {
             // favicon: path.resolve(__dirname, "public/favicon.ico"),
             meta: {
                 copyright: "Copyright 2020",
-                description: "Play out of step, a collaborative puzzle room.",
-                "og:title": "out of step",
+                description: "Play stochastic exchange, a collaborative puzzle room.",
+                "og:title": "stochastic exchange",
                 // "og:image": path.resolve(__dirname, "public/og-image.png"),
-                title: "out of step.",
+                title: "stochastic exchange.",
                 viewport: "width=device-width, initial-scale=1.0",
             },
             template: "./src/index.html",

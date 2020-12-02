@@ -1,4 +1,4 @@
-# out-of-step
+# stochastic-exchange
 A fake market simulator
 
 TODO

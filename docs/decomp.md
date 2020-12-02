@@ -1,4 +1,4 @@
-# Out of step decomp
+# Stochastic exchange decomp
 
 ## Goals
 We want a fake stock market where we can come up with our own heuristic determination of stock value. We also want people to create their own portfolios, trade stocks and see how their portfolio is doing.

@@ -1,10 +1,10 @@
 {
-  "name": "@out-of-step/scss-modules",
+  "name": "@stochastic-exchange/scss-modules",
   "version": "0.1.0",
-  "description": "The scss modules for out of step.",
+  "description": "The scss modules for stochastic exchange.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "repository": "https://github.com/kadhirvelm/out-of-step",
+  "repository": "https://github.com/kadhirvelm/stochastic-exchange",
   "license": "MIT",
   "dependencies": {
     "fs-extra": "^9.0.1",
