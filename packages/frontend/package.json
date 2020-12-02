@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/kadhirvelm/out-of-step#readme",
   "dependencies": {
+    "@out-of-step/api": "^0.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
