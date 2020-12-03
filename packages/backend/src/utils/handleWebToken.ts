@@ -11,7 +11,11 @@ export function convertUserIdToWebToken(id: IAccountId) {
     return jsonwebtoken.sign({ id } as IWebToken, stochasticExchangeSecret, { expiresIn: "72h" });
 }
 
-export function checkIfValidWebToken(webtoken: string): IAccountId | null {
+export function checkIfValidWebToken(webtoken: string | undefined | null): IAccountId | null {
+    if (webtoken == null) {
+        return null;
+    }
+
     try {
         const decoded = jsonwebtoken.verify(webtoken, stochasticExchangeSecret);
         if (typeof decoded === "string") {

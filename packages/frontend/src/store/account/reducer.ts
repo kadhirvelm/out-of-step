@@ -1,5 +1,5 @@
 import { setWith, TypedReducer } from "redoodle";
-import { getTokenInCookie } from "../../utils/tokenInCookies";
+import { getTokenInCookie, setTokenInCookie } from "../../utils/tokenInCookies";
 import { SetToken } from "./actions";
 
 export interface IAccountState {
@@ -11,5 +11,11 @@ export const EMPTY_ACCOUNT_STATE: IAccountState = {
 };
 
 export const accountReducer = TypedReducer.builder<IAccountState>()
-    .withHandler(SetToken.TYPE, (state, { token }) => setWith(state, { token }))
+    .withHandler(SetToken.TYPE, (state, { token }) => {
+        if (token == null) {
+            setTokenInCookie(undefined);
+        }
+
+        return setWith(state, { token });
+    })
     .build();

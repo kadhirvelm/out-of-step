@@ -15,10 +15,12 @@ const { backend, frontend } = implementEndpoints<IAccountService>({
     createAccount: {
         method: "post",
         slug: "/account/create",
+        isPublic: true,
     },
     loginToAccount: {
         method: "post",
         slug: "/account/login",
+        isPublic: true,
     },
 });
 
