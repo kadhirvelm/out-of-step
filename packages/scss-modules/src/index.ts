@@ -1,11 +1,12 @@
 import { writeFileSync } from "fs-extra";
+import * as webpack from "webpack";
 import { getExportLocalsObject } from "./utils/getExportLocalsObject";
 import { getTypingsFile } from "./utils/getTypingsFile";
 import { getTypingsFilePath } from "./utils/getTypingsFilePath";
 import { ensureDirectoryExists } from "./utils/ensureDirectoryExists";
 import { generateSourceMap } from "./utils/generateSourceMap";
 
-export default async function(this: any, src: string) {
+export default async function(this: webpack.loader.LoaderContext, src: string) {
     const async = this.async();
 
     if (async === undefined) {
@@ -32,7 +33,9 @@ export default async function(this: any, src: string) {
         typingsFile = `${typingsFile}\n\n/*# sourceMappingURL=${typingsFilePath.file}.map*/`;
     }
 
-    writeFileSync(`${typingsFilePath.path}/${typingsFilePath.file}.d.ts`, typingsFile);
+    const finalTypingsFile = `${typingsFilePath.path}/${typingsFilePath.file}.d.ts`;
+
+    writeFileSync(finalTypingsFile, typingsFile);
 
     this.addDependency(this.resourcePath);
 

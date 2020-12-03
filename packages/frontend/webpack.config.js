@@ -137,7 +137,6 @@ module.exports = {
             filename: process.env.NODE_ENV === "production" ? "main-[hash].css" : "main.css",
             chunkFilename: process.env.NODE_ENV === "production" ? "[id].css" : "[id].[hash].css",
         }),
-        new webpack.ProvidePlugin({ process: path.resolve(__dirname, "shims/process") }),
         new webpack.optimize.AggressiveMergingPlugin(),
         ...(process.env.NODE_ENV === "production"
             ? [

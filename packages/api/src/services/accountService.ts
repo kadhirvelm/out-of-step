@@ -1,14 +1,9 @@
 import { implementEndpoints, IService } from "../common/generics";
-import { IAccount, IPortfolio, IPortfolioId } from "../types/dataTypes";
 
-interface IAccountService extends IService {
-    getAccount: {
-        payload: {};
-        response: IAccount;
-    };
-    getPortfolio: {
-        payload: IPortfolioId;
-        response: IPortfolio;
+export interface IAccountService extends IService {
+    createAccount: {
+        payload: { hashedPassword: string; email: string; name: string; username: string };
+        response: string;
     };
     loginToAccount: {
         payload: { hashedPassword: string; username: string };
@@ -17,17 +12,13 @@ interface IAccountService extends IService {
 }
 
 const { backend, frontend } = implementEndpoints<IAccountService>({
-    getAccount: {
-        method: "get",
-        slug: "/account/get",
-    },
-    getPortfolio: {
-        method: "get",
-        slug: "/portfolio/get",
+    createAccount: {
+        method: "post",
+        slug: "/account/create",
     },
     loginToAccount: {
         method: "post",
-        slug: "/login",
+        slug: "/account/login",
     },
 });
 

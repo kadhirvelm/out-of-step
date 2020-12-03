@@ -1,4 +1,8 @@
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/core/lib/scss/variables";
+
 body {
     font-size: 14px;
-    font-family: 'Baloo Bhaina 2', cursive;
+    font-family: 'Open Sans', sans-serif;
+    background: $light-gray5;
 }
