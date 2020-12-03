@@ -1,4 +1,3 @@
-import { MD5 } from "crypto-js";
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
