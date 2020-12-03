@@ -1,6 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { MainPage } from "./components/mainPage";
+import { Provider } from "react-redux";
+import { StochasticExchange } from "./components/stochasticExchange";
 import "./index.scss";
+import { configureStore } from "./store/configureStore";
 
-ReactDOM.render(<MainPage />, document.getElementById("main-app"));
+const store = configureStore();
+
+ReactDOM.render(
+    <Provider store={store}>
+        <StochasticExchange />
+    </Provider>,
+    document.getElementById("main-app"),
+);

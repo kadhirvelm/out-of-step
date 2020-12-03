@@ -1,9 +1,22 @@
 /* eslint-disable @typescript-eslint/require-await */
 
-import { IHistoricalPricePointsId, IPricePointId, IStockId, IVolumeId, StocksBackendService } from "@stochastic-exchange/api";
+import {
+    AccountServiceBackend,
+    IHistoricalPricePointsId,
+    IPricePointId,
+    IStockId,
+    IVolumeId,
+    StocksBackendService,
+} from "@stochastic-exchange/api";
 import Express from "express";
+import { createAccount } from "../accountService/createAccount";
+import { loginToAccount } from "../accountService/loginToAccount";
 
 export function configureAllRoutes(app: Express.Express) {
+    app.get("/", (_, response) => {
+        response.status(200).send({ version: process.env.npm_package_version });
+    });
+
     StocksBackendService(app, {
         getAllStocks: async () => {
             return [
@@ -11,13 +24,16 @@ export function configureAllRoutes(app: Express.Express) {
                     id: "test-stock-1" as IStockId,
                     historicalPricePoints: "test-historical-price-points" as IHistoricalPricePointsId,
                     latestPricePoint: "latest-price-point" as IPricePointId,
-                    metadata: {
-                        name: "Sample stock 1",
-                        status: "available",
-                    },
+                    name: "Sample stock 1",
+                    status: "available",
                     volume: "volume-id" as IVolumeId,
                 },
             ];
         },
+    });
+
+    AccountServiceBackend(app, {
+        createAccount,
+        loginToAccount,
     });
 }

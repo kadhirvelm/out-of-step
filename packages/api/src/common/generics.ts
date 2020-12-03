@@ -1,5 +1,4 @@
 import Express from "express";
-import _ from "lodash";
 import { PORT, ORIGIN } from "../constants";
 
 type IMethods = "get" | "post" | "put" | "delete";
@@ -24,11 +23,11 @@ type IBackendEndpoint<Service extends IService> = {
     [Key in keyof Service]: (
         payload: Service[Key]["payload"],
         response: Express.Response,
-    ) => Promise<Service[Key]["response"]>;
+    ) => Promise<Service[Key]["response"] | undefined>;
 };
 
 type IFrontendEndpoint<Service extends IService> = {
-    [Key in keyof Service]: (payload: Service[Key]["payload"]) => Promise<Service[Key]["response"]>;
+    [Key in keyof Service]: (payload: Service[Key]["payload"]) => Promise<Service[Key]["response"] | { error: string }>;
 };
 
 function implementBackend<Service extends IService>(endpoints: IImplementEndpoint<Service>) {
@@ -43,7 +42,7 @@ function implementBackend<Service extends IService>(endpoints: IImplementEndpoin
                         return;
                     }
 
-                    response.status(200).send(responseData);
+                    response.status(200).send(JSON.stringify(responseData));
                 } catch (e) {
                     response.status(500).send({ error: JSON.stringify(e) });
                 }
@@ -64,9 +63,11 @@ function maybeRemoveVariableFromSlug(slug: string) {
 function implementFrontend<Service extends IService>(
     endpoints: IImplementEndpoint<Service>,
 ): IFrontendEndpoint<Service> {
-    return _.mapValues(endpoints, endpoint => {
-        const { method, slug } = endpoint;
-        return async (payload: any) => {
+    const endpointsWithRestRequest: IFrontendEndpoint<Service> = {} as any;
+
+    Object.keys(endpoints).forEach((endpointKey: keyof Service) => {
+        const { method, slug } = endpoints[endpointKey];
+        endpointsWithRestRequest[endpointKey] = async (payload: any) => {
             let rawResponse: globalThis.Response;
 
             if (method === "get") {
@@ -89,6 +90,8 @@ function implementFrontend<Service extends IService>(
             return (await rawResponse.json()) as Response;
         };
     });
+
+    return endpointsWithRestRequest;
 }
 
 export function implementEndpoints<Service extends IService>(

@@ -15,10 +15,8 @@ export interface IStock {
     id: IStockId;
     historicalPricePoints: IHistoricalPricePointsId;
     latestPricePoint: IPricePointId;
-    metadata: {
-        name: string;
-        status: "available" | "acquired";
-    };
+    name: string;
+    status: "available" | "acquired";
     volume: IVolumeId;
 }
 
@@ -57,10 +55,10 @@ export interface IOwnedVolume {
 export interface IAccount {
     id: IAccountId;
     hashedPassword: string;
-    metadata: {
-        name: string;
-    };
-    portfolio: IPortfolioId;
+    email: string;
+    name: string;
+    portfolioId: IPortfolioId;
+    username: string;
 }
 
 export interface IPortfolio {

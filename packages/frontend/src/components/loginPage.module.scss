@@ -1,0 +1,53 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.main-container {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.overall-container {
+    display: flex;
+    flex-direction: column;
+    width: 175px;
+}
+
+.stochastic-exchange-container {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -20%);
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.fields-container {
+    > :global(.bp3-input-group) {
+        margin-bottom: 10px;
+    }
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center;
+}
+
+.primary-button {
+    display: flex;
+    flex: 1;
+    margin-right: 10px;
+    max-width: 125px;
+}
+
+.secondary-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: $blue3;
+}
+
+.error-container {
+    margin-top: 10px;
+    color: $red4;
+}
