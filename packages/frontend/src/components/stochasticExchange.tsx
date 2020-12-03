@@ -1,5 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { SetToken } from "../store/account/actions";
 import { IStoreState } from "../store/state";
 import { LoginPage } from "./loginPage";
 
@@ -7,7 +9,21 @@ interface IStoreProps {
     token: string | undefined;
 }
 
-const UnconnectedStochasticExchange: React.FC<IStoreProps> = ({ token }) => {
+interface IDispatchProps {
+    invalidateToken: () => void;
+}
+
+declare global {
+    interface Window {
+        onTokenInvalidate: () => void;
+    }
+}
+
+const UnconnectedStochasticExchange: React.FC<IStoreProps & IDispatchProps> = ({ invalidateToken, token }) => {
+    React.useEffect(() => {
+        window.onTokenInvalidate = () => invalidateToken();
+    }, []);
+
     if (token === undefined) {
         return <LoginPage />;
     }
@@ -21,4 +37,10 @@ function mapStateToProps(state: IStoreState): IStoreProps {
     };
 }
 
-export const StochasticExchange = connect(mapStateToProps)(UnconnectedStochasticExchange);
+function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
+    return {
+        invalidateToken: () => dispatch(SetToken({ token: undefined })),
+    };
+}
+
+export const StochasticExchange = connect(mapStateToProps, mapDispatchToProps)(UnconnectedStochasticExchange);

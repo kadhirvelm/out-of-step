@@ -11,13 +11,14 @@ import {
 import Express from "express";
 import { createAccount } from "../accountService/createAccount";
 import { loginToAccount } from "../accountService/loginToAccount";
+import { checkIfValidWebToken } from "../utils/handleWebToken";
 
 export function configureAllRoutes(app: Express.Express) {
     app.get("/", (_, response) => {
         response.status(200).send({ version: process.env.npm_package_version });
     });
 
-    StocksBackendService(app, {
+    StocksBackendService(app, checkIfValidWebToken, {
         getAllStocks: async () => {
             return [
                 {
@@ -32,7 +33,7 @@ export function configureAllRoutes(app: Express.Express) {
         },
     });
 
-    AccountServiceBackend(app, {
+    AccountServiceBackend(app, checkIfValidWebToken, {
         createAccount,
         loginToAccount,
     });
