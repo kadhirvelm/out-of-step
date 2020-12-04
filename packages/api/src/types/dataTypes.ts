@@ -1,104 +1,100 @@
 type Id<T extends string> = string & { __id: T };
 
 export type IStockId = Id<"stock">;
-export type IPricePointId = Id<"price-point">;
-export type IDividendPayoutId = Id<"dividend-payout">;
-export type IHistoricalPricePointsId = Id<"historical-price-points">;
+export type IPriceHistoryId = Id<"price-point">;
+export type IDividendHistoryId = Id<"dividend-payout">;
 export type IVolumeId = Id<"volume">;
 export type IOwnedVolumeId = Id<"owned-volume">;
 export type IAccountId = Id<"account">;
 export type IPortfolioId = Id<"portfolio">;
-export type ITransactionId = Id<"transaction">;
+export type ITransactionHistoryId = Id<"transaction-history">;
 export type ILimitOrderId = Id<"limit-order">;
-
-export interface IStock {
-    id: IStockId;
-    historicalPricePoints: IHistoricalPricePointsId;
-    latestPricePoint: IPricePointId;
-    name: string;
-    status: "available" | "acquired";
-    volume: IVolumeId;
-}
-
-export interface IHistoricalPricePoints {
-    id: IHistoricalPricePointsId;
-    pricePoints: {
-        [bucket: string]: Array<IPricePointId | IDividendPayoutId>;
-    };
-}
-
-export interface IPricePoint {
-    id: IPricePointId;
-    dollarValue: number;
-    timestamp: Date;
-}
-
-export interface IDividendPayout {
-    id: IDividendPayoutId;
-    payoutPerShare: number;
-    timestamp: Date;
-}
-
-export interface IVolume {
-    id: IVolumeId;
-    ownedVolumes: IOwnedVolumeId[];
-    totalVolumeAvailable: number;
-}
-
-export interface IOwnedVolume {
-    id: IOwnedVolumeId;
-    portfolioId: IPortfolioId;
-    quantity: number;
-    stockId: IStockId;
-}
 
 export interface IAccount {
     id: IAccountId;
     hashedPassword: string;
     email: string;
     name: string;
-    portfolioId: IPortfolioId;
+    portfolio: IPortfolioId;
     username: string;
+}
+
+export interface IDividendHistory {
+    id: IDividendHistoryId;
+    payoutPerShare: number;
+    timestamp: Date;
+    stock: IStockId;
+}
+
+export interface ILimitOrder {
+    id: ILimitOrderId;
+    portfolio: IPortfolioId;
+    quantity: number;
+    stock: IStockId;
+    sellAtPrice: number;
+    timestamp: Date;
+    transactionHistory?: ITransactionHistoryId;
+}
+
+export interface IOwnedVolume {
+    id: IOwnedVolumeId;
+    portfolio: IPortfolioId;
+    quantity: number;
+    stock: IStockId;
 }
 
 export interface IPortfolio {
     id: IPortfolioId;
     cashOnHand: number;
+    name: string;
     limitOrders: ILimitOrderId[];
-    stocks: { [stockId: string]: IOwnedVolumeId };
-    transactions: { [stockId: string]: ITransactionId[] };
+    ownedVolumes: { [stockId: string]: IOwnedVolumeId };
+    transactionHistory: { [stockId: string]: ITransactionHistoryId[] };
+}
+
+export interface IPriceHistory {
+    id: IPriceHistoryId;
+    dollarValue: number;
+    timestamp: Date;
+    stock: IStockId;
+}
+
+export interface IStock {
+    id: IStockId;
+    name: string;
+    status: "available" | "acquired";
+    volume: IVolumeId;
 }
 
 interface IBaseTransaction {
-    id: ITransactionId;
-    stockId: IStockId;
+    id: ITransactionHistoryId;
     timestamp: Date;
+    portfolio: IPortfolioId;
     type: string;
 }
 
 export interface IExchangeTransaction extends IBaseTransaction {
-    pricePoint: IPricePointId;
+    limitOrder?: ILimitOrderId;
+    price: IPriceHistoryId;
     purchasedQuantity: number;
     soldQuantity: number;
     type: "exchange-transaction";
 }
 
 export interface IDividendTransaction extends IBaseTransaction {
-    dividendPayout: IDividendPayoutId;
+    dividend: IDividendHistoryId;
     quantity: number;
     type: "dividend-transaction";
 }
 
 export interface IAcquisitionTransaction extends IBaseTransaction {
-    pricePoint: IPricePointId;
-    quantity: number;
+    acquiredQuantity: number;
+    price: IPriceHistoryId;
     type: "acquisition-transaction";
 }
 
-export interface ILimitOrder {
-    id: ILimitOrderId;
-    portfolioId: IPortfolioId;
-    quantity: number;
-    stockId: IStockId;
-    value: number;
+export interface IVolume {
+    id: IVolumeId;
+    ownedVolumes: IOwnedVolumeId[];
+    totalQuantity: number;
 }

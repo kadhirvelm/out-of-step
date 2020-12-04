@@ -1,4 +1,4 @@
-import { IAccountId, IAccountService } from "@stochastic-exchange/api";
+import { IAccountId, IAccountService, IPortfolioId } from "@stochastic-exchange/api";
 import _ from "lodash";
 import { Response } from "express";
 import { postgresPool } from "../utils/getPostgresPool";
@@ -23,12 +23,18 @@ export async function createAccount(
             throw new Error("That user ID already exists, please pick another one.");
         }
 
+        const newPortfolioForUser = await postgresPool.query<{ id: IPortfolioId }>(
+            // eslint-disable-next-line prettier/prettier
+            "INSERT INTO portfolio (\"cashOnHand\") VALUES ($1) RETURNING id",
+            [100000000],
+        );
+
         const doublyHashedPassword = doubleHashPassword(hashedPassword);
 
         const newUser = await postgresPool.query<{ id: IAccountId }>(
             // eslint-disable-next-line prettier/prettier
-            "INSERT INTO account (\"hashedPassword\", email, name, username) VALUES ($1, $2, $3, $4) RETURNING id",
-            [doublyHashedPassword, email, name, username],
+            "INSERT INTO account (\"hashedPassword\", email, name, username, \"portfolioId\") VALUES ($1, $2, $3, $4, $5) RETURNING id",
+            [doublyHashedPassword, email, name, username, newPortfolioForUser.rows[0].id],
         );
 
         return convertUserIdToWebToken(newUser.rows[0].id);
