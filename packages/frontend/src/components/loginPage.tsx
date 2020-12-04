@@ -20,6 +20,7 @@ const UnconnectedLoginPage: React.FC<IDispatchProps> = ({ setToken }) => {
 
     const [email, setEmail] = React.useState("");
     const [name, setName] = React.useState("");
+    const [portfolioName, setPortfolioName] = React.useState("");
 
     const [loginError, setLoginError] = React.useState<string | undefined>(undefined);
 
@@ -47,6 +48,7 @@ const UnconnectedLoginPage: React.FC<IDispatchProps> = ({ setToken }) => {
             email,
             name,
             username,
+            portfolioName,
         });
 
         if (typeof tokenOrError !== "string") {
@@ -66,12 +68,15 @@ const UnconnectedLoginPage: React.FC<IDispatchProps> = ({ setToken }) => {
 
     const updateName = (event: React.ChangeEvent<HTMLInputElement>) => setName(event.currentTarget.value);
     const updateEmail = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.currentTarget.value);
+    const updatePortfolioName = (event: React.ChangeEvent<HTMLInputElement>) =>
+        setPortfolioName(event.currentTarget.value);
 
     const renderExtraFields = () => {
         return (
             <>
-                <InputGroup placeholder="Name" onChange={updateName} value={name} />
+                <InputGroup placeholder="Your name" onChange={updateName} value={name} />
                 <InputGroup placeholder="Email" onChange={updateEmail} value={email} />
+                <InputGroup placeholder="Portfolio name" onChange={updatePortfolioName} value={portfolioName} />
             </>
         );
     };

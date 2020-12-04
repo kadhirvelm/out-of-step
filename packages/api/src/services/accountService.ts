@@ -2,7 +2,7 @@ import { implementEndpoints, IService } from "../common/generics";
 
 export interface IAccountService extends IService {
     createAccount: {
-        payload: { hashedPassword: string; email: string; name: string; username: string };
+        payload: { hashedPassword: string; email: string; name: string; username: string; portfolioName: string };
         response: string;
     };
     loginToAccount: {
