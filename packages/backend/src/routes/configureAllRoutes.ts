@@ -5,6 +5,9 @@ import Express from "express";
 import { createAccount } from "../accountService/createAccount";
 import { loginToAccount } from "../accountService/loginToAccount";
 import { checkIfValidWebToken } from "../utils/handleWebToken";
+import { resetAccountPassword } from "../accountService/resetAccountPassword";
+import { getAccount } from "../accountService/getAccount";
+import { updateAccount } from "../accountService/updateAccount";
 
 export function configureAllRoutes(app: Express.Express) {
     app.get("/", (_, response) => {
@@ -26,6 +29,9 @@ export function configureAllRoutes(app: Express.Express) {
 
     AccountServiceBackend(app, checkIfValidWebToken, {
         createAccount,
+        getAccount,
         loginToAccount,
+        resetAccountPassword,
+        updateAccount,
     });
 }

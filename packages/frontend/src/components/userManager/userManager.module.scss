@@ -1,0 +1,40 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.main-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.user-fields-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px;
+
+    > .single-field-container {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+    }
+}
+
+.field-label {
+    margin-bottom: 5px;
+    color: $pt-text-color-muted;
+}
+
+.field-input {
+    &:global(.bp3-input-group) {
+        display: flex;
+        flex: 1;
+    }
+}
+
+.update-button {
+    margin-top: 10px;
+}
+
+.logout-button {
+    margin: 10px;
+}
