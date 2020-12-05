@@ -1,32 +1,41 @@
-import * as React from "react";
-import { keyBy, merge } from "lodash-es";
-import { Spinner } from "@blueprintjs/core";
+import { Icon, Spinner } from "@blueprintjs/core";
 import classNames from "classnames";
-import { IPriceHistory, IStock, StocksFrontendService } from "../../../../api/dist";
-import { checkIfIsError } from "../../utils/checkIfIsError";
-import { getTokenInCookie } from "../../utils/tokenInCookies";
-import styles from "./stockManager.module.scss";
+import { keyBy, pick } from "lodash-es";
+import * as React from "react";
+import { StocksFrontendService } from "../../../../api/dist";
+import { IStockWithDollarValue } from "../../common/types";
+import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { formatNumber } from "../../utils/formatNumber";
+import { StockInformation } from "./stockInformation";
+import styles from "./stockManager.module.scss";
 
-const getAllStocks = async (setAllStocksWithPrice: (allStocksWithPrice: Array<IStock & IPriceHistory>) => void) => {
-    const stocksAndPrices = await StocksFrontendService.getAllStocks(undefined, getTokenInCookie());
-    const stocksChecked = checkIfIsError(stocksAndPrices);
-    if (stocksChecked === undefined) {
-        return;
+const getStocksWithPrice = (): IStockWithDollarValue[] => {
+    const stocksAndPrices = callOnPrivateEndpoint(StocksFrontendService.getAllStocks, undefined);
+    if (stocksAndPrices === undefined) {
+        return [];
     }
 
-    const indexedStocks = merge(keyBy(stocksChecked.stocks, "id"), keyBy(stocksChecked.priceHistory, "stock"));
-    setAllStocksWithPrice(Object.values(indexedStocks).sort((a, b) => a.name.localeCompare(b.name)));
+    const keyedStocks = keyBy(stocksAndPrices.stocks, "id");
+    const keyedPrices = keyBy(stocksAndPrices.priceHistory, "stock");
+
+    const indexedStocks = Object.keys(keyedStocks).map(stockId => {
+        const priceForStock = keyedPrices[stockId];
+
+        return {
+            ...keyedStocks[stockId],
+            ...pick(priceForStock ?? {}, "timestamp", "dollarValue"),
+        };
+    });
+
+    return indexedStocks.sort((a, b) => a.name.localeCompare(b.name));
 };
 
 export const StockManager: React.FC = () => {
-    const [allStocksWithPrice, setAllStocksWithPrice] = React.useState<Array<IStock & IPriceHistory> | undefined>(
-        undefined,
-    );
+    const [viewSingleStockInformation, setViewingSingleStockInformation] = React.useState<
+        IStockWithDollarValue | undefined
+    >(undefined);
 
-    React.useEffect(() => {
-        getAllStocks(setAllStocksWithPrice);
-    }, []);
+    const allStocksWithPrice = getStocksWithPrice();
 
     if (allStocksWithPrice === undefined) {
         return (
@@ -36,6 +45,20 @@ export const StockManager: React.FC = () => {
         );
     }
 
+    const goBackToViewingAllStock = () => setViewingSingleStockInformation(undefined);
+
+    if (viewSingleStockInformation !== undefined) {
+        return (
+            <StockInformation
+                goBackToViewingAllStock={goBackToViewingAllStock}
+                stockWithLatestPrice={viewSingleStockInformation}
+            />
+        );
+    }
+
+    const curriedSetViewSingleStockInformation = (stockInformation: IStockWithDollarValue) => () =>
+        setViewingSingleStockInformation(stockInformation);
+
     return (
         <div className={styles.stocksContainer}>
             {allStocksWithPrice.map(stock => (
@@ -44,17 +67,19 @@ export const StockManager: React.FC = () => {
                         [styles.acquiredStock]: stock.status === "ACQUIRED",
                     })}
                     key={stock.id}
+                    onClick={curriedSetViewSingleStockInformation(stock)}
                 >
                     <div className={styles.leftContainer}>
                         <span className={styles.stockTitle}>{stock.name}</span>
                         <span className={styles.stockMarketCap}>
-                            {formatNumber(stock.dollarValue * stock.totalQuantity)}
+                            {formatNumber((stock.dollarValue ?? 0) * stock.totalQuantity)}
                         </span>
                     </div>
                     <div className={styles.rightContainer}>
                         <span className={styles.currentPrice}>
-                            {stock.status === "ACQUIRED" ? "Acquired" : `$${stock.dollarValue}`}
+                            {stock.status === "ACQUIRED" ? "Acquired" : `$${stock.dollarValue.toFixed(2)}`}
                         </span>
+                        <Icon className={styles.chevronRightIndicator} icon="chevron-right" />
                     </div>
                 </div>
             ))}

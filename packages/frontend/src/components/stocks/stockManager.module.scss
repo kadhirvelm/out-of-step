@@ -46,10 +46,15 @@
 
 .right-container {
     display: flex;
-    flex-direction: column;
+    align-items: center;
 }
 
 .current-price {
     font-size: 20px;
     font-weight: 500;
+}
+
+.chevron-right-indicator {
+    color: $pt-text-color-muted;
+    margin-left: 10px;
 }
