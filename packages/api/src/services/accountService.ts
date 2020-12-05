@@ -6,16 +6,16 @@ export interface IAccountService extends IService {
         payload: { hashedPassword: string; email: string; name: string; username: string; portfolioName: string };
         response: string;
     };
+    forgotPassword: {
+        payload: { username: string; email: string };
+        response: string;
+    };
     getAccount: {
         payload: undefined;
         response: Omit<IAccount, "hashedPassword">;
     };
     loginToAccount: {
         payload: { hashedPassword: string; username: string };
-        response: string;
-    };
-    resetAccountPassword: {
-        payload: { username: string; email: string };
         response: string;
     };
     updateAccount: {
@@ -30,6 +30,11 @@ const { backend, frontend } = implementEndpoints<IAccountService>({
         slug: "/account/create",
         isPublic: true,
     },
+    forgotPassword: {
+        method: "post",
+        slug: "/account/reset-password",
+        isPublic: true,
+    },
     getAccount: {
         method: "get",
         slug: "/account/get",
@@ -37,11 +42,6 @@ const { backend, frontend } = implementEndpoints<IAccountService>({
     loginToAccount: {
         method: "post",
         slug: "/account/login",
-        isPublic: true,
-    },
-    resetAccountPassword: {
-        method: "post",
-        slug: "/account/reset-password",
         isPublic: true,
     },
     updateAccount: {

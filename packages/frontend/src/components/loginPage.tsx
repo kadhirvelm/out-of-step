@@ -27,7 +27,7 @@ const ResetPassword: React.FC<{
     const updateEmail = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.currentTarget.value);
 
     const forgotPassword = async () => {
-        const tokenOrError = await AccountServiceFrontend.resetAccountPassword({
+        const tokenOrError = await AccountServiceFrontend.forgotPassword({
             username,
             email,
         });

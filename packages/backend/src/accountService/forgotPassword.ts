@@ -5,12 +5,12 @@ import { Database } from "../types/databaseTypes";
 import { postgresPool } from "../utils/getPostgresPool";
 import { convertUserIdToWebToken } from "../utils/handleWebToken";
 
-type IResetAccountPassword = IAccountService["resetAccountPassword"];
+type IForgotPassword = IAccountService["forgotPassword"];
 
-export async function resetAccountPassword(
-    payload: IResetAccountPassword["payload"],
+export async function forgotPassword(
+    payload: IForgotPassword["payload"],
     response: Response<any>,
-): Promise<IResetAccountPassword["response"] | undefined> {
+): Promise<IForgotPassword["response"] | undefined> {
     const { email, username } = payload;
     if ([email, username].some(_.isEmpty)) {
         response.status(400).send({ error: "You cannot leave any fields blank." });

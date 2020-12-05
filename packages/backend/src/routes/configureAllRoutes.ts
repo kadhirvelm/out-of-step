@@ -5,7 +5,7 @@ import Express from "express";
 import { createAccount } from "../accountService/createAccount";
 import { loginToAccount } from "../accountService/loginToAccount";
 import { checkIfValidWebToken } from "../utils/handleWebToken";
-import { resetAccountPassword } from "../accountService/resetAccountPassword";
+import { forgotPassword } from "../accountService/forgotPassword";
 import { getAccount } from "../accountService/getAccount";
 import { updateAccount } from "../accountService/updateAccount";
 
@@ -31,7 +31,7 @@ export function configureAllRoutes(app: Express.Express) {
         createAccount,
         getAccount,
         loginToAccount,
-        resetAccountPassword,
+        forgotPassword,
         updateAccount,
     });
 }
