@@ -1,10 +1,10 @@
 import { implementEndpoints, IService } from "../common/generics";
-import { IStock } from "../types/dataTypes";
+import { IPriceHistory, IStock } from "../types/dataTypes";
 
-interface IStocksService extends IService {
+export interface IStocksService extends IService {
     getAllStocks: {
-        payload: {};
-        response: IStock[];
+        payload: undefined;
+        response: { stocks: IStock[]; priceHistory: IPriceHistory[] };
     };
 }
 

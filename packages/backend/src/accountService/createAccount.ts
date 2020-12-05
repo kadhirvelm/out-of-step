@@ -7,7 +7,7 @@ import { doubleHashPassword } from "../utils/hashPassword";
 
 type ICreateAccount = IAccountService["createAccount"];
 
-const DEFAULT_CASH_ON_HAND = 100000000;
+const DEFAULT_CASH_ON_HAND = 1000000;
 
 export async function createAccount(
     payload: ICreateAccount["payload"],

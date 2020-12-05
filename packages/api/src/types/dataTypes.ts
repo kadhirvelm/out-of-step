@@ -21,8 +21,9 @@ export interface IAccount {
 export interface IDividendHistory {
     id: IDividendHistoryId;
     payoutPerShare: number;
-    timestamp: Date;
+    timestamp: string;
     stock: IStockId;
+    calculationNotes?: string;
 }
 
 export interface ILimitOrder {
@@ -31,7 +32,7 @@ export interface ILimitOrder {
     quantity: number;
     stock: IStockId;
     sellAtPrice: number;
-    timestamp: Date;
+    timestamp: string;
     status: "PENDING" | "EXECUTED" | "CANCELLED";
 }
 
@@ -45,22 +46,24 @@ export interface IOwnedStock {
 export interface IPriceHistory {
     id: IPriceHistoryId;
     dollarValue: number;
-    timestamp: Date;
+    timestamp: string;
     stock: IStockId;
+    calculationNotes?: string;
 }
 
 export interface IStock {
     id: IStockId;
     name: string;
-    status: "available" | "acquired";
+    status: "AVAILABLE" | "ACQUIRED";
     totalQuantity: number;
 }
 
 interface IBaseTransaction {
     id: ITransactionHistoryId;
-    timestamp: Date;
+    timestamp: string;
     type: string;
     account: IAccountId;
+    stock: IStockId;
 }
 
 export interface IExchangeTransaction extends IBaseTransaction {

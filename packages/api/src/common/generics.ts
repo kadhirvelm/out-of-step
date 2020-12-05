@@ -79,6 +79,7 @@ function implementBackend<Service extends IService>(endpoints: IImplementEndpoin
 
                     response.status(200).send(JSON.stringify(responseData));
                 } catch (e) {
+                    console.error(e);
                     response.status(500).send({ error: JSON.stringify(e) });
                 }
             });

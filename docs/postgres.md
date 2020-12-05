@@ -27,7 +27,7 @@ CREATE TABLE public.stock (
 	"name" text NOT NULL,
 	status text NOT NULL,
 	"totalQuantity" int4 NOT NULL,
-	CONSTRAINT stock_check CHECK (((status = 'available'::text) OR (status = 'acquired'::text))),
+	CONSTRAINT stock_check_1 CHECK (((status = 'AVAILABLE'::text) OR (status = 'ACQUIRED'::text))),
 	CONSTRAINT stock_pk PRIMARY KEY (id)
 );
 
@@ -41,8 +41,9 @@ CREATE TABLE public.stock (
 CREATE TABLE public."dividendHistory" (
 	id uuid NOT NULL DEFAULT uuid_generate_v4(),
 	"payoutPerShare" float8 NOT NULL,
-	"timestamp" date NOT NULL DEFAULT now(),
+	"timestamp" timestamp(0) NOT NULL DEFAULT now(),
 	stock uuid NOT NULL,
+	"calculationNotes" text NULL,
 	CONSTRAINT dividendpayout_check CHECK (("payoutPerShare" > (0.01)::double precision)),
 	CONSTRAINT dividendpayout_pk PRIMARY KEY (id),
 	CONSTRAINT dividendhistory_fk FOREIGN KEY (stock) REFERENCES stock(id)
@@ -61,7 +62,7 @@ CREATE TABLE public."limitOrder" (
 	quantity int4 NOT NULL,
 	stock uuid NOT NULL,
 	"sellAtPrice" float8 NOT NULL,
-	"timestamp" date NOT NULL DEFAULT now(),
+	"timestamp" timestamp(0) NOT NULL DEFAULT now(),
 	status text NOT NULL,
 	CONSTRAINT limitorder_check CHECK (((status = 'PENDING'::text) OR (status = 'EXECUTED'::text) OR (status = 'CANCELLED'::text))),
 	CONSTRAINT limitorder_pk PRIMARY KEY (id),
@@ -103,8 +104,9 @@ CREATE INDEX ownedstock_stock_idx ON public."ownedStock" USING btree (stock);
 CREATE TABLE public."priceHistory" (
 	id uuid NOT NULL DEFAULT uuid_generate_v4(),
 	"dollarValue" float8 NOT NULL,
-	"timestamp" date NOT NULL DEFAULT now(),
+	"timestamp" timestamp(0) NOT NULL DEFAULT now(),
 	stock uuid NOT NULL,
+	"calculationNotes" text NULL,
 	CONSTRAINT pricepoint_check CHECK (("dollarValue" > (0.01)::double precision)),
 	CONSTRAINT pricepoint_pk PRIMARY KEY (id),
 	CONSTRAINT pricehistory_fk FOREIGN KEY (stock) REFERENCES stock(id)
@@ -120,7 +122,7 @@ CREATE INDEX pricehistory_stockid_idx ON public."priceHistory" USING btree (stoc
 
 CREATE TABLE public."transactionHistory" (
 	id uuid NOT NULL DEFAULT uuid_generate_v4(),
-	"timestamp" date NOT NULL DEFAULT now(),
+	"timestamp" timestamp(0) NOT NULL DEFAULT now(),
 	"type" text NOT NULL,
 	"priceHistory" uuid NULL,
 	"purchasedQuantity" int4 NULL,
@@ -130,6 +132,7 @@ CREATE TABLE public."transactionHistory" (
 	"limitOrder" uuid NULL,
 	"acquiredQuantity" int4 NULL,
 	account uuid NOT NULL,
+	stock uuid NOT NULL,
 	CONSTRAINT transaction_check CHECK (((type = 'exchange-transaction'::text) OR (type = 'dividend-transaction'::text) OR (type = 'acquisition-transaction'::text))),
 	CONSTRAINT transaction_check_1 CHECK ((("purchasedQuantity" > 0) OR ("purchasedQuantity" IS NULL))),
 	CONSTRAINT transaction_check_2 CHECK ((("soldQuantity" > 0) OR ("soldQuantity" IS NULL))),
