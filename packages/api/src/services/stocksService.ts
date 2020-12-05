@@ -4,7 +4,10 @@ import { IPriceHistory, IStock } from "../types/dataTypes";
 export interface IStocksService extends IService {
     getAllStocks: {
         payload: undefined;
-        response: { stocks: IStock[]; priceHistory: IPriceHistory[] };
+        response: {
+            priceHistory: IPriceHistory[];
+            stocks: IStock[];
+        };
     };
 }
 
