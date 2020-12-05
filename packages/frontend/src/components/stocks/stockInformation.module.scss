@@ -1,0 +1,61 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.stock-information-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.back-arrow-container {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.spinner-container {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.stock-details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.stock-name {
+    font-size: 16px;
+    font-weight: 550;
+}
+
+.stock-latest {
+    color: $pt-text-color-muted;
+    margin-top: 5px;
+}
+
+.history-label {
+    display: flex;
+    padding: 10px 10px 5px 10px;
+    font-weight: 500;
+    color: $pt-text-color-muted;
+    box-shadow: 0 1px $pt-divider-black;
+}
+
+.price-points-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    > .single-price-point {
+        box-shadow: 0 1px $pt-divider-black;
+    }
+}
+
+.single-price-point {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}

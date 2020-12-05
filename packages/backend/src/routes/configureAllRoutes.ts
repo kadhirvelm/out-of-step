@@ -7,6 +7,7 @@ import { loginToAccount } from "../accountService/loginToAccount";
 import { updateAccount } from "../accountService/updateAccount";
 import { getAllStocks } from "../stockService/getAllStocks";
 import { checkIfValidWebToken } from "../utils/handleWebToken";
+import { getSingleStockInformation } from "../stockService/getSingleStockInformation";
 
 export function configureAllRoutes(app: Express.Express) {
     app.get("/", (_, response) => {
@@ -15,6 +16,7 @@ export function configureAllRoutes(app: Express.Express) {
 
     StocksBackendService(app, checkIfValidWebToken, {
         getAllStocks,
+        getSingleStockInformation,
     });
 
     AccountServiceBackend(app, checkIfValidWebToken, {
