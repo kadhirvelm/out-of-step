@@ -3,6 +3,7 @@ import classNames from "classnames";
 import * as React from "react";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import styles from "./mainPage.module.scss";
+import { PortfolioManager } from "./portfolio/portfolioManager";
 import { UserManager } from "./userManager/userManager";
 
 export const MainPage: React.FC = () => {
@@ -18,7 +19,7 @@ export const MainPage: React.FC = () => {
             <div className={styles.mainContentContainer}>
                 <Switch>
                     <Route path="/user" component={UserManager} />
-                    <Route path="/portfolio" component={() => <div>Portfolio</div>} />
+                    <Route path="/portfolio" component={PortfolioManager} />
                     <Route path="/score" component={() => <div>Score</div>} />
                     <Redirect to="/portfolio" />
                 </Switch>
