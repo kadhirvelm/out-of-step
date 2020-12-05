@@ -3,10 +3,8 @@ type Id<T extends string> = string & { __id: T };
 export type IStockId = Id<"stock">;
 export type IPriceHistoryId = Id<"price-point">;
 export type IDividendHistoryId = Id<"dividend-payout">;
-export type IVolumeId = Id<"volume">;
-export type IOwnedVolumeId = Id<"owned-volume">;
+export type IOwnedStockId = Id<"owned-stock">;
 export type IAccountId = Id<"account">;
-export type IPortfolioId = Id<"portfolio">;
 export type ITransactionHistoryId = Id<"transaction-history">;
 export type ILimitOrderId = Id<"limit-order">;
 
@@ -15,8 +13,9 @@ export interface IAccount {
     hashedPassword: string;
     email: string;
     name: string;
-    portfolio: IPortfolioId;
     username: string;
+    cashOnHand: number;
+    portfolioName: string;
 }
 
 export interface IDividendHistory {
@@ -28,28 +27,19 @@ export interface IDividendHistory {
 
 export interface ILimitOrder {
     id: ILimitOrderId;
-    portfolio: IPortfolioId;
+    account: IAccountId;
     quantity: number;
     stock: IStockId;
     sellAtPrice: number;
     timestamp: Date;
-    transactionHistory?: ITransactionHistoryId;
+    status: "PENDING" | "EXECUTED" | "CANCELLED";
 }
 
-export interface IOwnedVolume {
-    id: IOwnedVolumeId;
-    portfolio: IPortfolioId;
+export interface IOwnedStock {
+    id: IOwnedStockId;
+    account: IAccountId;
     quantity: number;
     stock: IStockId;
-}
-
-export interface IPortfolio {
-    id: IPortfolioId;
-    cashOnHand: number;
-    name: string;
-    limitOrders: ILimitOrderId[];
-    ownedVolumes: { [stockId: string]: IOwnedVolumeId };
-    transactionHistory: { [stockId: string]: ITransactionHistoryId[] };
 }
 
 export interface IPriceHistory {
@@ -63,14 +53,14 @@ export interface IStock {
     id: IStockId;
     name: string;
     status: "available" | "acquired";
-    volume: IVolumeId;
+    totalQuantity: number;
 }
 
 interface IBaseTransaction {
     id: ITransactionHistoryId;
     timestamp: Date;
-    portfolio: IPortfolioId;
     type: string;
+    account: IAccountId;
 }
 
 export interface IExchangeTransaction extends IBaseTransaction {
@@ -91,10 +81,4 @@ export interface IAcquisitionTransaction extends IBaseTransaction {
     acquiredQuantity: number;
     price: IPriceHistoryId;
     type: "acquisition-transaction";
-}
-
-export interface IVolume {
-    id: IVolumeId;
-    ownedVolumes: IOwnedVolumeId[];
-    totalQuantity: number;
 }

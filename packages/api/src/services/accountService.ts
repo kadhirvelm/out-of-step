@@ -19,7 +19,7 @@ export interface IAccountService extends IService {
         response: string;
     };
     updateAccount: {
-        payload: { updatedAccount: Partial<Omit<IAccount, "id" | "portfolio">> };
+        payload: { updatedAccount: Partial<Omit<IAccount, "id" | "username" | "cashOnHand">> };
         response: { message: string };
     };
 }
