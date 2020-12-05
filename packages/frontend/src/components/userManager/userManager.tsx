@@ -13,6 +13,11 @@ interface IDispatchProps {
     setTokenToUndefined: () => void;
 }
 
+interface IOwnProps {
+    userAccount: Partial<IAccount> | undefined;
+    setUserAccount: (updatedUserAccount: Partial<IAccount>) => void;
+}
+
 const UserAccountDetails: React.FC<{
     setUpdatedUserAccount: (updatedUserAccount: Partial<IAccount>) => void;
     userAccount: Partial<IAccount>;
@@ -40,7 +45,7 @@ const UserAccountDetails: React.FC<{
 
     const fields: Array<{
         label: string;
-        key: keyof IAccount;
+        key: keyof Omit<IAccount, "cashOnHand">;
     }> = [
         {
             label: "Email",
@@ -49,6 +54,10 @@ const UserAccountDetails: React.FC<{
         {
             label: "Name",
             key: "name",
+        },
+        {
+            label: "Portfolio name",
+            key: "portfolioName",
         },
         {
             label: "New password",
@@ -82,18 +91,11 @@ const UserAccountDetails: React.FC<{
     );
 };
 
-const getUser = async (setUserAccount: (userAccount: Partial<IAccount> | undefined) => void) => {
-    const rawUser = await AccountServiceFrontend.getAccount(undefined, getTokenInCookie());
-    setUserAccount(checkIfIsError(rawUser));
-};
-
-const UnconnectedUserManager: React.FC<IDispatchProps> = ({ setTokenToUndefined }) => {
-    const [userAccount, setUserAccount] = React.useState<Partial<IAccount> | undefined>(undefined);
-
-    React.useEffect(() => {
-        getUser(setUserAccount);
-    }, []);
-
+const UnconnectedUserManager: React.FC<IDispatchProps & IOwnProps> = ({
+    userAccount,
+    setUserAccount,
+    setTokenToUndefined,
+}) => {
     return (
         <div className={styles.mainContainer}>
             {userAccount !== undefined && (

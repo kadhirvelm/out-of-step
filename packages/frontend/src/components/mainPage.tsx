@@ -2,13 +2,27 @@ import { Icon } from "@blueprintjs/core";
 import classNames from "classnames";
 import * as React from "react";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
+import { IAccount, AccountServiceFrontend } from "../../../api/dist";
+import { checkIfIsError } from "../utils/checkIfIsError";
+import { getTokenInCookie } from "../utils/tokenInCookies";
 import styles from "./mainPage.module.scss";
-import { PortfolioManager } from "./portfolio/portfolioManager";
+import { StockManager } from "./stocks/stockManager";
 import { UserManager } from "./userManager/userManager";
+
+const getUser = async (setUserAccount: (userAccount: Partial<IAccount> | undefined) => void) => {
+    const rawUser = await AccountServiceFrontend.getAccount(undefined, getTokenInCookie());
+    setUserAccount(checkIfIsError(rawUser));
+};
 
 export const MainPage: React.FC = () => {
     const history = useHistory();
     const location = useLocation();
+
+    const [userAccount, setUserAccount] = React.useState<Partial<IAccount> | undefined>(undefined);
+
+    React.useEffect(() => {
+        getUser(setUserAccount);
+    }, []);
 
     const onUserClick = () => history.push("/user");
     const onPortfolioClick = () => history.push("/portfolio");
@@ -18,8 +32,11 @@ export const MainPage: React.FC = () => {
         <div className={styles.overallContainer}>
             <div className={styles.mainContentContainer}>
                 <Switch>
-                    <Route path="/user" component={UserManager} />
-                    <Route path="/portfolio" component={PortfolioManager} />
+                    <Route
+                        path="/user"
+                        component={() => <UserManager userAccount={userAccount} setUserAccount={setUserAccount} />}
+                    />
+                    <Route path="/portfolio" component={StockManager} />
                     <Route path="/score" component={() => <div>Score</div>} />
                     <Redirect to="/portfolio" />
                 </Switch>

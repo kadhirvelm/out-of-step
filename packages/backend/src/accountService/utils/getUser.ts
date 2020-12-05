@@ -1,9 +1,8 @@
-import { IAccountId } from "@stochastic-exchange/api";
-import { Database } from "../../types/databaseTypes";
+import { IAccount, IAccountId } from "@stochastic-exchange/api";
 import { postgresPool } from "../../utils/getPostgresPool";
 
 export async function getUser(accountId: IAccountId) {
-    const user = await postgresPool.query<Database.Account>("SELECT * FROM account WHERE id = $1", [accountId]);
+    const user = await postgresPool.query<IAccount>("SELECT * FROM account WHERE id = $1", [accountId]);
 
     return user.rows[0];
 }

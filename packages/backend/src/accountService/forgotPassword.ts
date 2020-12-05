@@ -1,7 +1,6 @@
-import { IAccountService } from "@stochastic-exchange/api";
+import { IAccount, IAccountService } from "@stochastic-exchange/api";
 import { Response } from "express";
 import _ from "lodash";
-import { Database } from "../types/databaseTypes";
 import { postgresPool } from "../utils/getPostgresPool";
 import { convertUserIdToWebToken } from "../utils/handleWebToken";
 
@@ -18,7 +17,7 @@ export async function forgotPassword(
     }
 
     try {
-        const user = await postgresPool.query<Database.Account>(
+        const user = await postgresPool.query<IAccount>(
             // eslint-disable-next-line prettier/prettier
             "SELECT id FROM account WHERE username = $1 AND email = $2",
             [username, email],
