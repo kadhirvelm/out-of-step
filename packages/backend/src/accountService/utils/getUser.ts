@@ -1,5 +1,4 @@
 import { IAccountId } from "@stochastic-exchange/api";
-import _ from "lodash";
 import { Database } from "../../types/databaseTypes";
 import { postgresPool } from "../../utils/getPostgresPool";
 
