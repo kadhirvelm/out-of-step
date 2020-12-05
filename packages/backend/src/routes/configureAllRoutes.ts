@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/require-await */
-
-import { AccountServiceBackend, IStockId, StocksBackendService } from "@stochastic-exchange/api";
+import { AccountServiceBackend, StocksBackendService } from "@stochastic-exchange/api";
 import Express from "express";
 import { createAccount } from "../accountService/createAccount";
 import { forgotPassword } from "../accountService/forgotPassword";
 import { getAccount } from "../accountService/getAccount";
 import { loginToAccount } from "../accountService/loginToAccount";
 import { updateAccount } from "../accountService/updateAccount";
+import { getAllStocks } from "../stockService/getAllStocks";
 import { checkIfValidWebToken } from "../utils/handleWebToken";
 
 export function configureAllRoutes(app: Express.Express) {
@@ -15,16 +14,7 @@ export function configureAllRoutes(app: Express.Express) {
     });
 
     StocksBackendService(app, checkIfValidWebToken, {
-        getAllStocks: async () => {
-            return [
-                {
-                    id: "test-stock-1" as IStockId,
-                    name: "Sample stock 1",
-                    status: "available",
-                    totalQuantity: 0,
-                },
-            ];
-        },
+        getAllStocks,
     });
 
     AccountServiceBackend(app, checkIfValidWebToken, {

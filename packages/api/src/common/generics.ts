@@ -1,5 +1,5 @@
 import Express from "express";
-import { PORT, ORIGIN } from "../constants";
+import { ORIGIN, PORT } from "../constants";
 import { IAccountId } from "../types/dataTypes";
 
 type IMethods = "get" | "post" | "put" | "delete";
@@ -79,6 +79,8 @@ function implementBackend<Service extends IService>(endpoints: IImplementEndpoin
 
                     response.status(200).send(JSON.stringify(responseData));
                 } catch (e) {
+                    // eslint-disable-next-line no-console
+                    console.error(e);
                     response.status(500).send({ error: JSON.stringify(e) });
                 }
             });
