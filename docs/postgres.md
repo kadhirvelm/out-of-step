@@ -70,6 +70,8 @@ CREATE TABLE public."limitOrder" (
 	CONSTRAINT limitorder_fk FOREIGN KEY (account) REFERENCES account(id),
 	CONSTRAINT limitorder_fk_1 FOREIGN KEY (stock) REFERENCES stock(id)
 );
+CREATE INDEX limitorder_account_idx ON public."limitOrder" USING btree (account);
+CREATE INDEX limitorder_status_idx ON public."limitOrder" USING btree (status);
 
 
 -- public."ownedStock" definition
@@ -88,6 +90,8 @@ CREATE TABLE public."ownedStock" (
 	CONSTRAINT ownedstock_fk FOREIGN KEY (account) REFERENCES account(id),
 	CONSTRAINT ownedvolume_fk_1 FOREIGN KEY (stock) REFERENCES stock(id)
 );
+CREATE INDEX ownedstock_account_idx ON public."ownedStock" USING btree (account);
+CREATE INDEX ownedstock_stock_idx ON public."ownedStock" USING btree (stock);
 
 
 -- public."priceHistory" definition
@@ -137,3 +141,4 @@ CREATE TABLE public."transactionHistory" (
 	CONSTRAINT transaction_fk_2 FOREIGN KEY ("dividendHistory") REFERENCES "dividendHistory"(id),
 	CONSTRAINT transactionhistory_fk FOREIGN KEY (account) REFERENCES account(id)
 );
+CREATE INDEX transactionhistory_account_idx ON public."transactionHistory" USING btree (account);
