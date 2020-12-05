@@ -1,4 +1,3 @@
-import { Toast, Toaster } from "@blueprintjs/core";
 import { showToast } from "./toaster";
 
 const isError = <T>(maybeError: T | { error: string }): maybeError is { error: string } => {
