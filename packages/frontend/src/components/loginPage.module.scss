@@ -47,7 +47,11 @@
     color: $blue3;
 }
 
-.error-container {
-    margin-top: 10px;
-    color: $red4;
+.forgot-password-container {
+    position: absolute;
+    right: 15px;
+    bottom: 10px;
+    text-align: right;
+    cursor: pointer;
+    color: $blue3;
 }

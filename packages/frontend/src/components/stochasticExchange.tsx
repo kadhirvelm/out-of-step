@@ -30,15 +30,15 @@ const UnconnectedStochasticExchange: React.FC<IStoreProps & IDispatchProps> = ({
         };
     }, []);
 
-    if (token === undefined) {
-        return <LoginPage />;
-    }
+    const renderContent = () => {
+        if (token === undefined || token === "") {
+            return <LoginPage />;
+        }
 
-    return (
-        <Router>
-            <MainPage />
-        </Router>
-    );
+        return <MainPage />;
+    };
+
+    return <Router>{renderContent()}</Router>;
 };
 
 function mapStateToProps(state: IStoreState): IStoreProps {
