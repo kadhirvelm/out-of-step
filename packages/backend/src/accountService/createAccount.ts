@@ -1,4 +1,4 @@
-import { IAccountId, IAccountService } from "@stochastic-exchange/api";
+import { IAccountId, IAccountService, IPortfolioId } from "@stochastic-exchange/api";
 import _ from "lodash";
 import { Response } from "express";
 import { postgresPool } from "../utils/getPostgresPool";
@@ -7,12 +7,14 @@ import { doubleHashPassword } from "../utils/hashPassword";
 
 type ICreateAccount = IAccountService["createAccount"];
 
+const DEFAULT_CASH_ON_HAND = 100000000;
+
 export async function createAccount(
     payload: ICreateAccount["payload"],
     response: Response<any>,
 ): Promise<ICreateAccount["response"] | undefined> {
-    const { hashedPassword, email, name, username } = payload;
-    if ([hashedPassword, email, name, username].some(_.isEmpty)) {
+    const { hashedPassword, email, name, username, portfolioName } = payload;
+    if ([hashedPassword, email, name, username, portfolioName].some(_.isEmpty)) {
         response.status(400).send({ error: "You cannot leave any fields blank." });
         return undefined;
     }
@@ -23,12 +25,18 @@ export async function createAccount(
             throw new Error("That user ID already exists, please pick another one.");
         }
 
+        const newPortfolioForUser = await postgresPool.query<{ id: IPortfolioId }>(
+            // eslint-disable-next-line prettier/prettier
+            "INSERT INTO portfolio (\"cashOnHand\", name) VALUES ($1, $2) RETURNING id",
+            [DEFAULT_CASH_ON_HAND, portfolioName],
+        );
+
         const doublyHashedPassword = doubleHashPassword(hashedPassword);
 
         const newUser = await postgresPool.query<{ id: IAccountId }>(
             // eslint-disable-next-line prettier/prettier
-            "INSERT INTO account (\"hashedPassword\", email, name, username) VALUES ($1, $2, $3, $4) RETURNING id",
-            [doublyHashedPassword, email, name, username],
+            "INSERT INTO account (\"hashedPassword\", email, name, username, portfolio) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+            [doublyHashedPassword, email, name, username, newPortfolioForUser.rows[0].id],
         );
 
         return convertUserIdToWebToken(newUser.rows[0].id);

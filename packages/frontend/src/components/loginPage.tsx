@@ -2,28 +2,76 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import { Button, InputGroup } from "@blueprintjs/core";
+import { useHistory } from "react-router-dom";
 import { AccountServiceFrontend } from "../../../api/dist";
 import { SetToken } from "../store/account/actions";
 import { setTokenInCookie } from "../utils/tokenInCookies";
 import styles from "./loginPage.module.scss";
 import { hashPassword } from "../utils/hashPassword";
+import { checkIfIsError } from "../utils/checkIfIsError";
 
 interface IDispatchProps {
     setToken: (payload: { token: string }) => void;
 }
 
+const ResetPassword: React.FC<{
+    completeLogin: (token: string | undefined) => void;
+    switchBackToLogin: () => void;
+}> = ({ completeLogin, switchBackToLogin }) => {
+    const history = useHistory();
+
+    const [username, setUsername] = React.useState("");
+    const [email, setEmail] = React.useState("");
+
+    const updateUsername = (event: React.ChangeEvent<HTMLInputElement>) => setUsername(event.currentTarget.value);
+    const updateEmail = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.currentTarget.value);
+
+    const forgotPassword = async () => {
+        const tokenOrError = await AccountServiceFrontend.forgotPassword({
+            username,
+            email,
+        });
+
+        history.push("/user");
+        completeLogin(checkIfIsError(tokenOrError));
+    };
+
+    return (
+        <>
+            <div className={styles.fieldsContainer}>
+                <InputGroup placeholder="Username" onChange={updateUsername} value={username} />
+                <InputGroup placeholder="Email" onChange={updateEmail} value={email} />
+            </div>
+            <div className={styles.footerContainer}>
+                <Button
+                    className={styles.primaryButton}
+                    intent="primary"
+                    text="Forgot password"
+                    onClick={forgotPassword}
+                />
+                <span className={styles.secondaryButton} onClick={switchBackToLogin}>
+                    Login
+                </span>
+            </div>
+        </>
+    );
+};
+
 const UnconnectedLoginPage: React.FC<IDispatchProps> = ({ setToken }) => {
-    const [typeOfEntry, setTypeOfEntry] = React.useState<"creating-account" | "login">("login");
+    const [typeOfEntry, setTypeOfEntry] = React.useState<"creating-account" | "login" | "forgot-password">("login");
 
     const [rawTextPassword, setRawTextPassword] = React.useState<string>("");
     const [username, setUsername] = React.useState<string>("");
 
     const [email, setEmail] = React.useState("");
     const [name, setName] = React.useState("");
+    const [portfolioName, setPortfolioName] = React.useState("");
 
-    const [loginError, setLoginError] = React.useState<string | undefined>(undefined);
+    const completeLogin = (token: string | undefined) => {
+        if (token === undefined) {
+            return;
+        }
 
-    const completeLogin = (token: string) => {
         setToken({ token });
         setTokenInCookie(token);
     };
@@ -34,11 +82,7 @@ const UnconnectedLoginPage: React.FC<IDispatchProps> = ({ setToken }) => {
             username,
         });
 
-        if (typeof tokenOrError !== "string") {
-            setLoginError(tokenOrError.error);
-        } else {
-            completeLogin(tokenOrError);
-        }
+        completeLogin(checkIfIsError(tokenOrError));
     };
 
     const createAccount = async () => {
@@ -47,31 +91,31 @@ const UnconnectedLoginPage: React.FC<IDispatchProps> = ({ setToken }) => {
             email,
             name,
             username,
+            portfolioName,
         });
 
-        if (typeof tokenOrError !== "string") {
-            setLoginError(tokenOrError.error);
-        } else {
-            completeLogin(tokenOrError);
-        }
+        completeLogin(checkIfIsError(tokenOrError));
     };
 
     const switchTypeOfEntry = () => {
         if (typeOfEntry === "login") {
             setTypeOfEntry("creating-account");
-        } else {
+        } else if (typeOfEntry === "creating-account") {
             setTypeOfEntry("login");
         }
     };
 
     const updateName = (event: React.ChangeEvent<HTMLInputElement>) => setName(event.currentTarget.value);
     const updateEmail = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.currentTarget.value);
+    const updatePortfolioName = (event: React.ChangeEvent<HTMLInputElement>) =>
+        setPortfolioName(event.currentTarget.value);
 
     const renderExtraFields = () => {
         return (
             <>
-                <InputGroup placeholder="Name" onChange={updateName} value={name} />
+                <InputGroup placeholder="Your name" onChange={updateName} value={name} />
                 <InputGroup placeholder="Email" onChange={updateEmail} value={email} />
+                <InputGroup placeholder="Portfolio name" onChange={updatePortfolioName} value={portfolioName} />
             </>
         );
     };
@@ -80,10 +124,11 @@ const UnconnectedLoginPage: React.FC<IDispatchProps> = ({ setToken }) => {
     const updateRawTextPassword = (event: React.ChangeEvent<HTMLInputElement>) =>
         setRawTextPassword(event.currentTarget.value);
 
-    return (
-        <div className={styles.mainContainer}>
-            <div className={styles.overallContainer}>
-                <div className={styles.stochasticExchangeContainer}>Stochastic Exchange</div>
+    const switchToForgotPassword = () => setTypeOfEntry("forgot-password");
+
+    const renderLoginOrCreate = () => {
+        return (
+            <>
                 <div className={styles.fieldsContainer}>
                     <InputGroup placeholder="Username" onChange={updateUsername} value={username} />
                     <InputGroup
@@ -105,9 +150,24 @@ const UnconnectedLoginPage: React.FC<IDispatchProps> = ({ setToken }) => {
                         {typeOfEntry === "login" ? "Create account" : "Login"}
                     </span>
                 </div>
-                <div className={styles.errorContainer}>
-                    {loginError !== undefined && <span>{JSON.stringify(loginError)}</span>}
+                <div className={styles.forgotPasswordContainer} onClick={switchToForgotPassword}>
+                    <span>Forgot password</span>
                 </div>
+            </>
+        );
+    };
+
+    const switchBackToLogin = () => setTypeOfEntry("login");
+
+    return (
+        <div className={styles.mainContainer}>
+            <div className={styles.overallContainer}>
+                <div className={styles.stochasticExchangeContainer}>Stochastic Exchange</div>
+                {typeOfEntry === "forgot-password" ? (
+                    <ResetPassword completeLogin={completeLogin} switchBackToLogin={switchBackToLogin} />
+                ) : (
+                    renderLoginOrCreate()
+                )}
             </div>
         </div>
     );

@@ -1,9 +1,12 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
 import { Dispatch } from "redux";
 import { SetToken } from "../store/account/actions";
 import { IStoreState } from "../store/state";
+import { showToast } from "../utils/toaster";
 import { LoginPage } from "./loginPage";
+import { MainPage } from "./mainPage";
 
 interface IStoreProps {
     token: string | undefined;
@@ -21,14 +24,21 @@ declare global {
 
 const UnconnectedStochasticExchange: React.FC<IStoreProps & IDispatchProps> = ({ invalidateToken, token }) => {
     React.useEffect(() => {
-        window.onTokenInvalidate = () => invalidateToken();
+        window.onTokenInvalidate = () => {
+            showToast({ intent: "warning", message: "Your session has expired, please login again." });
+            invalidateToken();
+        };
     }, []);
 
-    if (token === undefined) {
-        return <LoginPage />;
-    }
+    const renderContent = () => {
+        if (token === undefined || token === "") {
+            return <LoginPage />;
+        }
 
-    return <div>You&apos;re in! {token}.</div>;
+        return <MainPage />;
+    };
+
+    return <Router>{renderContent()}</Router>;
 };
 
 function mapStateToProps(state: IStoreState): IStoreProps {

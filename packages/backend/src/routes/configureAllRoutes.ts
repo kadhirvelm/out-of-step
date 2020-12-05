@@ -2,16 +2,20 @@
 
 import {
     AccountServiceBackend,
-    IHistoricalPricePointsId,
-    IPricePointId,
     IStockId,
     IVolumeId,
+    PortfolioServiceBackend,
     StocksBackendService,
 } from "@stochastic-exchange/api";
 import Express from "express";
 import { createAccount } from "../accountService/createAccount";
 import { loginToAccount } from "../accountService/loginToAccount";
 import { checkIfValidWebToken } from "../utils/handleWebToken";
+import { forgotPassword } from "../accountService/forgotPassword";
+import { getAccount } from "../accountService/getAccount";
+import { updateAccount } from "../accountService/updateAccount";
+import { getPortfolio } from "../portfolioService/getPortfolio";
+import { updatePortfolioMetadata } from "../portfolioService/updatePortfolioMetadata";
 
 export function configureAllRoutes(app: Express.Express) {
     app.get("/", (_, response) => {
@@ -23,8 +27,6 @@ export function configureAllRoutes(app: Express.Express) {
             return [
                 {
                     id: "test-stock-1" as IStockId,
-                    historicalPricePoints: "test-historical-price-points" as IHistoricalPricePointsId,
-                    latestPricePoint: "latest-price-point" as IPricePointId,
                     name: "Sample stock 1",
                     status: "available",
                     volume: "volume-id" as IVolumeId,
@@ -33,8 +35,16 @@ export function configureAllRoutes(app: Express.Express) {
         },
     });
 
+    PortfolioServiceBackend(app, checkIfValidWebToken, {
+        getPortfolio,
+        updatePortfolioMetadata,
+    });
+
     AccountServiceBackend(app, checkIfValidWebToken, {
         createAccount,
+        getAccount,
         loginToAccount,
+        forgotPassword,
+        updateAccount,
     });
 }

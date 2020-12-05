@@ -4,16 +4,15 @@ import _ from "lodash";
 import { Database } from "../types/databaseTypes";
 import { postgresPool } from "../utils/getPostgresPool";
 import { convertUserIdToWebToken } from "../utils/handleWebToken";
-import { doubleHashPassword } from "../utils/hashPassword";
 
-type ILoginToAccount = IAccountService["loginToAccount"];
+type IForgotPassword = IAccountService["forgotPassword"];
 
-export async function loginToAccount(
-    payload: ILoginToAccount["payload"],
+export async function forgotPassword(
+    payload: IForgotPassword["payload"],
     response: Response<any>,
-): Promise<ILoginToAccount["response"] | undefined> {
-    const { hashedPassword, username } = payload;
-    if ([hashedPassword, username].some(_.isEmpty)) {
+): Promise<IForgotPassword["response"] | undefined> {
+    const { email, username } = payload;
+    if ([email, username].some(_.isEmpty)) {
         response.status(400).send({ error: "You cannot leave any fields blank." });
         return undefined;
     }
@@ -21,15 +20,11 @@ export async function loginToAccount(
     try {
         const user = await postgresPool.query<Database.Account>(
             // eslint-disable-next-line prettier/prettier
-            "SELECT \"hashedPassword\", id FROM account WHERE username = $1",
-            [username],
+            "SELECT id FROM account WHERE username = $1 AND email = $2",
+            [username, email],
         );
 
         if (user.rows.length === 0) {
-            throw new Error("Invalid account.");
-        }
-
-        if (user.rows[0].hashedPassword !== doubleHashPassword(hashedPassword)) {
             throw new Error("Invalid account.");
         }
 

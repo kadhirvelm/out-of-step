@@ -1,0 +1,41 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.overall-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    max-width: 100%;
+}
+
+.main-content-container {
+    display: flex;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.footer-container {
+    display: flex;
+    height: 50px;
+    box-shadow: 0 -1px $pt-divider-black;
+    background: $light-gray4;
+
+    > :not(:last-child) {
+        box-shadow: 1px 0 $pt-divider-black;
+    }
+}
+
+.footer-icon-container {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.footer-icon {
+    color: $gray4;
+
+    &.active {
+        color: $blue3;
+    }
+}
