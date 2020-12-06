@@ -8,6 +8,7 @@ import { updateAccount } from "../accountService/updateAccount";
 import { getAllStocks } from "../stockService/getAllStocks";
 import { checkIfValidWebToken } from "../utils/handleWebToken";
 import { getSingleStockInformation } from "../stockService/getSingleStockInformation";
+import { getCurrentStandings } from "../accountService/getCurrentStandings";
 
 export function configureAllRoutes(app: Express.Express) {
     app.get("/", (_, response) => {
@@ -24,6 +25,7 @@ export function configureAllRoutes(app: Express.Express) {
         getAccount,
         loginToAccount,
         forgotPassword,
+        getCurrentStandings,
         updateAccount,
     });
 }

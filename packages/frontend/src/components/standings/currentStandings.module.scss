@@ -1,0 +1,46 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.spinner-container {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.standings-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    > .single-standings-container {
+        box-shadow: 0 1px $pt-divider-black;
+    }
+}
+
+.single-standings-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.information-spacer {
+    display: flex;
+    flex: 1;
+    align-items: center;
+}
+
+.information-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.portfolio-name {
+    font-size: 16px;
+    font-weight: 550;
+}
+
+.net-worth {
+    margin-top: 5px;
+    color: $pt-text-color-muted;
+}

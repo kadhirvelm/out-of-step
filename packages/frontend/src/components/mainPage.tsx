@@ -6,6 +6,7 @@ import { IAccount, AccountServiceFrontend } from "../../../api/dist";
 import { checkIfIsError } from "../utils/checkIfIsError";
 import { getTokenInCookie } from "../utils/tokenInCookies";
 import styles from "./mainPage.module.scss";
+import { CurrentStandings } from "./standings/currentStandings";
 import { StockManager } from "./stocks/stockManager";
 import { UserManager } from "./userManager/userManager";
 
@@ -37,7 +38,7 @@ export const MainPage: React.FC = () => {
                         component={() => <UserManager userAccount={userAccount} setUserAccount={setUserAccount} />}
                     />
                     <Route path="/portfolio" component={StockManager} />
-                    <Route path="/score" component={() => <div>Score</div>} />
+                    <Route path="/score" component={() => <CurrentStandings userAccountId={userAccount?.id} />} />
                     <Redirect to="/portfolio" />
                 </Switch>
             </div>
