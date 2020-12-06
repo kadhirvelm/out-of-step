@@ -7,13 +7,63 @@
     align-items: center;
 }
 
-.stocks-container {
+.overall-container {
     display: flex;
     flex: 1;
     flex-direction: column;
+}
 
-    > .single-stock-container {
-        box-shadow: 0 1px $pt-divider-black;
+.user-information-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.greeting {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.asset-information {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.total-worth {
+    font-size: 22px;
+    font-weight: 550;
+    margin-bottom: 5px
+}
+
+.breakdown-container {
+    display: flex;
+    font-size: 14px;
+    color: $pt-text-color-muted;
+
+    > :not(:first-child) {
+        margin-left: 10px;
+    }
+}
+
+.type-of-stock-label {
+    padding: 10px 0 5px 10px;
+    font-weight: 500;
+    color: $pt-text-color-muted;
+}
+
+.other-stocks {
+    margin-top: 10px;
+}
+
+.stocks-container {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -1px $pt-divider-black;
+
+    > :nth-child(2).single-stock-container {
+        background: $light-gray3;
     }
 }
 
@@ -23,10 +73,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px;
-}
-
-.acquired-stock {
-    background: rgba($red5, 0.1);
 }
 
 .left-container {

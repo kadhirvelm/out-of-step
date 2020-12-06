@@ -1,45 +1,50 @@
 import { Icon } from "@blueprintjs/core";
-import { IAccount, IGetAccountResponse } from "@stochastic-exchange/api";
+import { IGetAccountResponse } from "@stochastic-exchange/api";
 import classNames from "classnames";
 import * as React from "react";
+import { connect } from "react-redux";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
+import { bindActionCreators, Dispatch } from "redux";
 import { AccountServiceFrontend } from "../../../api/dist";
+import { SetUserAccountAndOwnedStocks } from "../store/account/actions";
 import { executePrivateEndpoint } from "../utils/executePrivateEndpoint";
 import styles from "./mainPage.module.scss";
 import { CurrentStandings } from "./standings/currentStandings";
 import { StockManager } from "./stocks/stockManager";
 import { UserManager } from "./userManager/userManager";
 
-const getUser = async (setUserAccount: (userAccount: IGetAccountResponse | undefined) => void) => {
-    setUserAccount(await executePrivateEndpoint(AccountServiceFrontend.getAccount, undefined));
+interface IDispatchProps {
+    setUserAccountAndOwnedStocks: (userAccountAndOwnedStocks: IGetAccountResponse) => void;
+}
+
+const getUser = async (setUserAccountAndOwnedStocks: (userAccount: IGetAccountResponse) => void) => {
+    const response = await executePrivateEndpoint(AccountServiceFrontend.getAccount, undefined);
+    if (response === undefined) {
+        return;
+    }
+
+    setUserAccountAndOwnedStocks(response);
 };
 
-export const MainPage: React.FC = () => {
+const UnconnectedMainPage: React.FC<IDispatchProps> = ({ setUserAccountAndOwnedStocks }) => {
     const history = useHistory();
     const location = useLocation();
 
-    const [userAccount, setUserAccount] = React.useState<IGetAccountResponse | undefined>(undefined);
-
     React.useEffect(() => {
-        getUser(setUserAccount);
+        getUser(setUserAccountAndOwnedStocks);
     }, []);
 
     const onUserClick = () => history.push("/user");
     const onPortfolioClick = () => history.push("/portfolio");
     const onScoreClick = () => history.push("/score");
 
-    const updateUserAccount = (updatedUserAccount: Partial<IAccount>) => setUserAccount({ ...userAccount, account: { ...userAccount?.account, ...updatedUserAccount } } as IGetAccountResponse)
-
     return (
         <div className={styles.overallContainer}>
             <div className={styles.mainContentContainer}>
                 <Switch>
-                    <Route
-                        path="/user"
-                        component={() => <UserManager userAccount={userAccount?.account} setUserAccount={updateUserAccount} />}
-                    />
+                    <Route path="/user" component={UserManager} />
                     <Route path="/portfolio" component={StockManager} />
-                    <Route path="/score" component={() => <CurrentStandings userAccountId={userAccount?.account.id} />} />
+                    <Route path="/score" component={CurrentStandings} />
                     <Redirect to="/portfolio" />
                 </Switch>
             </div>
@@ -75,3 +80,9 @@ export const MainPage: React.FC = () => {
         </div>
     );
 };
+
+function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
+    return bindActionCreators({ setUserAccountAndOwnedStocks: SetUserAccountAndOwnedStocks }, dispatch);
+}
+
+export const MainPage = connect(undefined, mapDispatchToProps)(UnconnectedMainPage);

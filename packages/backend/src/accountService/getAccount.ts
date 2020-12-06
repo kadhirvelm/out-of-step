@@ -26,5 +26,5 @@ export async function getAccount(
         response.status(400).send({ error: `No user was found with the ID ${accountId}` });
     }
 
-    return { account: _.omit(user, "hashedPassword"), ownedStock: ownedStock.rows };
+    return { account: _.omit(user, "hashedPassword"), ownedStocks: ownedStock.rows };
 }

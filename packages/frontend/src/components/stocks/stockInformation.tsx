@@ -1,8 +1,7 @@
 import { Button, Spinner } from "@blueprintjs/core";
 import { capitalize } from "lodash-es";
 import * as React from "react";
-import { StocksFrontendService, TransactionFrontendService } from "../../../../api/dist";
-import { IStockWithDollarValue } from "../../common/types";
+import { StocksFrontendService, TransactionFrontendService, IStockWithDollarValue } from "@stochastic-exchange/api";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { executePrivateEndpoint } from "../../utils/executePrivateEndpoint";
 import styles from "./stockInformation.module.scss";
