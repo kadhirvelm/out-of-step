@@ -2,41 +2,18 @@ import { Icon, Spinner } from "@blueprintjs/core";
 import classNames from "classnames";
 import { keyBy, pick } from "lodash-es";
 import * as React from "react";
-import { StocksFrontendService } from "../../../../api/dist";
-import { IStockWithDollarValue } from "../../common/types";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { formatNumber } from "../../utils/formatNumber";
 import { StockInformation } from "./stockInformation";
 import styles from "./stockManager.module.scss";
-
-const getStocksWithPrice = (): IStockWithDollarValue[] => {
-    const stocksAndPrices = callOnPrivateEndpoint(StocksFrontendService.getAllStocks, undefined);
-    if (stocksAndPrices === undefined) {
-        return [];
-    }
-
-    const keyedStocks = keyBy(stocksAndPrices.stocks, "id");
-    const keyedPrices = keyBy(stocksAndPrices.priceHistory, "stock");
-
-    const indexedStocks = Object.keys(keyedStocks).map(stockId => {
-        const priceForStock = keyedPrices[stockId];
-
-        return {
-            ...keyedStocks[stockId],
-            ...pick(priceForStock ?? {}, "timestamp", "dollarValue"),
-            priceHistoryId: priceForStock.id,
-        };
-    });
-
-    return indexedStocks.sort((a, b) => a.name.localeCompare(b.name));
-};
+import { IStockWithDollarValue, StocksFrontendService } from "@stochastic-exchange/api";
 
 export const StockManager: React.FC = () => {
     const [viewSingleStockInformation, setViewingSingleStockInformation] = React.useState<
         IStockWithDollarValue | undefined
     >(undefined);
 
-    const allStocksWithPrice = getStocksWithPrice();
+    const allStocksWithPrice = callOnPrivateEndpoint(StocksFrontendService.getAllStocks, undefined);
 
     if (allStocksWithPrice === undefined) {
         return (
@@ -62,7 +39,7 @@ export const StockManager: React.FC = () => {
 
     return (
         <div className={styles.stocksContainer}>
-            {allStocksWithPrice.map(stock => (
+            {allStocksWithPrice.stocks.map(stock => (
                 <div
                     className={classNames(styles.singleStockContainer, {
                         [styles.acquiredStock]: stock.status === "ACQUIRED",

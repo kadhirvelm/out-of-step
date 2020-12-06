@@ -1,5 +1,10 @@
 import { implementEndpoints, IService } from "../common/generics";
-import { IAccount, IAccountId } from "../types/dataTypes";
+import { IAccount, IAccountId, IOwnedStock } from "../types/dataTypes";
+
+export interface IGetAccountResponse {
+    account: Omit<IAccount, "hashedPassword">;
+    ownedStocks: IOwnedStock[];
+}
 
 export interface IAccountService extends IService {
     createAccount: {
@@ -12,7 +17,7 @@ export interface IAccountService extends IService {
     };
     getAccount: {
         payload: undefined;
-        response: Omit<IAccount, "hashedPassword">;
+        response: IGetAccountResponse;
     };
     getCurrentStandings: {
         payload: undefined;
