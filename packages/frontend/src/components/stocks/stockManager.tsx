@@ -20,9 +20,9 @@ const UnconnectedStockManager: React.FC<IStoreProps> = ({ userAccount, userOwned
         IStockWithDollarValue | undefined
     >(undefined);
 
-    const [usersTotalAssertWorth, setUsersTotalAssertWorth] = React.useState<number | undefined>(undefined);
     const [sortedStocks, setSortedStocks] = React.useState<
         | {
+              totalAssetWorth: number;
               inUserPortfolio: IStockWithDollarValue[];
               notInUserPortfolio: IStockWithDollarValue[];
               keyedUserOwnedStocks: { [stockId: string]: IOwnedStock };
@@ -38,18 +38,19 @@ const UnconnectedStockManager: React.FC<IStoreProps> = ({ userAccount, userOwned
         }
 
         const keyedStocks = keyBy(allStocksWithPrice.stocks, "id");
-        setUsersTotalAssertWorth(
-            userOwnedStocks.reduce(
-                (previous, next) => previous + next.quantity * (keyedStocks[next.stock].dollarValue ?? 0),
-                0,
-            ),
-        );
-
         const keyedUserOwnedStocks = keyBy(userOwnedStocks, "stock");
         const inUserPortfolio = allStocksWithPrice.stocks.filter(s => keyedUserOwnedStocks[s.id] !== undefined);
         const notInUserPortfolio = allStocksWithPrice.stocks.filter(s => keyedUserOwnedStocks[s.id] === undefined);
 
-        setSortedStocks({ inUserPortfolio, notInUserPortfolio, keyedUserOwnedStocks });
+        setSortedStocks({
+            totalAssetWorth: userOwnedStocks.reduce(
+                (previous, next) => previous + next.quantity * (keyedStocks[next.stock].dollarValue ?? 0),
+                0,
+            ),
+            inUserPortfolio,
+            notInUserPortfolio,
+            keyedUserOwnedStocks,
+        });
     }, [allStocksWithPrice, userOwnedStocks]);
 
     if (allStocksWithPrice === undefined || userAccount === undefined) {
@@ -76,14 +77,10 @@ const UnconnectedStockManager: React.FC<IStoreProps> = ({ userAccount, userOwned
 
     const renderSingleStock = (stock: IStockWithDollarValue, ownedStock?: IOwnedStock) => {
         const stockNameLabel =
-            ownedStock === undefined
-                ? `Mkt cap: ${formatNumber((stock.dollarValue ?? 0) * stock.totalQuantity)}`
-                : `Shares: ${ownedStock.quantity}`;
+            ownedStock === undefined ? `Price: $${stock.dollarValue.toFixed(2)}` : `Shares: ${ownedStock.quantity}`;
 
-        const mainStockNumber =
-            ownedStock === undefined
-                ? stock.dollarValue.toFixed(2)
-                : formatNumber(ownedStock.quantity * stock.dollarValue);
+        const maybeTotalAssertWorth =
+            ownedStock !== undefined && `$${formatNumber(ownedStock.quantity * stock.dollarValue)}`;
 
         return (
             <div
@@ -96,7 +93,7 @@ const UnconnectedStockManager: React.FC<IStoreProps> = ({ userAccount, userOwned
                     <span className={styles.stockMarketCap}>{stockNameLabel}</span>
                 </div>
                 <div className={styles.rightContainer}>
-                    <span className={styles.currentPrice}>${mainStockNumber}</span>
+                    <span className={styles.currentPrice}>{maybeTotalAssertWorth}</span>
                     <Icon className={styles.chevronRightIndicator} icon="chevron-right" />
                 </div>
             </div>
@@ -109,10 +106,10 @@ const UnconnectedStockManager: React.FC<IStoreProps> = ({ userAccount, userOwned
                 <span className={styles.greeting}>{userAccount.name}</span>
                 <div className={styles.assetInformation}>
                     <span className={styles.totalWorth}>
-                        ${((usersTotalAssertWorth ?? 0) + userAccount.cashOnHand).toLocaleString()}
+                        ${((sortedStocks?.totalAssetWorth ?? 0) + userAccount.cashOnHand).toLocaleString()}
                     </span>
                     <div className={styles.breakdownContainer}>
-                        <span>Assets: ${usersTotalAssertWorth?.toLocaleString()}</span>
+                        <span>Assets: ${sortedStocks?.totalAssetWorth?.toLocaleString()}</span>
                         <span>Cash: ${userAccount.cashOnHand.toLocaleString()}</span>
                     </div>
                 </div>
