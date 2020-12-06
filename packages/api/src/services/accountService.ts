@@ -1,5 +1,5 @@
 import { implementEndpoints, IService } from "../common/generics";
-import { IAccount } from "../types/dataTypes";
+import { IAccount, IAccountId } from "../types/dataTypes";
 
 export interface IAccountService extends IService {
     createAccount: {
@@ -13,6 +13,10 @@ export interface IAccountService extends IService {
     getAccount: {
         payload: undefined;
         response: Omit<IAccount, "hashedPassword">;
+    };
+    getCurrentStandings: {
+        payload: undefined;
+        response: Array<{ accountId: IAccountId; portfolioName: string; netWorth: number }>;
     };
     loginToAccount: {
         payload: { hashedPassword: string; username: string };
@@ -38,6 +42,10 @@ const { backend, frontend } = implementEndpoints<IAccountService>({
     getAccount: {
         method: "get",
         slug: "/account/get",
+    },
+    getCurrentStandings: {
+        method: "get",
+        slug: "/account/standings",
     },
     loginToAccount: {
         method: "post",
