@@ -68,20 +68,20 @@ interface IBaseTransaction {
 
 export interface IExchangeTransaction extends IBaseTransaction {
     limitOrder?: ILimitOrderId;
-    price: IPriceHistoryId;
+    priceHistory: IPriceHistoryId;
     purchasedQuantity: number;
     soldQuantity: number;
     type: "exchange-transaction";
 }
 
 export interface IDividendTransaction extends IBaseTransaction {
-    dividend: IDividendHistoryId;
+    dividendHistory: IDividendHistoryId;
     quantity: number;
     type: "dividend-transaction";
 }
 
 export interface IAcquisitionTransaction extends IBaseTransaction {
     acquiredQuantity: number;
-    price: IPriceHistoryId;
+    priceHistory: IPriceHistoryId;
     type: "acquisition-transaction";
 }
