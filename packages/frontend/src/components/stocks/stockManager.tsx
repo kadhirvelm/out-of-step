@@ -24,6 +24,7 @@ const getStocksWithPrice = (): IStockWithDollarValue[] => {
         return {
             ...keyedStocks[stockId],
             ...pick(priceForStock ?? {}, "timestamp", "dollarValue"),
+            priceHistoryId: priceForStock.id,
         };
     });
 
