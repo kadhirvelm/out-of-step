@@ -1,21 +1,22 @@
 import { Button, InputGroup } from "@blueprintjs/core";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { bindActionCreators, Dispatch } from "redux";
 import { AccountServiceFrontend, IAccount } from "../../../../api/dist";
-import { SetToken } from "../../store/account/actions";
+import { SetToken, UpdatedUserAccount } from "../../store/account/actions";
+import { IStoreState } from "../../store/state";
 import { checkIfIsError } from "../../utils/checkIfIsError";
 import { showToast } from "../../utils/toaster";
 import { getTokenInCookie } from "../../utils/tokenInCookies";
 import styles from "./userManager.module.scss";
 
-interface IDispatchProps {
-    setTokenToUndefined: () => void;
+interface IStoreProps {
+    userAccount: Omit<IAccount, "hashedPassword"> | undefined;
 }
 
-interface IOwnProps {
-    userAccount: Partial<IAccount> | undefined;
-    setUserAccount: (updatedUserAccount: Partial<IAccount>) => void;
+interface IDispatchProps {
+    setTokenToUndefined: () => void;
+    updateUserAccount: (updatedUserAccount: Partial<IAccount>) => void;
 }
 
 const UserAccountDetails: React.FC<{
@@ -91,25 +92,32 @@ const UserAccountDetails: React.FC<{
     );
 };
 
-const UnconnectedUserManager: React.FC<IDispatchProps & IOwnProps> = ({
+const UnconnectedUserManager: React.FC<IDispatchProps & IStoreProps> = ({
     userAccount,
-    setUserAccount,
+    updateUserAccount,
     setTokenToUndefined,
 }) => {
     return (
         <div className={styles.mainContainer}>
             {userAccount !== undefined && (
-                <UserAccountDetails userAccount={userAccount} setUpdatedUserAccount={setUserAccount} />
+                <UserAccountDetails userAccount={userAccount} setUpdatedUserAccount={updateUserAccount} />
             )}
             <Button className={styles.logoutButton} icon="log-out" text="Log out" onClick={setTokenToUndefined} />
         </div>
     );
 };
 
+function mapStateToProps(state: IStoreState): IStoreProps {
+    return {
+        userAccount: state.account.userAccount,
+    };
+}
+
 function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
     return {
+        ...bindActionCreators({ updateUserAccount: UpdatedUserAccount }, dispatch),
         setTokenToUndefined: () => dispatch(SetToken({ token: undefined })),
     };
 }
 
-export const UserManager = connect(undefined, mapDispatchToProps)(UnconnectedUserManager);
+export const UserManager = connect(mapStateToProps, mapDispatchToProps)(UnconnectedUserManager);

@@ -1,4 +1,5 @@
 import { IPriceHistory, IStock, IStocksService } from "@stochastic-exchange/api";
+import _ from "lodash";
 import { postgresPool } from "../utils/getPostgresPool";
 
 type IGetAllStocks = IStocksService["getAllStocks"];
@@ -12,5 +13,18 @@ export async function getAllStocks(): Promise<IGetAllStocks["response"] | undefi
         ),
     ]);
 
-    return { priceHistory: latestPrices.rows, stocks: allStocks.rows };
+    const keyedStocks = _.keyBy(allStocks.rows, "id");
+    const keyedPrices = _.keyBy(latestPrices.rows, "stock");
+
+    const indexedStocks = Object.keys(keyedStocks).map(stockId => {
+        const priceForStock = keyedPrices[stockId];
+
+        return {
+            ...keyedStocks[stockId],
+            ..._.pick(priceForStock ?? {}, "timestamp", "dollarValue"),
+            priceHistoryId: priceForStock.id,
+        };
+    });
+
+    return { stocks: indexedStocks.sort((a, b) => a.name.localeCompare(b.name)) };
 }

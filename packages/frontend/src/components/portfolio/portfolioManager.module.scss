@@ -1,0 +1,106 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.spinner-container {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.overall-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.user-information-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.greeting {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.asset-information {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.total-worth {
+    font-size: 22px;
+    font-weight: 550;
+    margin-bottom: 5px
+}
+
+.breakdown-container {
+    display: flex;
+    font-size: 14px;
+    color: $pt-text-color-muted;
+
+    > :not(:first-child) {
+        margin-left: 10px;
+    }
+}
+
+.type-of-stock-label {
+    padding: 10px 0 5px 10px;
+    font-weight: 500;
+    color: $pt-text-color-muted;
+}
+
+.other-stocks {
+    margin-top: 10px;
+}
+
+.stocks-container {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -1px $pt-divider-black;
+
+    > :nth-child(2).single-stock-container {
+        background: $light-gray3;
+    }
+}
+
+.single-stock-container {
+    display: flex;
+    height: 65px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.left-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.stock-title {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.stock-market-cap {
+    font-size: 12px;
+    color: $pt-text-color-muted;
+}
+
+.right-container {
+    display: flex;
+    align-items: center;
+}
+
+.current-price {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.chevron-right-indicator {
+    color: $pt-text-color-muted;
+    margin-left: 10px;
+}

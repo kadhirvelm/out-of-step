@@ -1,14 +1,16 @@
 import { implementEndpoints, IService } from "../common/generics";
-import { IPriceHistory, IStock, IStockId } from "../types/dataTypes";
+import { IPriceHistory, IPriceHistoryId, IStock, IStockId } from "../types/dataTypes";
 
 export type ITimeBucket = "day" | "week" | "4 weeks" | "all";
+
+export type IStockWithDollarValue = IStock &
+    Pick<IPriceHistory, "dollarValue" | "timestamp"> & { priceHistoryId: IPriceHistoryId };
 
 export interface IStocksService extends IService {
     getAllStocks: {
         payload: undefined;
         response: {
-            priceHistory: IPriceHistory[];
-            stocks: IStock[];
+            stocks: IStockWithDollarValue[];
         };
     };
     getSingleStockInformation: {
