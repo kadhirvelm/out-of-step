@@ -1,14 +1,15 @@
+import { Button, InputGroup } from "@blueprintjs/core";
 import * as React from "react";
 import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
-import { Button, InputGroup } from "@blueprintjs/core";
 import { useHistory } from "react-router-dom";
+import { bindActionCreators, Dispatch } from "redux";
 import { AccountServiceFrontend } from "../../../api/dist";
+import { Routes } from "../common/routes";
 import { SetToken } from "../store/account/actions";
+import { checkIfIsError } from "../utils/checkIfIsError";
+import { hashPassword } from "../utils/hashPassword";
 import { setTokenInCookie } from "../utils/tokenInCookies";
 import styles from "./loginPage.module.scss";
-import { hashPassword } from "../utils/hashPassword";
-import { checkIfIsError } from "../utils/checkIfIsError";
 
 interface IDispatchProps {
     setToken: (payload: { token: string }) => void;
@@ -32,7 +33,7 @@ const ResetPassword: React.FC<{
             email,
         });
 
-        history.push("/user");
+        history.push(Routes.USER);
         completeLogin(checkIfIsError(tokenOrError));
     };
 

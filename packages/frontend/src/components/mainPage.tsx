@@ -10,8 +10,11 @@ import { SetUserAccountAndOwnedStocks } from "../store/account/actions";
 import { executePrivateEndpoint } from "../utils/executePrivateEndpoint";
 import styles from "./mainPage.module.scss";
 import { CurrentStandings } from "./standings/currentStandings";
-import { StockManager } from "./stocks/stockManager";
+import { PortfolioManager } from "./portfolio/portfolioManager";
+import { StockInformation } from "./stocks/stockInformation";
 import { UserManager } from "./userManager/userManager";
+import { ViewTransactions } from "./transactions/viewTransaction";
+import { Routes } from "../common/routes";
 
 interface IDispatchProps {
     setUserAccountAndOwnedStocks: (userAccountAndOwnedStocks: IGetAccountResponse) => void;
@@ -34,18 +37,20 @@ const UnconnectedMainPage: React.FC<IDispatchProps> = ({ setUserAccountAndOwnedS
         getUser(setUserAccountAndOwnedStocks);
     }, []);
 
-    const onUserClick = () => history.push("/user");
-    const onPortfolioClick = () => history.push("/portfolio");
-    const onScoreClick = () => history.push("/score");
+    const onUserClick = () => history.push(Routes.USER);
+    const onPortfolioClick = () => history.push(Routes.PORTFOLIO);
+    const onScoreClick = () => history.push(Routes.SCORE);
 
     return (
         <div className={styles.overallContainer}>
             <div className={styles.mainContentContainer}>
                 <Switch>
-                    <Route path="/user" component={UserManager} />
-                    <Route path="/portfolio" component={StockManager} />
-                    <Route path="/score" component={CurrentStandings} />
-                    <Redirect to="/portfolio" />
+                    <Route path={Routes.USER} component={UserManager} />
+                    <Route path={Routes.PORTFOLIO} component={PortfolioManager} />
+                    <Route path={Routes.STOCK} component={StockInformation} />
+                    <Route path={Routes.TRANSACTIONS} component={ViewTransactions} />
+                    <Route path={Routes.SCORE} component={CurrentStandings} />
+                    <Redirect to={Routes.PORTFOLIO} />
                 </Switch>
             </div>
             <div className={styles.footerContainer}>

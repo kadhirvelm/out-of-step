@@ -1,7 +1,7 @@
-import { IAccount, IOwnedStock } from "@stochastic-exchange/api";
+import { IAccount, IOwnedStock, IOwnedStockId } from "@stochastic-exchange/api";
 import { setWith, TypedReducer } from "redoodle";
 import { getTokenInCookie, setTokenInCookie } from "../../utils/tokenInCookies";
-import { SetToken, SetUserAccountAndOwnedStocks, UpdatedUserAccount } from "./actions";
+import { SetToken, SetUserAccountAndOwnedStocks, UpdatedUserAccount, UpdateUserAccountOnTransaction } from "./actions";
 
 export interface IAccountState {
     token: string | undefined;
@@ -32,5 +32,35 @@ export const accountReducer = TypedReducer.builder<IAccountState>()
         }
 
         return setWith(state, { userAccount: { ...state.userAccount, ...account } });
+    })
+    .withHandler(UpdateUserAccountOnTransaction.TYPE, (state, { stockId, purchaseQuantity, soldQuantity, price }) => {
+        if (state.userAccount === undefined) {
+            return state;
+        }
+
+        const cashOnHand = (state.userAccount?.cashOnHand ?? 0) - purchaseQuantity * price + soldQuantity * price;
+        const existingOwnedStock = state.ownedStocks?.find(s => s.stock === stockId);
+
+        if (existingOwnedStock === undefined) {
+            return setWith(state, {
+                userAccount: { ...state.userAccount, cashOnHand },
+                ownedStocks: (state.ownedStocks ?? []).concat({
+                    id: `temporary-owned-stock-id-${stockId}` as IOwnedStockId,
+                    account: state.userAccount.id,
+                    quantity: purchaseQuantity,
+                    stock: stockId,
+                }),
+            });
+        }
+
+        const newOwnedStock = (state.ownedStocks?.filter(s => s.stock !== stockId) ?? []).concat({
+            ...existingOwnedStock,
+            quantity: existingOwnedStock.quantity + purchaseQuantity - soldQuantity,
+        });
+
+        return setWith(state, {
+            userAccount: { ...state.userAccount, cashOnHand },
+            ownedStocks: newOwnedStock,
+        });
     })
     .build();

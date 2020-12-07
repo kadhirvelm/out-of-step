@@ -4,21 +4,30 @@ import classNames from "classnames";
 import { keyBy } from "lodash-es";
 import * as React from "react";
 import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { bindActionCreators, Dispatch } from "redux";
+import { Routes } from "../../common/routes";
+import { SetViewStockWithLatestPrice } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { formatNumber } from "../../utils/formatNumber";
-import { StockInformation } from "./stockInformation";
-import styles from "./stockManager.module.scss";
+import styles from "./portfolioManager.module.scss";
 
 interface IStoreProps {
     userAccount: Omit<IAccount, "hashedPassword"> | undefined;
     userOwnedStocks: IOwnedStock[] | undefined;
 }
 
-const UnconnectedStockManager: React.FC<IStoreProps> = ({ userAccount, userOwnedStocks }) => {
-    const [viewSingleStockInformation, setViewingSingleStockInformation] = React.useState<
-        IStockWithDollarValue | undefined
-    >(undefined);
+interface IDispatchProps {
+    setViewStockWithLatestPrice: (stockWithLatestPrice: IStockWithDollarValue) => void;
+}
+
+const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
+    setViewStockWithLatestPrice,
+    userAccount,
+    userOwnedStocks,
+}) => {
+    const history = useHistory();
 
     const [sortedStocks, setSortedStocks] = React.useState<
         | {
@@ -61,19 +70,10 @@ const UnconnectedStockManager: React.FC<IStoreProps> = ({ userAccount, userOwned
         );
     }
 
-    const goBackToViewingAllStock = () => setViewingSingleStockInformation(undefined);
-
-    if (viewSingleStockInformation !== undefined) {
-        return (
-            <StockInformation
-                goBackToViewingAllStock={goBackToViewingAllStock}
-                stockWithLatestPrice={viewSingleStockInformation}
-            />
-        );
-    }
-
-    const curriedSetViewSingleStockInformation = (stockInformation: IStockWithDollarValue) => () =>
-        setViewingSingleStockInformation(stockInformation);
+    const curriedSetViewSingleStockInformation = (stockInformation: IStockWithDollarValue) => () => {
+        setViewStockWithLatestPrice(stockInformation);
+        history.push(Routes.STOCK);
+    };
 
     const renderSingleStock = (stock: IStockWithDollarValue, ownedStock?: IOwnedStock) => {
         const stockNameLabel =
@@ -133,4 +133,13 @@ function mapStateToProps(state: IStoreState): IStoreProps {
     };
 }
 
-export const StockManager = connect(mapStateToProps)(UnconnectedStockManager);
+function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
+    return bindActionCreators(
+        {
+            setViewStockWithLatestPrice: SetViewStockWithLatestPrice,
+        },
+        dispatch,
+    );
+}
+
+export const PortfolioManager = connect(mapStateToProps, mapDispatchToProps)(UnconnectedPortfolioManager);

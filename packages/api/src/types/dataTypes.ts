@@ -1,8 +1,8 @@
 type Id<T extends string> = string & { __id: T };
 
 export type IStockId = Id<"stock">;
-export type IPriceHistoryId = Id<"price-point">;
-export type IDividendHistoryId = Id<"dividend-payout">;
+export type IPriceHistoryId = Id<"price-history">;
+export type IDividendHistoryId = Id<"dividend-history">;
 export type IOwnedStockId = Id<"owned-stock">;
 export type IAccountId = Id<"account">;
 export type ITransactionHistoryId = Id<"transaction-history">;
@@ -85,3 +85,5 @@ export interface IAcquisitionTransaction extends IBaseTransaction {
     priceHistory: IPriceHistoryId;
     type: "acquisition-transaction";
 }
+
+export type ITransactionHistory = IExchangeTransaction | IDividendTransaction | IAcquisitionTransaction;

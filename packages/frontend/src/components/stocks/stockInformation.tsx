@@ -1,51 +1,95 @@
 import { Button, Spinner } from "@blueprintjs/core";
-import { capitalize } from "lodash-es";
-import * as React from "react";
 import {
+    IOwnedStock,
+    IStockWithDollarValue,
     StocksFrontendService,
     TransactionFrontendService,
-    IStockWithDollarValue,
-    IOwnedStock,
 } from "@stochastic-exchange/api";
+import * as React from "react";
 import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { bindActionCreators, Dispatch } from "redux";
+import { Routes } from "../../common/routes";
+import { selectUserOwnedStock } from "../../selectors/selectUserOwnedStock";
+import { IUpdateUserAccountOnTransaction, UpdateUserAccountOnTransaction } from "../../store/account/actions";
+import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../store/interface/actions";
+import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { executePrivateEndpoint } from "../../utils/executePrivateEndpoint";
-import styles from "./stockInformation.module.scss";
-import { IStoreState } from "../../store/state";
-import { selectUserOwnedStock } from "../../selectors/selectUserOwnedStock";
 import { formatNumber } from "../../utils/formatNumber";
+import { showToast } from "../../utils/toaster";
+import styles from "./stockInformation.module.scss";
 
 interface IStoreProps {
     cashOnHand: number | undefined;
     userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
+    viewStockWithLatestPrice: IStockWithDollarValue | undefined;
 }
 
-interface IOwnProps {
-    goBackToViewingAllStock: () => void;
-    stockWithLatestPrice: IStockWithDollarValue;
+interface IDispatchProps {
+    removeViewStockWithLatestPrice: () => void;
+    setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
+    updateUserAccountOnTransaction: (transaction: IUpdateUserAccountOnTransaction) => void;
 }
 
 const TransactStock: React.FC<{
     cashOnHand: number | undefined;
-    stockWithLatestPrice: IStockWithDollarValue;
+    viewStockWithLatestPrice: IStockWithDollarValue;
+    setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
     userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
-}> = ({ cashOnHand, stockWithLatestPrice, userOwnedStockOfStockWithLatestPrice }) => {
-    const onBuy = () => {
-        executePrivateEndpoint(TransactionFrontendService.createExchangeTransaction, {
-            price: stockWithLatestPrice.priceHistoryId,
+    updateUserAccountOnTransaction: (transaction: IUpdateUserAccountOnTransaction) => void;
+}> = ({
+    cashOnHand,
+    viewStockWithLatestPrice,
+    setViewTransactionsForStock,
+    userOwnedStockOfStockWithLatestPrice,
+    updateUserAccountOnTransaction,
+}) => {
+    const history = useHistory();
+
+    const onBuy = async () => {
+        const response = await executePrivateEndpoint(TransactionFrontendService.createExchangeTransaction, {
+            price: viewStockWithLatestPrice.priceHistoryId,
             purchasedQuantity: 100,
             soldQuantity: 0,
-            stock: stockWithLatestPrice.id,
+            stock: viewStockWithLatestPrice.id,
         });
+        if (response === undefined) {
+            return;
+        }
+
+        updateUserAccountOnTransaction({
+            stockId: viewStockWithLatestPrice.id,
+            purchaseQuantity: 100,
+            soldQuantity: 0,
+            price: viewStockWithLatestPrice.dollarValue,
+        });
+        showToast({ intent: "success", message: "Successfully purchased 100 shares." });
     };
 
-    const onSell = () => {
-        executePrivateEndpoint(TransactionFrontendService.createExchangeTransaction, {
-            price: stockWithLatestPrice.priceHistoryId,
+    const onSell = async () => {
+        const response = await executePrivateEndpoint(TransactionFrontendService.createExchangeTransaction, {
+            price: viewStockWithLatestPrice.priceHistoryId,
             purchasedQuantity: 0,
             soldQuantity: 100,
-            stock: stockWithLatestPrice.id,
+            stock: viewStockWithLatestPrice.id,
         });
+        if (response === undefined) {
+            return;
+        }
+
+        updateUserAccountOnTransaction({
+            stockId: viewStockWithLatestPrice.id,
+            purchaseQuantity: 0,
+            soldQuantity: 100,
+            price: viewStockWithLatestPrice.dollarValue,
+        });
+        showToast({ intent: "primary", message: "Successfully sold 100 shares." });
+    };
+
+    const viewTransactionHistory = () => {
+        setViewTransactionsForStock(viewStockWithLatestPrice);
+        history.push(Routes.TRANSACTIONS);
     };
 
     return (
@@ -62,7 +106,7 @@ const TransactStock: React.FC<{
                             <div className={styles.transactButtonContainer}>
                                 <Button
                                     className={styles.transactButton}
-                                    disabled={(cashOnHand ?? 0) < stockWithLatestPrice.dollarValue}
+                                    disabled={(cashOnHand ?? 0) < viewStockWithLatestPrice.dollarValue}
                                     intent="success"
                                     text="Buy"
                                     onClick={onBuy}
@@ -92,8 +136,8 @@ const TransactStock: React.FC<{
                 </div>
                 <Button
                     className={styles.viewTransactionHistory}
-                    disabled
                     minimal
+                    onClick={viewTransactionHistory}
                     text="View your transaction history"
                 />
             </div>
@@ -101,21 +145,34 @@ const TransactStock: React.FC<{
     );
 };
 
-const UnconnectedStockInformation: React.FC<IStoreProps & IOwnProps> = ({
+const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
     cashOnHand,
-    goBackToViewingAllStock,
-    stockWithLatestPrice,
+    removeViewStockWithLatestPrice,
+    viewStockWithLatestPrice,
+    setViewTransactionsForStock,
     userOwnedStockOfStockWithLatestPrice,
+    updateUserAccountOnTransaction,
 }) => {
+    const history = useHistory();
+    if (viewStockWithLatestPrice === undefined) {
+        history.push(Routes.PORTFOLIO);
+        return null;
+    }
+
     const stockInformation = callOnPrivateEndpoint(StocksFrontendService.getSingleStockInformation, {
-        stock: stockWithLatestPrice.id,
+        stock: viewStockWithLatestPrice.id,
         bucket: "week",
     });
+
+    const goBackToPortfolioManager = () => {
+        removeViewStockWithLatestPrice();
+        history.push(Routes.PORTFOLIO);
+    };
 
     const renderBackButton = () => {
         return (
             <div className={styles.backArrowContainer}>
-                <Button icon="arrow-left" minimal onClick={goBackToViewingAllStock} />
+                <Button icon="arrow-left" minimal onClick={goBackToPortfolioManager} />
             </div>
         );
     };
@@ -132,15 +189,17 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IOwnProps> = ({
     }
 
     const maybeRenderTransactStock = () => {
-        if (stockWithLatestPrice.status === "ACQUIRED") {
+        if (viewStockWithLatestPrice.status === "ACQUIRED") {
             return null;
         }
 
         return (
             <TransactStock
                 cashOnHand={cashOnHand}
-                stockWithLatestPrice={stockWithLatestPrice}
+                viewStockWithLatestPrice={viewStockWithLatestPrice}
+                setViewTransactionsForStock={setViewTransactionsForStock}
                 userOwnedStockOfStockWithLatestPrice={userOwnedStockOfStockWithLatestPrice}
+                updateUserAccountOnTransaction={updateUserAccountOnTransaction}
             />
         );
     };
@@ -151,8 +210,8 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IOwnProps> = ({
         <div className={styles.stockInformationContainer}>
             {renderBackButton()}
             <div className={styles.stockDetailsContainer}>
-                <span className={styles.stockName}>{stockWithLatestPrice.name}</span>
-                <span className={styles.stockLatestPrice}>${stockWithLatestPrice.dollarValue.toFixed(2)}</span>
+                <span className={styles.stockName}>{viewStockWithLatestPrice.name}</span>
+                <span className={styles.stockLatestPrice}>${viewStockWithLatestPrice.dollarValue.toFixed(2)}</span>
             </div>
             <div className={styles.pricePointsContainer}>
                 {stockInformation.priceHistory.map(price => (
@@ -167,17 +226,20 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IOwnProps> = ({
                     <div className={styles.rowContainer}>
                         <span className={styles.label}>Market cap:</span>
                         <span>
-                            ${formatNumber(stockWithLatestPrice.dollarValue * stockWithLatestPrice.totalQuantity)}
+                            $
+                            {formatNumber(
+                                viewStockWithLatestPrice.dollarValue * viewStockWithLatestPrice.totalQuantity,
+                            )}
                         </span>
                     </div>
                     <div className={styles.rowContainer}>
                         <span className={styles.label}>Total shares:</span>
-                        <span>{formatNumber(stockWithLatestPrice.totalQuantity)}</span>
+                        <span>{formatNumber(viewStockWithLatestPrice.totalQuantity)}</span>
                     </div>
                     <div className={styles.rowContainer}>
                         <span className={styles.label}>Available shares:</span>
                         <span>
-                            {formatNumber(stockWithLatestPrice.totalQuantity - stockInformation.ownedStockQuantity)}
+                            {formatNumber(viewStockWithLatestPrice.totalQuantity - stockInformation.ownedStockQuantity)}
                         </span>
                     </div>
                 </div>
@@ -198,11 +260,27 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IOwnProps> = ({
     );
 };
 
-function mapStateToProps(store: IStoreState, ownProps: IOwnProps): IStoreProps {
+function mapStateToProps(store: IStoreState): IStoreProps {
     return {
         cashOnHand: store.account.userAccount?.cashOnHand,
-        userOwnedStockOfStockWithLatestPrice: selectUserOwnedStock(ownProps.stockWithLatestPrice)(store),
+        userOwnedStockOfStockWithLatestPrice: selectUserOwnedStock(store.interface.viewStockWithLatestPrice)(store),
+        viewStockWithLatestPrice: store.interface.viewStockWithLatestPrice,
     };
 }
 
-export const StockInformation = connect(mapStateToProps)(UnconnectedStockInformation);
+function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
+    const boundActions = bindActionCreators(
+        {
+            setViewTransactionsForStock: SetViewTransactionsForStock,
+            updateUserAccountOnTransaction: UpdateUserAccountOnTransaction,
+        },
+        dispatch,
+    );
+
+    return {
+        ...boundActions,
+        removeViewStockWithLatestPrice: () => dispatch(SetViewStockWithLatestPrice(undefined)),
+    };
+}
+
+export const StockInformation = connect(mapStateToProps, mapDispatchToProps)(UnconnectedStockInformation);

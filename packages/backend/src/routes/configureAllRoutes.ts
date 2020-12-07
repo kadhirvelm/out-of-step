@@ -10,6 +10,7 @@ import { checkIfValidWebToken } from "../utils/handleWebToken";
 import { getSingleStockInformation } from "../stockService/getSingleStockInformation";
 import { getCurrentStandings } from "../accountService/getCurrentStandings";
 import { createExchangeTransaction } from "../transactionService/createExchangeTransaction";
+import { viewTransactionsForStock } from "../transactionService/viewTransactionsForStock";
 
 export function configureAllRoutes(app: Express.Express) {
     app.get("/", (_, response) => {
@@ -32,5 +33,6 @@ export function configureAllRoutes(app: Express.Express) {
 
     TransactionBackendService(app, checkIfValidWebToken, {
         createExchangeTransaction,
+        viewTransactionsForStock,
     });
 }
