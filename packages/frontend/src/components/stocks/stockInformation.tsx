@@ -1,24 +1,17 @@
 import { Button, Spinner } from "@blueprintjs/core";
-import {
-    IOwnedStock,
-    IStockWithDollarValue,
-    StocksFrontendService,
-    TransactionFrontendService,
-} from "@stochastic-exchange/api";
+import { IOwnedStock, IStockWithDollarValue, StocksFrontendService } from "@stochastic-exchange/api";
 import * as React from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
 import { Routes } from "../../common/routes";
 import { selectUserOwnedStock } from "../../selectors/selectUserOwnedStock";
-import { IUpdateUserAccountOnTransaction, UpdateUserAccountOnTransaction } from "../../store/account/actions";
 import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
-import { executePrivateEndpoint } from "../../utils/executePrivateEndpoint";
 import { formatNumber } from "../../utils/formatNumber";
-import { showToast } from "../../utils/toaster";
 import styles from "./stockInformation.module.scss";
+import { BuyStocksDialog, SellStocksDialog } from "./stocksDialog";
 
 interface IStoreProps {
     cashOnHand: number | undefined;
@@ -29,7 +22,6 @@ interface IStoreProps {
 interface IDispatchProps {
     removeViewStockWithLatestPrice: () => void;
     setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
-    updateUserAccountOnTransaction: (transaction: IUpdateUserAccountOnTransaction) => void;
 }
 
 const TransactStock: React.FC<{
@@ -37,55 +29,17 @@ const TransactStock: React.FC<{
     viewStockWithLatestPrice: IStockWithDollarValue;
     setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
     userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
-    updateUserAccountOnTransaction: (transaction: IUpdateUserAccountOnTransaction) => void;
-}> = ({
-    cashOnHand,
-    viewStockWithLatestPrice,
-    setViewTransactionsForStock,
-    userOwnedStockOfStockWithLatestPrice,
-    updateUserAccountOnTransaction,
-}) => {
+}> = ({ cashOnHand, viewStockWithLatestPrice, setViewTransactionsForStock, userOwnedStockOfStockWithLatestPrice }) => {
     const history = useHistory();
 
-    const onBuy = async () => {
-        const response = await executePrivateEndpoint(TransactionFrontendService.createExchangeTransaction, {
-            price: viewStockWithLatestPrice.priceHistoryId,
-            purchasedQuantity: 100,
-            soldQuantity: 0,
-            stock: viewStockWithLatestPrice.id,
-        });
-        if (response === undefined) {
-            return;
-        }
+    const [isBuyDialogOpen, setBuyDialogOpenState] = React.useState<boolean>(false);
+    const [isSellDialogOpen, setSellDialogOpenState] = React.useState<boolean>(false);
 
-        updateUserAccountOnTransaction({
-            stockId: viewStockWithLatestPrice.id,
-            purchaseQuantity: 100,
-            soldQuantity: 0,
-            price: viewStockWithLatestPrice.dollarValue,
-        });
-        showToast({ intent: "success", message: "Successfully purchased 100 shares." });
-    };
+    const openBuyStocksDialog = () => setBuyDialogOpenState(true);
+    const closeBuyStocksDialog = () => setBuyDialogOpenState(false);
 
-    const onSell = async () => {
-        const response = await executePrivateEndpoint(TransactionFrontendService.createExchangeTransaction, {
-            price: viewStockWithLatestPrice.priceHistoryId,
-            purchasedQuantity: 0,
-            soldQuantity: 100,
-            stock: viewStockWithLatestPrice.id,
-        });
-        if (response === undefined) {
-            return;
-        }
-
-        updateUserAccountOnTransaction({
-            stockId: viewStockWithLatestPrice.id,
-            purchaseQuantity: 0,
-            soldQuantity: 100,
-            price: viewStockWithLatestPrice.dollarValue,
-        });
-        showToast({ intent: "primary", message: "Successfully sold 100 shares." });
-    };
+    const openSellStocksDialog = () => setSellDialogOpenState(true);
+    const closeSellStocksDialog = () => setSellDialogOpenState(false);
 
     const viewTransactionHistory = () => {
         setViewTransactionsForStock(viewStockWithLatestPrice);
@@ -109,7 +63,12 @@ const TransactStock: React.FC<{
                                     disabled={(cashOnHand ?? 0) < viewStockWithLatestPrice.dollarValue}
                                     intent="success"
                                     text="Buy"
-                                    onClick={onBuy}
+                                    onClick={openBuyStocksDialog}
+                                />
+                                <BuyStocksDialog
+                                    isOpen={isBuyDialogOpen}
+                                    onClose={closeBuyStocksDialog}
+                                    stock={viewStockWithLatestPrice}
                                 />
                             </div>
                         </div>
@@ -127,9 +86,14 @@ const TransactStock: React.FC<{
                                     }
                                     intent="primary"
                                     text="Sell"
-                                    onClick={onSell}
+                                    onClick={openSellStocksDialog}
                                 />
                                 <Button className={styles.transactButton} disabled text="Limit order" />
+                                <SellStocksDialog
+                                    isOpen={isSellDialogOpen}
+                                    onClose={closeSellStocksDialog}
+                                    stock={viewStockWithLatestPrice}
+                                />
                             </div>
                         </div>
                     </div>
@@ -151,7 +115,6 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
     viewStockWithLatestPrice,
     setViewTransactionsForStock,
     userOwnedStockOfStockWithLatestPrice,
-    updateUserAccountOnTransaction,
 }) => {
     const history = useHistory();
     if (viewStockWithLatestPrice === undefined) {
@@ -199,7 +162,6 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                 viewStockWithLatestPrice={viewStockWithLatestPrice}
                 setViewTransactionsForStock={setViewTransactionsForStock}
                 userOwnedStockOfStockWithLatestPrice={userOwnedStockOfStockWithLatestPrice}
-                updateUserAccountOnTransaction={updateUserAccountOnTransaction}
             />
         );
     };
@@ -272,7 +234,6 @@ function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
     const boundActions = bindActionCreators(
         {
             setViewTransactionsForStock: SetViewTransactionsForStock,
-            updateUserAccountOnTransaction: UpdateUserAccountOnTransaction,
         },
         dispatch,
     );

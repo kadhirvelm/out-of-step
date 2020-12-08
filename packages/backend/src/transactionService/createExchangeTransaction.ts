@@ -10,6 +10,7 @@ import {
 } from "@stochastic-exchange/api";
 import { Response } from "express";
 import { postgresPool } from "../utils/getPostgresPool";
+import { roundToNearestHundreth } from "../utils/roundToNearestHundreth";
 
 type ICreateTransactionService = ITransactionService["createExchangeTransaction"];
 
@@ -92,7 +93,9 @@ function executePurchaseQuantity(
         return [];
     }
 
-    const newCashOnHand = cashOnHand - (exchangeTransaction.purchasedQuantity ?? 0) * price.dollarValue;
+    const newCashOnHand = roundToNearestHundreth(
+        cashOnHand - (exchangeTransaction.purchasedQuantity ?? 0) * price.dollarValue,
+    );
     const alreadyOwnedStock = ownedStock.find(s => s.account === exchangeTransaction.account);
 
     return [
@@ -133,7 +136,9 @@ function executeSellQuantity(
         return [];
     }
 
-    const newCashOnHand = cashOnHand + (exchangeTransaction.soldQuantity ?? 0) * price.dollarValue;
+    const newCashOnHand = roundToNearestHundreth(
+        cashOnHand + (exchangeTransaction.soldQuantity ?? 0) * price.dollarValue,
+    );
 
     const alreadyOwnedStock = ownedStock.find(s => s.account === exchangeTransaction.account);
     const newAlreadyOwnedStockQuantity = (alreadyOwnedStock?.quantity ?? 0) - (exchangeTransaction.soldQuantity ?? 0);

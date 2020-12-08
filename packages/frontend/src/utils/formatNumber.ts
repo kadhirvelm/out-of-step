@@ -5,3 +5,7 @@ export function formatNumber(number: number) {
         .format(".3s")(number)
         .replace(/G/, "B");
 }
+
+export function formatDollar(number: number) {
+    return d3Format.format("$,.2f")(number);
+}

@@ -1,0 +1,67 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.dialog-container {
+    &:global(.bp3-dialog) {
+        margin: 30px;
+        padding: 0;
+    }
+}
+
+.main-dialog-body {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.current-separator-container {
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.label {
+    color: $pt-text-color-muted;
+    margin-right: 5px;
+}
+
+.shares-to-buy-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.shares-to-buy-sentence {
+    color: $pt-text-color-muted;
+}
+
+.input-container {
+    margin: 0 10px;
+}
+
+.summary-sentence {
+    color: $pt-text-color-muted;
+    font-weight: 450;
+    padding-top: 10px;
+}
+
+.acknowledge-container {
+    padding: 20px 10px 10px 10px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
+
+.buy-button {
+    margin-left: 5px;
+    width: 125px;
+}
+
+.value {
+    color: $pt-text-color;
+    font-size: 14px;
+    font-weight: 550;
+}
