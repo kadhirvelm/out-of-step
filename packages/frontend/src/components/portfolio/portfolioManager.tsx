@@ -94,7 +94,10 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
                 </div>
                 <div className={styles.rightContainer}>
                     <span className={styles.currentPrice}>{maybeTotalAssertWorth}</span>
-                    <Icon className={styles.chevronRightIndicator} icon="chevron-right" />
+                    <Icon
+                        className={styles.chevronRightIndicator}
+                        icon={stock.status === "AVAILABLE" ? "chevron-right" : "git-merge"}
+                    />
                 </div>
             </div>
         );

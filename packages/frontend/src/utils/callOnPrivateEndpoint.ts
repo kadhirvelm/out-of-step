@@ -17,6 +17,7 @@ export function callOnPrivateEndpoint<Payload, Response>(
         | Response
     >,
     payload: Payload,
+    checkCache?: any[],
 ) {
     const [response, setResponse] = React.useState<Response | undefined>(undefined);
 
@@ -29,7 +30,7 @@ export function callOnPrivateEndpoint<Payload, Response>(
 
     React.useEffect(() => {
         callOnEndpoint();
-    }, []);
+    }, checkCache ?? []);
 
     return response;
 }
