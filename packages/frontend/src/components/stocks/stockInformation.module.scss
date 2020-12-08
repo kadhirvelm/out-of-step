@@ -19,6 +19,29 @@
     justify-content: center;
 }
 
+.time-buckets-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.single-time-bucket {
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 1px $pt-divider-black;
+    padding: 3px 5px;
+    width: 75px;
+}
+
+.single-time-bucket-active {
+    &.single-time-bucket {
+        border-radius: 3px;
+        background: $dark-gray4;
+        color: $white;
+        box-shadow: none;
+    }
+}
+
 .stock-details-container {
     display: flex;
     flex-direction: column;
@@ -38,17 +61,12 @@
 
 .price-points-container {
     display: flex;
+    flex: 1;
     flex-direction: column;
 
     > .single-price-point {
         box-shadow: 0 1px $pt-divider-black;
     }
-}
-
-.single-price-point {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
 }
 
 .basic-information-container {
@@ -80,13 +98,30 @@
 .transact-container {
     display: flex;
     flex-direction: column;
-    padding: 20px 0;
+    padding: 20px 0 0;
 }
 
 .your-portfolio-label {
     color: $pt-text-color-muted;
     margin-left: 10px;
     margin-bottom: 3px;
+}
+
+.acquired-info-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 1px $pt-divider-black, 0 -1px $pt-divider-black;
+}
+
+.has-been-acquired-label {
+    font-size: 14px;
+    font-weight: 550;
+}
+
+.has-been-acquired-description {
+    margin-top: 5px;
+    color: $pt-text-color-muted;
 }
 
 .transact-information-container {
@@ -137,6 +172,6 @@
     margin-top: 15px
 }
 
-.move-to-other-panels {
-    margin: 10px;
+.see-stock-information {
+    margin: 10px 0;
 }

@@ -1,5 +1,6 @@
 import { Button, Spinner } from "@blueprintjs/core";
-import { IOwnedStock, IStockWithDollarValue, StocksFrontendService } from "@stochastic-exchange/api";
+import { IOwnedStock, IStockWithDollarValue, ITimeBucket, StocksFrontendService } from "@stochastic-exchange/api";
+import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -9,7 +10,8 @@ import { selectUserOwnedStock } from "../../selectors/selectUserOwnedStock";
 import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
-import { formatNumber } from "../../utils/formatNumber";
+import { formatDollar, formatNumber } from "../../utils/formatNumber";
+import { StockChart } from "./stockChart";
 import styles from "./stockInformation.module.scss";
 import { BuyStocksDialog, SellStocksDialog } from "./stocksDialog";
 
@@ -23,6 +25,8 @@ interface IDispatchProps {
     removeViewStockWithLatestPrice: () => void;
     setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
 }
+
+const VALID_TIME_BUCKETS: ITimeBucket[] = ["day", "5 days", "month", "all"];
 
 const TransactStock: React.FC<{
     cashOnHand: number | undefined;
@@ -117,15 +121,22 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
     userOwnedStockOfStockWithLatestPrice,
 }) => {
     const history = useHistory();
+
+    const [bucket, setBucket] = React.useState<ITimeBucket>("day");
+
     if (viewStockWithLatestPrice === undefined) {
         history.push(Routes.PORTFOLIO);
         return null;
     }
 
-    const stockInformation = callOnPrivateEndpoint(StocksFrontendService.getSingleStockInformation, {
-        stock: viewStockWithLatestPrice.id,
-        bucket: "week",
-    });
+    const stockInformation = callOnPrivateEndpoint(
+        StocksFrontendService.getSingleStockInformation,
+        {
+            stock: viewStockWithLatestPrice.id,
+            bucket,
+        },
+        [bucket],
+    );
 
     const goBackToPortfolioManager = () => {
         removeViewStockWithLatestPrice();
@@ -151,9 +162,30 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
         );
     }
 
+    const viewTransactionHistory = () => {
+        setViewTransactionsForStock(viewStockWithLatestPrice);
+        history.push(Routes.TRANSACTIONS);
+    };
+
     const maybeRenderTransactStock = () => {
         if (viewStockWithLatestPrice.status === "ACQUIRED") {
-            return null;
+            return (
+                <div className={styles.transactContainer}>
+                    <div className={styles.acquiredInfoContainer}>
+                        <span className={styles.hasBeenAcquiredLabel}>This stock has been acquired.</span>
+                        <span className={styles.hasBeenAcquiredDescription}>
+                            All shareholders have been paid {formatDollar(viewStockWithLatestPrice.dollarValue)} per
+                            share.
+                        </span>
+                        <Button
+                            className={styles.viewTransactionHistory}
+                            minimal
+                            onClick={viewTransactionHistory}
+                            text="View your transaction history"
+                        />
+                    </div>
+                </div>
+            );
         }
 
         return (
@@ -166,7 +198,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
         );
     };
 
-    const stockPrices = stockInformation.priceHistory.map(p => p.dollarValue);
+    const setBucketCurried = (timeBucket: ITimeBucket) => () => setBucket(timeBucket);
 
     return (
         <div className={styles.stockInformationContainer}>
@@ -175,13 +207,21 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                 <span className={styles.stockName}>{viewStockWithLatestPrice.name}</span>
                 <span className={styles.stockLatestPrice}>${viewStockWithLatestPrice.dollarValue.toFixed(2)}</span>
             </div>
-            <div className={styles.pricePointsContainer}>
-                {stockInformation.priceHistory.map(price => (
-                    <div className={styles.singlePricePoint} key={price.id}>
-                        <span>${price.dollarValue.toFixed(2)}</span>
-                        <span>{new Date(price.timestamp).toLocaleString()}</span>
-                    </div>
+            <div className={styles.timeBucketsContainer}>
+                {VALID_TIME_BUCKETS.map(timeBucket => (
+                    <span
+                        className={classNames(styles.singleTimeBucket, {
+                            [styles.singleTimeBucketActive]: timeBucket === bucket,
+                        })}
+                        key={timeBucket}
+                        onClick={setBucketCurried(timeBucket)}
+                    >
+                        {timeBucket}
+                    </span>
                 ))}
+            </div>
+            <div className={styles.pricePointsContainer}>
+                <StockChart pricePoints={stockInformation.priceHistory} timeBucket={bucket} />
             </div>
             <div className={styles.basicInformationContainer}>
                 <div className={styles.columnContainer}>
@@ -208,16 +248,16 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                 <div className={styles.columnContainer}>
                     <div className={styles.rowContainer}>
                         <span className={styles.label}>High:</span>
-                        <span>${Math.max(...stockPrices).toFixed(2)}</span>
+                        <span>{formatDollar(stockInformation.high)}</span>
                     </div>
                     <div className={styles.rowContainer}>
                         <span className={styles.label}>Low:</span>
-                        <span>${Math.min(...stockPrices).toFixed(2)}</span>
+                        <span>{formatDollar(stockInformation.low)}</span>
                     </div>
                 </div>
             </div>
             {maybeRenderTransactStock()}
-            <Button className={styles.moveToOtherPanels} disabled minimal text="See stock information" />
+            <Button className={styles.seeStockInformation} disabled minimal text="See stock information" />
         </div>
     );
 };

@@ -1,10 +1,15 @@
 import { implementEndpoints, IService } from "../common/generics";
 import { IPriceHistory, IPriceHistoryId, IStock, IStockId } from "../types/dataTypes";
 
-export type ITimeBucket = "day" | "week" | "4 weeks" | "all";
+export type ITimeBucket = "day" | "5 days" | "month" | "all";
 
 export type IStockWithDollarValue = IStock &
     Pick<IPriceHistory, "dollarValue" | "timestamp"> & { priceHistoryId: IPriceHistoryId };
+
+export interface IPriceHistoryInBuckets {
+    timestamp: string;
+    dollarValue: number;
+}
 
 export interface IStocksService extends IService {
     getAllStocks: {
@@ -19,8 +24,10 @@ export interface IStocksService extends IService {
             stock: IStockId;
         };
         response: {
-            priceHistory: IPriceHistory[];
+            high: number;
+            low: number;
             ownedStockQuantity: number;
+            priceHistory: IPriceHistoryInBuckets[];
         };
     };
 }
