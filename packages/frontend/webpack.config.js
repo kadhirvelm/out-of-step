@@ -126,7 +126,7 @@ module.exports = {
             // favicon: path.resolve(__dirname, "public/favicon.ico"),
             meta: {
                 copyright: "Copyright 2020",
-                description: "Play stochastic exchange, a collaborative puzzle room.",
+                description: "Play stochastic exchange.",
                 "og:title": "stochastic exchange",
                 // "og:image": path.resolve(__dirname, "public/og-image.png"),
                 title: "stochastic exchange.",
@@ -134,22 +134,17 @@ module.exports = {
             },
             template: "./src/index.html",
         }),
+        new webpack.DefinePlugin({
+            "process.env.HOSTNAME": JSON.stringify(process.env.HOSTNAME),
+            "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+        }),
         new MiniCssExtractPlugin({
             filename: process.env.NODE_ENV === "production" ? "main-[hash].css" : "main.css",
             chunkFilename: process.env.NODE_ENV === "production" ? "[id].css" : "[id].[hash].css",
         }),
         new webpack.optimize.AggressiveMergingPlugin(),
         ...(process.env.NODE_ENV === "production"
-            ? [
-                  new CompressionPlugin({
-                      filename: "[path].gz[query]",
-                      algorithm: "gzip",
-                      test: /\.js$|\.css$|\.html$|\.json$/,
-                      threshold: 10240,
-                      deleteOriginalAssets: true,
-                      minRatio: 0.8,
-                  }),
-              ]
+            ? [new CompressionPlugin()]
             : [new BundleAnalyzerPlugin({ analyzerMode: "static", openAnalyzer: false })]),
     ],
 

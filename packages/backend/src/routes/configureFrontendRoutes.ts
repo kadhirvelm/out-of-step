@@ -3,6 +3,13 @@ import { join } from "path";
 
 export function configureFrontendRoutes(app: Express.Express) {
     if (process.env.NODE_ENV === "production") {
+        app.get("*.html", (req, res, next) => {
+            req.url = `${req.url}.gz`;
+            res.set("Content-Encoding", "gzip");
+            res.set("Content-Type", "text/html");
+            next();
+        });
+
         app.get("*.js", (req, res, next) => {
             req.url = `${req.url}.gz`;
             res.set("Content-Encoding", "gzip");
