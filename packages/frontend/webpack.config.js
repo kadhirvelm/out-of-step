@@ -126,7 +126,7 @@ module.exports = {
             // favicon: path.resolve(__dirname, "public/favicon.ico"),
             meta: {
                 copyright: "Copyright 2020",
-                description: "Play stochastic exchange, a collaborative puzzle room.",
+                description: "Play stochastic exchange.",
                 "og:title": "stochastic exchange",
                 // "og:image": path.resolve(__dirname, "public/og-image.png"),
                 title: "stochastic exchange.",
