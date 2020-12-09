@@ -134,6 +134,10 @@ module.exports = {
             },
             template: "./src/index.html",
         }),
+        new webpack.DefinePlugin({
+            "process.env.HOSTNAME": JSON.stringify(process.env.HOSTNAME),
+            "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+        }),
         new MiniCssExtractPlugin({
             filename: process.env.NODE_ENV === "production" ? "main-[hash].css" : "main.css",
             chunkFilename: process.env.NODE_ENV === "production" ? "[id].css" : "[id].[hash].css",

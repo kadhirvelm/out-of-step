@@ -131,7 +131,7 @@ function implementFrontend<Service extends IService>(
                     },
                 );
             } else {
-                rawResponse = await fetch(`${hostname}${slug}`, {
+                rawResponse = await fetch(`${hostname}/api${slug}`, {
                     headers,
                     body: JSON.stringify(payload),
                     method: method.toUpperCase(),
