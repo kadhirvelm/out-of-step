@@ -20,11 +20,11 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "start": "node --experimental-modules --es-module-specifier-resolution=node dist/index.js",
-    "start:watch": "nodemon --experimental-modules --es-module-specifier-resolution=node dist/index.js --watch . --watch ../api/* --watch ../utils/* --watch ../pipelines/*",
-    "start:production": "sudo -E yarn pm2 start ../../ecosystem.config.js --env production --name='stract-service'",
-    "watch:all": "yarn build:watch & yarn start:watch",
-    "dev": "yarn build && yarn watch:all",
+    "dev": "yarn build:watch & yarn start",
     "lint": "eslint . --ext .ts,.tsx"
+  },
+  "engines": {
+    "node": "14.15.1"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",

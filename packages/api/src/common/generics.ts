@@ -67,7 +67,7 @@ function implementBackend<Service extends IService>(endpoints: IImplementEndpoin
 
         Object.entries(endpoints).forEach(endpoint => {
             const [key, { method, slug, isPublic }] = endpoint;
-            app[method](`${slug}`, verifyToken(isPublic ?? false), async (request, response) => {
+            app[method](`/api${slug}`, verifyToken(isPublic ?? false), async (request, response) => {
                 try {
                     const payload = method === "get" ? Object.values(request.params)[0] : request.body;
                     const accountIdFromToken = request.body[STORE_TOKEN_KEY] as IAccountId | null;
@@ -122,7 +122,7 @@ function implementFrontend<Service extends IService>(
                 const stringPayload: string = typeof payload === "string" ? `/${payload}` : "";
 
                 rawResponse = await fetch(
-                    `http://${ORIGIN}:${PORT}${maybeRemoveVariableFromSlug(slug)}${stringPayload}`,
+                    `http://${ORIGIN}:${PORT}/api${maybeRemoveVariableFromSlug(slug)}${stringPayload}`,
                     {
                         headers,
                         method,
