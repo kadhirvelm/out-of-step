@@ -22,7 +22,7 @@ if (ORIGIN !== undefined) {
         console.log({ level: "info", message: `Server started, listening on http://${ORIGIN}:${PORT}` });
     });
 } else {
-    server.listen(PORT, () => {
+    server.listen(PORT || 3000, () => {
         // eslint-disable-next-line no-console
         console.log({ level: "info", message: `Server started, listening on ${PORT}` });
     });
