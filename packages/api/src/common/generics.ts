@@ -123,13 +123,10 @@ function implementFrontend<Service extends IService>(
             if (method === "get") {
                 const stringPayload: string = typeof payload === "string" ? `/${payload}` : "";
 
-                rawResponse = await fetch(
-                    `${hostname}/api${maybeRemoveVariableFromSlug(slug)}${stringPayload}`,
-                    {
-                        headers,
-                        method,
-                    },
-                );
+                rawResponse = await fetch(`${hostname}/api${maybeRemoveVariableFromSlug(slug)}${stringPayload}`, {
+                    headers,
+                    method,
+                });
             } else {
                 rawResponse = await fetch(`${hostname}/api${slug}`, {
                     headers,
