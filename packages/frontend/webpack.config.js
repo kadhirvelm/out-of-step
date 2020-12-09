@@ -141,14 +141,14 @@ module.exports = {
         new webpack.optimize.AggressiveMergingPlugin(),
         ...(process.env.NODE_ENV === "production"
             ? [
-                  new CompressionPlugin({
-                      filename: "[path].gz[query]",
-                      algorithm: "gzip",
-                      test: /\.js$|\.css$|\.html$|\.json$/,
-                      threshold: 10240,
-                      deleteOriginalAssets: true,
-                      minRatio: 0.8,
-                  }),
+                //   new CompressionPlugin({
+                //       filename: "[path].gz[query]",
+                //       algorithm: "gzip",
+                //       test: /\.js$|\.css$|\.html$|\.json$/,
+                //       threshold: 10240,
+                //       deleteOriginalAssets: true,
+                //       minRatio: 0.8,
+                //   }),
               ]
             : [new BundleAnalyzerPlugin({ analyzerMode: "static", openAnalyzer: false })]),
     ],
