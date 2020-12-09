@@ -118,10 +118,10 @@ function implementFrontend<Service extends IService>(
                     ? { "Content-Type": "application/json", Authorization: "N/A" }
                     : { "Content-Type": "application/json", Authorization: cookie };
 
+            const hostname = process.env.NODE_ENV === "development" ? `http://${ORIGIN}:${PORT}` : process.env.HOSTNAME;
+
             if (method === "get") {
                 const stringPayload: string = typeof payload === "string" ? `/${payload}` : "";
-
-                const hostname = process.env.NODE_ENV === "development" ? `http://${ORIGIN}:${PORT}` : process.env.HOSTNAME;
 
                 rawResponse = await fetch(
                     `${hostname}/api${maybeRemoveVariableFromSlug(slug)}${stringPayload}`,
@@ -131,7 +131,7 @@ function implementFrontend<Service extends IService>(
                     },
                 );
             } else {
-                rawResponse = await fetch(`http://${ORIGIN}:${PORT}${slug}`, {
+                rawResponse = await fetch(`${hostname}${slug}`, {
                     headers,
                     body: JSON.stringify(payload),
                     method: method.toUpperCase(),
