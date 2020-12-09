@@ -1,6 +1,6 @@
 import pg from "pg";
 
-export const postgresPool = new pg.Pool({
+export const postgresPool = process.env.NODE_ENV === "production" ? new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false }}) : new pg.Pool({
     user: process.env.POSTGRES_USER,
     host: process.env.POSTGRES_HOST,
     database: process.env.POSTGRES_DATABASE,
