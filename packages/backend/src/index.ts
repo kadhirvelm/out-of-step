@@ -16,7 +16,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 configureSecurity(app);
 configureAllRoutes(app);
 
-server.listen(PORT, ORIGIN, () => {
-    // eslint-disable-next-line no-console
-    console.log({ level: "info", message: `Server started, listening on http://${ORIGIN}:${PORT}` });
-});
+if (ORIGIN !== undefined) {
+    server.listen(ORIGIN, PORT as any, () => {
+        // eslint-disable-next-line no-console
+        console.log({ level: "info", message: `Server started, listening on http://${ORIGIN}:${PORT}` });
+    });
+} else {
+    server.listen(PORT, () => {
+        // eslint-disable-next-line no-console
+        console.log({ level: "info", message: `Server started, listening on ${PORT}` });
+    });
+}
