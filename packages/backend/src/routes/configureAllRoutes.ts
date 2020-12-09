@@ -1,5 +1,6 @@
 import { AccountServiceBackend, StocksBackendService, TransactionBackendService } from "@stochastic-exchange/api";
 import Express from "express";
+import { join } from "path";
 import { createAccount } from "../accountService/createAccount";
 import { forgotPassword } from "../accountService/forgotPassword";
 import { getAccount } from "../accountService/getAccount";
@@ -11,11 +12,10 @@ import { getSingleStockInformation } from "../stockService/getSingleStockInforma
 import { getCurrentStandings } from "../accountService/getCurrentStandings";
 import { createExchangeTransaction } from "../transactionService/createExchangeTransaction";
 import { viewTransactionsForStock } from "../transactionService/viewTransactionsForStock";
+import { configureFrontendRoutes } from "./configureFrontendRoutes";
 
 export function configureAllRoutes(app: Express.Express) {
-    app.get("/", (_, response) => {
-        response.status(200).send({ version: process.env.npm_package_version });
-    });
+    configureFrontendRoutes(app);
 
     AccountServiceBackend(app, checkIfValidWebToken, {
         createAccount,
@@ -34,5 +34,9 @@ export function configureAllRoutes(app: Express.Express) {
     TransactionBackendService(app, checkIfValidWebToken, {
         createExchangeTransaction,
         viewTransactionsForStock,
+    });
+
+    app.get("*", (_, res) => {
+        res.sendFile(join(process.cwd(), "../frontend/dist/index.html"));
     });
 }
