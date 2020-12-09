@@ -121,8 +121,10 @@ function implementFrontend<Service extends IService>(
             if (method === "get") {
                 const stringPayload: string = typeof payload === "string" ? `/${payload}` : "";
 
+                const hostname = process.env.NODE_ENV === "development" ? `http://${ORIGIN}:${PORT}` : process.env.HOSTNAME;
+
                 rawResponse = await fetch(
-                    `http://${ORIGIN}:${PORT}/api${maybeRemoveVariableFromSlug(slug)}${stringPayload}`,
+                    `${hostname}/api${maybeRemoveVariableFromSlug(slug)}${stringPayload}`,
                     {
                         headers,
                         method,
