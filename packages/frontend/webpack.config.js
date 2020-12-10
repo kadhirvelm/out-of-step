@@ -19,7 +19,7 @@ module.exports = {
         hot: true,
         inline: true,
         historyApiFallback: true,
-        host: process.env.DEV_ADDRESS || "0.0.0.0",
+        host: process.env.ORIGIN || process.env.DEV_ADDRESS || "0.0.0.0",
         port: 3001,
         stats: {
             colors: true,
@@ -137,6 +137,7 @@ module.exports = {
         new webpack.DefinePlugin({
             "process.env.HOSTNAME": JSON.stringify(process.env.HOSTNAME),
             "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+            "process.env.ORIGIN": JSON.stringify(process.env.ORIGIN),
         }),
         new MiniCssExtractPlugin({
             filename: process.env.NODE_ENV === "production" ? "main-[hash].css" : "main.css",
