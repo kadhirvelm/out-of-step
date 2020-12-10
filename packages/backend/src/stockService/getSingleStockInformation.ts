@@ -54,7 +54,8 @@ export async function getSingleStockInformation(
         ),
         postgresPool.query<{ ownedStockQuantity: number }>(
             // eslint-disable-next-line @typescript-eslint/quotes
-            'SELECT SUM(quantity) as "ownedStockQuantity" FROM "ownedStock" GROUP BY stock',
+            'SELECT SUM(quantity) as "ownedStockQuantity" FROM "ownedStock" WHERE stock = $1',
+            [payload.stock],
         ),
     ]);
 

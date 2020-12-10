@@ -2,10 +2,12 @@ import { Button, Checkbox, Dialog, InputGroup } from "@blueprintjs/core";
 import { IAccount, IOwnedStock, IStockWithDollarValue, TransactionFrontendService } from "@stochastic-exchange/api";
 import * as React from "react";
 import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
-import { selectUserOwnedStock } from "../../selectors/selectUserOwnedStock";
+import { CompoundAction } from "redoodle";
+import { Dispatch } from "redux";
+import { selectUserOwnedStock } from "../../selectors/stocksSelector";
 import { IUpdateUserAccountOnTransaction, UpdateUserAccountOnTransaction } from "../../store/account/actions";
 import { IStoreState } from "../../store/state";
+import { SetOwnedStockQuantity } from "../../store/stocks/actions";
 import { executePrivateEndpoint } from "../../utils/executePrivateEndpoint";
 import { formatDollar } from "../../utils/formatNumber";
 import { showToast } from "../../utils/toaster";
@@ -17,13 +19,17 @@ interface IStoreProps {
 }
 
 interface IDispatchProps {
-    updateUserAccountOnTransaction: (transaction: IUpdateUserAccountOnTransaction) => void;
+    updateStateOnTrasaction: (
+        ownedStockQuantity: { [stock: string]: number },
+        transaction: IUpdateUserAccountOnTransaction,
+    ) => void;
 }
 
 interface IOwnProps {
     isOpen: boolean;
     onClose: () => void;
     stock: IStockWithDollarValue;
+    totalOwnedStock: number;
     type: "buy" | "sell";
 }
 
@@ -33,7 +39,8 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
     onClose,
     stock,
     type,
-    updateUserAccountOnTransaction,
+    totalOwnedStock,
+    updateStateOnTrasaction,
     userOwnedStockOfBuyStock,
 }) => {
     if (account === undefined) {
@@ -46,6 +53,13 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
     const [parsedQuantity, setParsedQuantity] = React.useState(0);
 
     const [acknowledgeTransaction, setAcknowledgeTransaction] = React.useState(false);
+
+    const resetDialog = () => {
+        setRawQuantity("");
+        setParsedQuantity(0);
+        setAcknowledgeTransaction(false);
+        setIsLoading(false);
+    };
 
     const onExecuteAction = async () => {
         if (parsedQuantity === undefined) {
@@ -60,26 +74,29 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
             soldQuantity: type === "sell" ? parsedQuantity : 0,
             stock: stock.id,
         });
+
         if (response === undefined) {
+            setAcknowledgeTransaction(false);
+            setIsLoading(false);
             return;
         }
 
-        updateUserAccountOnTransaction({
-            stockId: stock.id,
-            purchaseQuantity: parsedQuantity,
-            soldQuantity: 0,
-            price: stock.dollarValue,
-        });
+        updateStateOnTrasaction(
+            { [stock.id]: totalOwnedStock + (type === "buy" ? parsedQuantity : -parsedQuantity) },
+            {
+                stockId: stock.id,
+                purchaseQuantity: type === "buy" ? parsedQuantity : 0,
+                soldQuantity: type === "sell" ? parsedQuantity : 0,
+                price: stock.dollarValue,
+            },
+        );
+
         showToast({
             intent: type === "buy" ? "success" : "primary",
             message: `Successfully ${type === "buy" ? "purchased" : "sold"} ${parsedQuantity} shares.`,
         });
 
-        setRawQuantity("");
-        setParsedQuantity(0);
-        setAcknowledgeTransaction(false);
-        setIsLoading(false);
-
+        resetDialog();
         onClose();
     };
 
@@ -88,13 +105,15 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
         setAcknowledgeTransaction(false);
     };
 
-    const maximumSharesPurchaseAble = Math.floor(account.cashOnHand / stock.dollarValue);
+    const maximumSharesPurchaseAble = Math.min(
+        Math.floor(account.cashOnHand / stock.dollarValue),
+        stock.totalQuantity - totalOwnedStock,
+    );
+    const maximumSellable = userOwnedStockOfBuyStock?.quantity ?? 0;
+    const maximumNumber = type === "buy" ? maximumSharesPurchaseAble : maximumSellable;
 
     const updateParsedQuantity = () => {
-        const parsedNumber =
-            type === "buy"
-                ? Math.min(parseInt(rawQuantity, 10), maximumSharesPurchaseAble)
-                : Math.min(parseInt(rawQuantity, 10), userOwnedStockOfBuyStock?.quantity ?? 0);
+        const parsedNumber = Math.min(parseInt(rawQuantity, 10), maximumNumber);
 
         // eslint-disable-next-line no-restricted-globals
         if (isNaN(parsedNumber)) {
@@ -107,6 +126,18 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
     };
 
     const toggleAcknowledge = () => setAcknowledgeTransaction(!acknowledgeTransaction);
+
+    const maybeRenderWarningValue = () => {
+        if (parsedQuantity !== maximumNumber) {
+            return null;
+        }
+
+        return (
+            <span>
+                , <span className={styles.warningValue}>the maximum possible</span>
+            </span>
+        );
+    };
 
     return (
         <Dialog
@@ -130,6 +161,7 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
                     <span className={styles.sharesToBuySentence}>{type === "buy" ? "Buy" : "Sell"}</span>
                     <InputGroup
                         className={styles.inputContainer}
+                        intent={parsedQuantity === maximumNumber ? "warning" : "none"}
                         onBlur={updateParsedQuantity}
                         onChange={updateRawQuantity}
                         placeholder="quantity"
@@ -139,8 +171,9 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
                 </div>
                 <div className={styles.summarySentence}>
                     You will {type} <span className={styles.value}>{parsedQuantity ?? 0}</span> shares of{" "}
-                    <span className={styles.value}>{stock.name}</span> at{" "}
-                    <span className={styles.value}>${stock.dollarValue.toFixed(2)}</span> per share for a total of{" "}
+                    <span className={styles.value}>{stock.name}</span>
+                    {maybeRenderWarningValue()} at <span className={styles.value}>${stock.dollarValue.toFixed(2)}</span>{" "}
+                    per share for a total of{" "}
                     <span className={styles.value}>{formatDollar(parsedQuantity * stock.dollarValue)}</span>.
                 </div>
                 <div className={styles.summarySentence}>
@@ -198,12 +231,18 @@ function mapStateToProps(state: IStoreState, ownProps: IOwnProps): IStoreProps {
 }
 
 function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
-    return bindActionCreators(
-        {
-            updateUserAccountOnTransaction: UpdateUserAccountOnTransaction,
-        },
-        dispatch,
-    );
+    return {
+        updateStateOnTrasaction: (
+            ownedStockQuantity: { [stockId: string]: number },
+            updateTransaction: IUpdateUserAccountOnTransaction,
+        ) =>
+            dispatch(
+                CompoundAction([
+                    SetOwnedStockQuantity(ownedStockQuantity),
+                    UpdateUserAccountOnTransaction(updateTransaction),
+                ]),
+            ),
+    };
 }
 
 export const StocksDialog = connect(mapStateToProps, mapDispatchToProps)(UnconnectedStocksDialog);
