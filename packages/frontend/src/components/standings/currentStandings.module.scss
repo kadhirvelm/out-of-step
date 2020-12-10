@@ -7,10 +7,22 @@
     justify-content: center;
 }
 
+.overall-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.leaderboard-text {
+    padding: 10px;
+    color: $pt-text-color-muted;
+}
+
 .standings-container {
     display: flex;
     flex: 1;
     flex-direction: column;
+    box-shadow: 0 -1px $pt-divider-black;
 
     > .single-standings-container {
         box-shadow: 0 1px $pt-divider-black;
@@ -43,4 +55,16 @@
 .net-worth {
     margin-top: 5px;
     color: $pt-text-color-muted;
+}
+
+.gold {
+    background: rgba($gold5, 0.6);
+}
+
+.silver {
+    background: rgba($gray2, 0.25);
+}
+
+.bronze {
+    background: rgba($sepia5, 0.35);
 }

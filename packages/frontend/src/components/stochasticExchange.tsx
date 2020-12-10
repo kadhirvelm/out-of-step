@@ -35,7 +35,7 @@ const UnconnectedStochasticExchange: React.FC<IStoreProps & IDispatchProps> = ({
             return <LoginPage />;
         }
 
-        return <MainPage />;
+        return <MainPage key={token} />;
     };
 
     return <Router>{renderContent()}</Router>;

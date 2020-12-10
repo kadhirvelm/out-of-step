@@ -20,7 +20,8 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "start": "node --experimental-modules --es-module-specifier-resolution=node dist/index.js",
-    "dev": "yarn build:watch & yarn start",
+    "start:watch": "nodemon --experimental-modules --es-module-specifier-resolution=node dist/index.js --watch . --watch ../api/*",
+    "dev": "yarn build:watch & yarn start:watch",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "engines": {

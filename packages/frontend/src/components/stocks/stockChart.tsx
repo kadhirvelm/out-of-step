@@ -6,7 +6,7 @@ import { formatNumber } from "../../utils/formatNumber";
 
 export const StockChart: React.FC<{ pricePoints: IPriceHistoryInBuckets[]; timeBucket: ITimeBucket }> = React.memo(
     ({ pricePoints, timeBucket }) => {
-        const chartRef = React.useRef(null);
+        const chartRef = React.useRef<HTMLDivElement>(null);
 
         const firstIndex = Math.round(pricePoints.length * 0.05);
         const secondIndex = Math.round(pricePoints.length * 0.4);
@@ -42,6 +42,7 @@ export const StockChart: React.FC<{ pricePoints: IPriceHistoryInBuckets[]; timeB
                         showGrid: true,
                     },
                     classNames: { area: styles.area, line: styles.line },
+                    height: chartRef.current.clientHeight,
                     lineSmooth: true,
                     low: 0,
                     showPoint: false,

@@ -1,4 +1,4 @@
-import { Icon, Spinner } from "@blueprintjs/core";
+import { Icon, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IAccount, IOwnedStock, IStockWithDollarValue, StocksFrontendService } from "@stochastic-exchange/api";
 import classNames from "classnames";
 import { keyBy } from "lodash-es";
@@ -103,10 +103,18 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
         );
     };
 
+    const maybeRenderUserPortfolioStocks = () => {
+        if (sortedStocks?.inUserPortfolio === undefined || sortedStocks.inUserPortfolio.length === 0) {
+            return <NonIdealState className={styles.nonIdealStateStocks} description="Buy some below!" />;
+        }
+
+        return sortedStocks.inUserPortfolio.map(s => renderSingleStock(s, sortedStocks?.keyedUserOwnedStocks[s.id]));
+    };
+
     return (
         <div className={styles.overallContainer}>
             <div className={styles.userInformationContainer}>
-                <span className={styles.greeting}>{userAccount.name}</span>
+                <span className={styles.greeting}>Hi {userAccount.name},</span>
                 <div className={styles.assetInformation}>
                     <span className={styles.totalWorth}>
                         ${((sortedStocks?.totalAssetWorth ?? 0) + userAccount.cashOnHand).toLocaleString()}
@@ -118,9 +126,7 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
                 </div>
             </div>
             <span className={styles.typeOfStockLabel}>Your portfolio</span>
-            <div className={styles.stocksContainer}>
-                {sortedStocks?.inUserPortfolio.map(s => renderSingleStock(s, sortedStocks?.keyedUserOwnedStocks[s.id]))}
-            </div>
+            <div className={styles.stocksContainer}>{maybeRenderUserPortfolioStocks()}</div>
             <span className={classNames(styles.typeOfStockLabel, styles.otherStocks)}>Other stocks</span>
             <div className={styles.stocksContainer}>
                 {sortedStocks?.notInUserPortfolio.map(s => renderSingleStock(s))}

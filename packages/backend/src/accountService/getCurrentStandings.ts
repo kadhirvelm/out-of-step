@@ -33,11 +33,11 @@ export async function getCurrentStandings(): Promise<IGetCurrentStandings["respo
         }
     }).sort((a, b) => {
         if (a.netWorth < b.netWorth) {
-            return -1;
+            return 1;
         }
 
         if (a.netWorth > b.netWorth) {
-            return 1;
+            return -1;
         }
 
         return a.portfolioName.localeCompare(b.portfolioName);
