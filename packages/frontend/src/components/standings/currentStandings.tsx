@@ -1,6 +1,7 @@
 import { Spinner } from "@blueprintjs/core";
 import * as React from "react";
 import { connect } from "react-redux";
+import classNames from "classnames";
 import { AccountServiceFrontend, IAccountId } from "../../../../api/dist";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
@@ -22,19 +23,29 @@ const UnconnectedCurrentStandings: React.FC<IStoreProps> = ({ userAccountId }) =
     }
 
     return (
-        <div className={styles.standingsContainer}>
-            {currentStandings.map((standing, index) => (
-                <div className={styles.singleStandingsContainer} key={standing.accountId}>
-                    <div className={styles.informationSpacer}>
-                        <span>{index + 1}</span>
-                        <div className={styles.informationContainer}>
-                            <span className={styles.portfolioName}>{standing.portfolioName}</span>
-                            <span className={styles.netWorth}>${standing.netWorth.toLocaleString()}</span>
+        <div className={styles.overallContainer}>
+            <span className={styles.leaderboardText}>Leaderboard</span>
+            <div className={styles.standingsContainer}>
+                {currentStandings.map((standing, index) => (
+                    <div
+                        className={classNames(styles.singleStandingsContainer, {
+                            [styles.gold]: index === 0,
+                            [styles.silver]: index === 1,
+                            [styles.bronze]: index === 2,
+                        })}
+                        key={standing.accountId}
+                    >
+                        <div className={styles.informationSpacer}>
+                            <span>{index + 1}</span>
+                            <div className={styles.informationContainer}>
+                                <span className={styles.portfolioName}>{standing.portfolioName}</span>
+                                <span className={styles.netWorth}>${standing.netWorth.toLocaleString()}</span>
+                            </div>
                         </div>
+                        <div>{standing.accountId === userAccountId ? "You" : ""}</div>
                     </div>
-                    <div>{standing.accountId === userAccountId ? "You" : ""}</div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     );
 };

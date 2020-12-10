@@ -1,6 +1,7 @@
 @import "~@blueprintjs/core/lib/scss/variables";
 
 .overall-container {
+    position: relative;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -8,15 +9,24 @@
 }
 
 .main-content-container {
+    position: absolute;
+    top: 36px;
+    right: 0;
+    left: 0;
+    bottom: 0;
     display: flex;
     flex: 1;
     overflow-y: auto;
 }
 
-.footer-container {
+.header-container {
+    position: absolute;
+    top: 1px;
+    right: 0;
+    left: 0;
     display: flex;
-    height: 50px;
-    box-shadow: 0 -1px $pt-divider-black;
+    height: 36px;
+    box-shadow: 0 1px $pt-divider-black, 0 -1px $pt-divider-black;
     background: $light-gray4;
 
     > :not(:last-child) {
@@ -24,7 +34,7 @@
     }
 }
 
-.footer-icon-container {
+.header-icon-container {
     display: flex;
     flex: 1;
     align-items: center;
@@ -32,7 +42,7 @@
     cursor: pointer;
 }
 
-.footer-icon {
+.header-icon {
     color: $gray4;
 
     &.active {

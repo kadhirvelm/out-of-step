@@ -43,6 +43,35 @@ const UnconnectedMainPage: React.FC<IDispatchProps> = ({ setUserAccountAndOwnedS
 
     return (
         <div className={styles.overallContainer}>
+            <div className={styles.headerContainer}>
+                <div className={styles.headerIconContainer} onClick={onUserClick}>
+                    <Icon
+                        className={classNames(styles.headerIcon, {
+                            [styles.active]: location.pathname === "/user",
+                        })}
+                        icon="user"
+                        iconSize={Icon.SIZE_STANDARD}
+                    />
+                </div>
+                <div className={styles.headerIconContainer} onClick={onPortfolioClick}>
+                    <Icon
+                        className={classNames(styles.headerIcon, {
+                            [styles.active]: location.pathname === "/portfolio",
+                        })}
+                        icon="chart"
+                        iconSize={Icon.SIZE_STANDARD}
+                    />
+                </div>
+                <div className={styles.headerIconContainer} onClick={onScoreClick}>
+                    <Icon
+                        className={classNames(styles.headerIcon, {
+                            [styles.active]: location.pathname === "/score",
+                        })}
+                        icon="path"
+                        iconSize={Icon.SIZE_STANDARD}
+                    />
+                </div>
+            </div>
             <div className={styles.mainContentContainer}>
                 <Switch>
                     <Route path={Routes.USER} component={UserManager} />
@@ -52,35 +81,6 @@ const UnconnectedMainPage: React.FC<IDispatchProps> = ({ setUserAccountAndOwnedS
                     <Route path={Routes.SCORE} component={CurrentStandings} />
                     <Redirect to={Routes.PORTFOLIO} />
                 </Switch>
-            </div>
-            <div className={styles.footerContainer}>
-                <div className={styles.footerIconContainer} onClick={onUserClick}>
-                    <Icon
-                        className={classNames(styles.footerIcon, {
-                            [styles.active]: location.pathname === "/user",
-                        })}
-                        icon="user"
-                        iconSize={Icon.SIZE_LARGE}
-                    />
-                </div>
-                <div className={styles.footerIconContainer} onClick={onPortfolioClick}>
-                    <Icon
-                        className={classNames(styles.footerIcon, {
-                            [styles.active]: location.pathname === "/portfolio",
-                        })}
-                        icon="chart"
-                        iconSize={Icon.SIZE_LARGE}
-                    />
-                </div>
-                <div className={styles.footerIconContainer} onClick={onScoreClick}>
-                    <Icon
-                        className={classNames(styles.footerIcon, {
-                            [styles.active]: location.pathname === "/score",
-                        })}
-                        icon="path"
-                        iconSize={Icon.SIZE_LARGE}
-                    />
-                </div>
             </div>
         </div>
     );

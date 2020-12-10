@@ -73,8 +73,8 @@ const UnconnectedLoginPage: React.FC<IDispatchProps> = ({ setToken }) => {
             return;
         }
 
-        setToken({ token });
         setTokenInCookie(token);
+        setToken({ token });
     };
 
     const login = async () => {
