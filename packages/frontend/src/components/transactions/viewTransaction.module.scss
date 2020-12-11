@@ -22,13 +22,14 @@
 
 .stock-name {
     font-size: 20px;
-    font-weight: 550;
 }
 
-.stock-owned-label {
+.stock-worth-label {
     display: flex;
     align-items: center;
     margin-top: 5px;
+    font-size: 22px;
+    font-weight: 550;
 }
 
 .total-quantity-owned-label {
@@ -41,18 +42,25 @@
     font-size: 16px;
 }
 
+.transaction-label-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 10px 3px 10px;
+}
+
 .transactions-table-label {
     color: $pt-text-color-muted;
-    margin: 10px 0 3px 10px;
 }
 
 .transactions-table {
     display: flex;
     flex: 1;
     flex-direction: column;
+    padding-bottom: 60px;
     box-shadow: 0 -1px $pt-divider-black;
 
-    > :not(:last-child) {
+    > .single-exchange-transaction {
         box-shadow: 0 1px $pt-divider-black;   
     }
 }
@@ -64,31 +72,14 @@
 }
 
 .net-purchase {
-    background: rgba($green3, 0.15);
+    background: rgba($green3, 0.05);
 }
 
 .net-sold {
-    background: rgba($blue3, 0.15);
+    background: rgba($blue3, 0.05);
 }
 
 .left-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.before-label {
-    font-size: 12px;
-    color: $pt-text-color-muted;
-}
-
-.total-quantity-owned {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-}
-
-.right-container {
     display: flex;
     flex: 1;
 }
@@ -111,4 +102,24 @@
 
 .at-price-container {
     margin-left: 3px;
+}
+
+.right-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.stock-value-at-transaction {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.positive-stock-value {
+    color: $green2;
+}
+
+.negative-stock-value {
+    color: $red2;
 }
