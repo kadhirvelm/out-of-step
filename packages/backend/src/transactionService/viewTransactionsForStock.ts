@@ -32,34 +32,34 @@ export async function viewTransactionsForStock(
     }
 
     const allTransactionHistoryForStock = await postgresPool.query<ITransactionHistory>(
-        'SELECT * FROM "transactionHistory" WHERE account = $1 AND stock = $2',
+        'SELECT * FROM "transactionHistory" WHERE account = $1 AND stock = $2 SORT BY timestamp DESC',
         [accountId, payload.stockId],
     );
 
-    const allLimitOrders = _.compact(
+    const allLimitOrdersIds = _.compact(
         allTransactionHistoryForStock.rows.map(s => (s as IExchangeTransaction).limitOrder),
     );
-    const allPriceHistory = _.compact(
+    const allPriceHistoryIds = _.compact(
         allTransactionHistoryForStock.rows.map(s => (s as IExchangeTransaction).priceHistory),
     );
-    const allDividendHistory = _.compact(
+    const allDividendHistoryIds = _.compact(
         allTransactionHistoryForStock.rows.map(s => (s as IDividendTransaction).dividendHistory),
     );
 
     const [limitOrderQuery, priceHistoryQuery, dividendHistoryQuery] = await Promise.all([
-        allLimitOrders.length > 0
+        allLimitOrdersIds.length > 0
             ? postgresPool.query<ILimitOrder>(
-                  `SELECT * FROM "limitOrder" WHERE id IN ${convertArrayToPostgresIn(allLimitOrders)}`,
+                  `SELECT * FROM "limitOrder" WHERE id IN ${convertArrayToPostgresIn(allLimitOrdersIds)}`,
               )
             : undefined,
-        allPriceHistory.length > 0
+        allPriceHistoryIds.length > 0
             ? postgresPool.query<IPriceHistory>(
-                  `SELECT * FROM "priceHistory" WHERE id IN ${convertArrayToPostgresIn(allPriceHistory)}`,
+                  `SELECT * FROM "priceHistory" WHERE id IN ${convertArrayToPostgresIn(allPriceHistoryIds)}`,
               )
             : undefined,
-        allDividendHistory.length > 0
+        allDividendHistoryIds.length > 0
             ? postgresPool.query<IDividendHistory>(
-                  `SELECT * FROM "dividendHistory" WHERE id IN ${convertArrayToPostgresIn(allDividendHistory)}`,
+                  `SELECT * FROM "dividendHistory" WHERE id IN ${convertArrayToPostgresIn(allDividendHistoryIds)}`,
               )
             : undefined,
     ]);
@@ -96,13 +96,9 @@ export async function viewTransactionsForStock(
         }),
     );
 
-    const allCompleteTransactionsSorted = allCompleteTransactions.sort((a, b) =>
-        Date.parse(a.timestamp) - Date.parse(b.timestamp) > 0 ? 1 : -1,
-    );
-
     let currentStockValue = 0;
     const allCompleteTransactionsSortedWithStockValue: Array<ITransactionHistoryComplete &
-        IStockValueAtTransactionTime> = allCompleteTransactionsSorted.map(transaction => {
+        IStockValueAtTransactionTime> = allCompleteTransactions.map(transaction => {
         if (transaction.type === "acquisition-transaction") {
             currentStockValue += transaction.acquiredQuantity * transaction.priceHistory.dollarValue;
         }
