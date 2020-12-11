@@ -28,6 +28,10 @@ export type ITransactionHistoryComplete =
     | IDividendTransactionWithDividend
     | IAcquisitionTransactionWithPrice;
 
+export interface IStockValueAtTransactionTime {
+    stockValueAtTransactionTime: number;
+}
+
 export interface ITransactionService extends IService {
     createExchangeTransaction: {
         payload: { price: IPriceHistoryId; purchasedQuantity: number; soldQuantity: number; stock: IStockId };
@@ -35,9 +39,7 @@ export interface ITransactionService extends IService {
     };
     viewTransactionsForStock: {
         payload: { stockId: IStockId };
-        response: Array<
-            IExchangeTransactionWithPrice | IDividendTransactionWithDividend | IAcquisitionTransactionWithPrice
-        >;
+        response: Array<ITransactionHistoryComplete & IStockValueAtTransactionTime>;
     };
 }
 

@@ -1,22 +1,23 @@
 import { Button } from "@blueprintjs/core";
 import {
     IOwnedStock,
+    IStockValueAtTransactionTime,
     IStockWithDollarValue,
     ITransactionHistoryComplete,
     TransactionFrontendService,
 } from "@stochastic-exchange/api";
-import { clone } from "lodash-es";
+import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { CompoundAction } from "redoodle";
 import { Dispatch } from "redux";
-import classNames from "classnames";
 import { Routes } from "../../common/routes";
 import { selectUserOwnedStock } from "../../selectors/selectUserOwnedStock";
 import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
+import { formatDollar } from "../../utils/formatNumber";
 import styles from "./viewTransaction.module.scss";
 
 interface IStoreProps {
@@ -46,9 +47,7 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
         stockId: viewTransactionsForStock.id,
     });
 
-    let startQuantityOfShares = clone(userOwnedStockOfStockWithLatestPrice?.quantity ?? 0);
-
-    const renderSingleTransaction = (transaction: ITransactionHistoryComplete) => {
+    const renderSingleTransaction = (transaction: ITransactionHistoryComplete & IStockValueAtTransactionTime) => {
         if (transaction.type === "acquisition-transaction") {
             return null;
         }
@@ -57,8 +56,6 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
             return null;
         }
 
-        startQuantityOfShares = clone(startQuantityOfShares) - transaction.purchasedQuantity + transaction.soldQuantity;
-
         return (
             <div
                 className={classNames(styles.singleExchangeTransaction, {
@@ -66,7 +63,7 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
                     [styles.netSold]: transaction.soldQuantity > 0,
                 })}
             >
-                <div className={styles.rightContainer}>
+                <div className={styles.leftContainer}>
                     <div className={styles.timestampAndExchangeContainer}>
                         <span className={styles.timestamp}>{new Date(transaction.timestamp).toLocaleString()}</span>
                         <div className={styles.exchangeContainer}>
@@ -80,13 +77,23 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
                         </div>
                     </div>
                 </div>
-                <div className={styles.leftContainer}>
-                    <span className={styles.beforeLabel}>Shares before</span>
-                    <span className={styles.totalQuantityOwned}>{clone(startQuantityOfShares)}</span>
+                <div className={styles.rightContainer}>
+                    <span
+                        className={classNames(styles.stockValueAtTransaction, {
+                            [styles.positiveStockValue]: transaction.stockValueAtTransactionTime > 0,
+                            [styles.negativeStockValue]: transaction.stockValueAtTransactionTime < 0,
+                        })}
+                    >
+                        {formatDollar(transaction.stockValueAtTransactionTime)}
+                    </span>
                 </div>
             </div>
         );
     };
+
+    const totalStockWorth =
+        (transactionHistory?.[0].stockValueAtTransactionTime ?? 0) +
+        (userOwnedStockOfStockWithLatestPrice?.quantity ?? 0) * viewTransactionsForStock.dollarValue;
 
     return (
         <div className={styles.overallContainer}>
@@ -98,14 +105,19 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
                     onClick={goBackToStockInformationPage}
                 />
                 <span className={styles.stockName}>{viewTransactionsForStock.name}</span>
-                <div className={styles.stockOwnedLabel}>
-                    <span className={styles.totalQuantityOwnedLabel}>You own:</span>
-                    <span className={styles.totalQuantityOwned}>
-                        {userOwnedStockOfStockWithLatestPrice?.quantity ?? 0} shares
-                    </span>
+                <div
+                    className={classNames(styles.stockWorthLabel, {
+                        [styles.positiveStockValue]: totalStockWorth > 0,
+                        [styles.negativeStockValue]: totalStockWorth < 0,
+                    })}
+                >
+                    {formatDollar(totalStockWorth)}
                 </div>
             </div>
-            <span className={styles.transactionsTableLabel}>Transactions</span>
+            <div className={styles.transactionLabelContainer}>
+                <span className={styles.transactionsTableLabel}>Transaction</span>
+                <span className={styles.transactionsTableLabel}>Total value</span>
+            </div>
             <div className={styles.transactionsTable}>{transactionHistory?.map(renderSingleTransaction)}</div>
         </div>
     );

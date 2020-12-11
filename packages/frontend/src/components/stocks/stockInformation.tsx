@@ -6,9 +6,10 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
 import { Routes } from "../../common/routes";
-import { selectUserOwnedStock } from "../../selectors/selectUserOwnedStock";
+import { selectOwnedStockQuantityOfViewStock, selectUserOwnedStock } from "../../selectors/stocksSelector";
 import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
+import { SetOwnedStockQuantity } from "../../store/stocks/actions";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { formatDollar, formatNumber } from "../../utils/formatNumber";
 import { StockChart } from "./stockChart";
@@ -17,12 +18,14 @@ import { BuyStocksDialog, SellStocksDialog } from "./stocksDialog";
 
 interface IStoreProps {
     cashOnHand: number | undefined;
+    ownedStockQuantity: number | undefined;
     userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
     viewStockWithLatestPrice: IStockWithDollarValue | undefined;
 }
 
 interface IDispatchProps {
     removeViewStockWithLatestPrice: () => void;
+    setOwnedStockQuantity: (newOwnedStockWithQuantity: { [stock: string]: number }) => void;
     setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
 }
 
@@ -30,10 +33,17 @@ const VALID_TIME_BUCKETS: ITimeBucket[] = ["day", "5 days", "month", "all"];
 
 const TransactStock: React.FC<{
     cashOnHand: number | undefined;
-    viewStockWithLatestPrice: IStockWithDollarValue;
     setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
+    totalOwnedStock: number;
     userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
-}> = ({ cashOnHand, viewStockWithLatestPrice, setViewTransactionsForStock, userOwnedStockOfStockWithLatestPrice }) => {
+    viewStockWithLatestPrice: IStockWithDollarValue;
+}> = ({
+    cashOnHand,
+    setViewTransactionsForStock,
+    totalOwnedStock,
+    userOwnedStockOfStockWithLatestPrice,
+    viewStockWithLatestPrice,
+}) => {
     const history = useHistory();
 
     const [isBuyDialogOpen, setBuyDialogOpenState] = React.useState<boolean>(false);
@@ -64,7 +74,10 @@ const TransactStock: React.FC<{
                             <div className={styles.transactButtonContainer}>
                                 <Button
                                     className={styles.transactButton}
-                                    disabled={(cashOnHand ?? 0) < viewStockWithLatestPrice.dollarValue}
+                                    disabled={
+                                        (cashOnHand ?? 0) < viewStockWithLatestPrice.dollarValue ||
+                                        viewStockWithLatestPrice.totalQuantity - totalOwnedStock === 0
+                                    }
                                     intent="success"
                                     text="Buy"
                                     onClick={openBuyStocksDialog}
@@ -73,6 +86,7 @@ const TransactStock: React.FC<{
                                     isOpen={isBuyDialogOpen}
                                     onClose={closeBuyStocksDialog}
                                     stock={viewStockWithLatestPrice}
+                                    totalOwnedStock={totalOwnedStock}
                                 />
                             </div>
                         </div>
@@ -97,6 +111,7 @@ const TransactStock: React.FC<{
                                     isOpen={isSellDialogOpen}
                                     onClose={closeSellStocksDialog}
                                     stock={viewStockWithLatestPrice}
+                                    totalOwnedStock={totalOwnedStock}
                                 />
                             </div>
                         </div>
@@ -115,20 +130,20 @@ const TransactStock: React.FC<{
 
 const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
     cashOnHand,
+    ownedStockQuantity,
     removeViewStockWithLatestPrice,
     viewStockWithLatestPrice,
+    setOwnedStockQuantity,
     setViewTransactionsForStock,
     userOwnedStockOfStockWithLatestPrice,
 }) => {
     const history = useHistory();
-
-    const [bucket, setBucket] = React.useState<ITimeBucket>("day");
-
     if (viewStockWithLatestPrice === undefined) {
         history.push(Routes.PORTFOLIO);
         return null;
     }
 
+    const [bucket, setBucket] = React.useState<ITimeBucket>("day");
     const stockInformation = callOnPrivateEndpoint(
         StocksFrontendService.getSingleStockInformation,
         {
@@ -137,6 +152,14 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
         },
         [bucket],
     );
+
+    React.useEffect(() => {
+        if (viewStockWithLatestPrice === undefined || stockInformation === undefined) {
+            return;
+        }
+
+        setOwnedStockQuantity({ [viewStockWithLatestPrice.id]: stockInformation?.ownedStockQuantity });
+    }, [stockInformation?.ownedStockQuantity, viewStockWithLatestPrice.id]);
 
     const goBackToPortfolioManager = () => {
         removeViewStockWithLatestPrice();
@@ -191,9 +214,10 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
         return (
             <TransactStock
                 cashOnHand={cashOnHand}
-                viewStockWithLatestPrice={viewStockWithLatestPrice}
                 setViewTransactionsForStock={setViewTransactionsForStock}
+                totalOwnedStock={ownedStockQuantity ?? stockInformation.ownedStockQuantity}
                 userOwnedStockOfStockWithLatestPrice={userOwnedStockOfStockWithLatestPrice}
+                viewStockWithLatestPrice={viewStockWithLatestPrice}
             />
         );
     };
@@ -241,7 +265,10 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                     <div className={styles.rowContainer}>
                         <span className={styles.label}>Available shares:</span>
                         <span>
-                            {formatNumber(viewStockWithLatestPrice.totalQuantity - stockInformation.ownedStockQuantity)}
+                            {formatNumber(
+                                viewStockWithLatestPrice.totalQuantity -
+                                    (ownedStockQuantity ?? stockInformation.ownedStockQuantity),
+                            )}
                         </span>
                     </div>
                 </div>
@@ -265,6 +292,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
 function mapStateToProps(store: IStoreState): IStoreProps {
     return {
         cashOnHand: store.account.userAccount?.cashOnHand,
+        ownedStockQuantity: selectOwnedStockQuantityOfViewStock(store),
         userOwnedStockOfStockWithLatestPrice: selectUserOwnedStock(store.interface.viewStockWithLatestPrice)(store),
         viewStockWithLatestPrice: store.interface.viewStockWithLatestPrice,
     };
@@ -273,6 +301,7 @@ function mapStateToProps(store: IStoreState): IStoreProps {
 function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
     const boundActions = bindActionCreators(
         {
+            setOwnedStockQuantity: SetOwnedStockQuantity,
             setViewTransactionsForStock: SetViewTransactionsForStock,
         },
         dispatch,

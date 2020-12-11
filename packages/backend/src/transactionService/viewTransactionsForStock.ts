@@ -9,6 +9,7 @@ import {
     IExchangeTransactionWithPrice,
     ILimitOrder,
     IPriceHistory,
+    IStockValueAtTransactionTime,
     ITransactionHistory,
     ITransactionHistoryComplete,
     ITransactionService,
@@ -95,5 +96,31 @@ export async function viewTransactionsForStock(
         }),
     );
 
-    return allCompleteTransactions.sort((a, b) => (Date.parse(a.timestamp) - Date.parse(b.timestamp) > 0 ? -1 : 1));
+    const allCompleteTransactionsSorted = allCompleteTransactions.sort((a, b) =>
+        Date.parse(a.timestamp) - Date.parse(b.timestamp) > 0 ? 1 : -1,
+    );
+
+    let currentStockValue = 0;
+    const allCompleteTransactionsSortedWithStockValue: Array<ITransactionHistoryComplete &
+        IStockValueAtTransactionTime> = allCompleteTransactionsSorted.map(transaction => {
+        if (transaction.type === "acquisition-transaction") {
+            currentStockValue += transaction.acquiredQuantity * transaction.priceHistory.dollarValue;
+        }
+
+        if (transaction.type === "dividend-transaction") {
+            currentStockValue += transaction.quantity * transaction.dividendHistory.payoutPerShare;
+        }
+
+        if (transaction.type === "exchange-transaction") {
+            currentStockValue -= transaction.priceHistory.dollarValue * transaction.purchasedQuantity;
+            currentStockValue += transaction.priceHistory.dollarValue * transaction.soldQuantity;
+        }
+
+        return {
+            ...transaction,
+            stockValueAtTransactionTime: _.clone(currentStockValue),
+        };
+    });
+
+    return _.reverse(allCompleteTransactionsSortedWithStockValue);
 }
