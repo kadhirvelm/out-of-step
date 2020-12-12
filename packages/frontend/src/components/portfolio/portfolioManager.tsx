@@ -32,6 +32,7 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
     const [sortedStocks, setSortedStocks] = React.useState<
         | {
               totalAssetWorth: number;
+              previousTotalAssetWorth: number;
               inUserPortfolio: IStockWithDollarValue[];
               notInUserPortfolio: IStockWithDollarValue[];
               keyedUserOwnedStocks: { [stockId: string]: IOwnedStock };
@@ -56,13 +57,18 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
                 (previous, next) => previous + next.quantity * (keyedStocks[next.stock].dollarValue ?? 0),
                 0,
             ),
+            previousTotalAssetWorth: userOwnedStocks.reduce(
+                (previous, next) =>
+                    previous + next.quantity * (keyedStocks[next.stock].previousPriceHistory?.dollarValue ?? 0),
+                0,
+            ),
             inUserPortfolio,
             notInUserPortfolio,
             keyedUserOwnedStocks,
         });
     }, [allStocksWithPrice, userOwnedStocks]);
 
-    if (allStocksWithPrice === undefined || userAccount === undefined) {
+    if (allStocksWithPrice === undefined || userAccount === undefined || sortedStocks === undefined) {
         return (
             <div className={styles.spinnerContainer}>
                 <Spinner />
@@ -93,7 +99,16 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
                     <span className={styles.stockMarketCap}>{stockNameLabel}</span>
                 </div>
                 <div className={styles.rightContainer}>
-                    <span className={styles.currentPrice}>{maybeTotalAssertWorth}</span>
+                    <span
+                        className={classNames(styles.currentPrice, {
+                            [styles.negativePrice]: (stock.previousPriceHistory?.dollarValue ?? 0) > stock.dollarValue,
+                            [styles.positivePrice]:
+                                (stock.previousPriceHistory?.dollarValue ?? Number.MAX_SAFE_INTEGER) <
+                                stock.dollarValue,
+                        })}
+                    >
+                        {maybeTotalAssertWorth}
+                    </span>
                     <Icon
                         className={styles.chevronRightIndicator}
                         icon={stock.status === "AVAILABLE" ? "chevron-right" : "git-merge"}
@@ -104,7 +119,7 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
     };
 
     const maybeRenderUserPortfolioStocks = () => {
-        if (sortedStocks?.inUserPortfolio === undefined || sortedStocks.inUserPortfolio.length === 0) {
+        if (sortedStocks.inUserPortfolio.length === 0) {
             return <NonIdealState className={styles.nonIdealStateStocks} description="Buy some below!" />;
         }
 
@@ -116,11 +131,16 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
             <div className={styles.userInformationContainer}>
                 <span className={styles.greeting}>Hi {userAccount.name},</span>
                 <div className={styles.assetInformation}>
-                    <span className={styles.totalWorth}>
-                        ${((sortedStocks?.totalAssetWorth ?? 0) + userAccount.cashOnHand).toLocaleString()}
+                    <span
+                        className={classNames(styles.totalWorth, {
+                            [styles.negativePrice]: sortedStocks.previousTotalAssetWorth > sortedStocks.totalAssetWorth,
+                            [styles.positivePrice]: sortedStocks.previousTotalAssetWorth < sortedStocks.totalAssetWorth,
+                        })}
+                    >
+                        ${((sortedStocks.totalAssetWorth ?? 0) + userAccount.cashOnHand).toLocaleString()}
                     </span>
                     <div className={styles.breakdownContainer}>
-                        <span>Assets: ${sortedStocks?.totalAssetWorth?.toLocaleString()}</span>
+                        <span>Assets: ${sortedStocks.totalAssetWorth?.toLocaleString()}</span>
                         <span>Cash: ${userAccount.cashOnHand.toLocaleString()}</span>
                     </div>
                 </div>
@@ -129,7 +149,7 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
             <div className={styles.stocksContainer}>{maybeRenderUserPortfolioStocks()}</div>
             <span className={classNames(styles.typeOfStockLabel, styles.otherStocks)}>Other stocks</span>
             <div className={styles.stocksContainer}>
-                {sortedStocks?.notInUserPortfolio.map(s => renderSingleStock(s))}
+                {sortedStocks.notInUserPortfolio.map(s => renderSingleStock(s))}
             </div>
         </div>
     );

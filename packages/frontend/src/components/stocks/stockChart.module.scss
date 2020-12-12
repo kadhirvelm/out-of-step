@@ -16,3 +16,14 @@
     stroke: none;
     fill-opacity: 0.1;
 }
+
+:global(.ct-series-b) {
+    .line {
+        stroke: $gray2;
+        stroke-dasharray: 10px 5px;
+    }
+
+    .area {
+        fill: none;
+    }
+}
