@@ -105,6 +105,14 @@
     font-weight: 500;
 }
 
+.negative-price {
+    color: $red3;
+}
+
+.positive-price {
+    color: $green3;
+}
+
 .chevron-right-indicator {
     color: $pt-text-color-muted;
     margin-left: 10px;

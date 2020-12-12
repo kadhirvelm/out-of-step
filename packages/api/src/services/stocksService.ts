@@ -4,7 +4,10 @@ import { IPriceHistory, IPriceHistoryId, IStock, IStockId } from "../types/dataT
 export type ITimeBucket = "day" | "5 days" | "month" | "all";
 
 export type IStockWithDollarValue = IStock &
-    Pick<IPriceHistory, "dollarValue" | "timestamp"> & { priceHistoryId: IPriceHistoryId };
+    Pick<IPriceHistory, "dollarValue" | "timestamp"> & {
+        priceHistoryId: IPriceHistoryId;
+        previousPriceHistory?: Pick<IPriceHistory, "dollarValue" | "timestamp">;
+    };
 
 export interface IPriceHistoryInBuckets {
     timestamp: string;

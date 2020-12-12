@@ -245,7 +245,11 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                 ))}
             </div>
             <div className={styles.pricePointsContainer}>
-                <StockChart pricePoints={stockInformation.priceHistory} timeBucket={bucket} />
+                <StockChart
+                    previousClosePrice={viewStockWithLatestPrice.previousPriceHistory?.dollarValue}
+                    pricePoints={stockInformation.priceHistory}
+                    timeBucket={bucket}
+                />
             </div>
             <div className={styles.basicInformationContainer}>
                 <div className={styles.columnContainer}>
