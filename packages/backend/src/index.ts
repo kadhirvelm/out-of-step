@@ -1,8 +1,8 @@
 import { ORIGIN, PORT } from "@stochastic-exchange/api";
+import bodyParser from "body-parser";
 import compression from "compression";
 import express from "express";
 import { createServer } from "http";
-import bodyParser from "body-parser";
 import { configureAllRoutes } from "./routes/configureAllRoutes";
 import { configureSecurity } from "./security/configureSecurity";
 
@@ -15,6 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 configureSecurity(app);
 configureAllRoutes(app);
+
+// instantiateAllCronJobs();
 
 if (ORIGIN !== undefined) {
     server.listen(PORT as number | undefined, ORIGIN, () => {
