@@ -131,12 +131,7 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
             <div className={styles.userInformationContainer}>
                 <span className={styles.greeting}>Hi {userAccount.name},</span>
                 <div className={styles.assetInformation}>
-                    <span
-                        className={classNames(styles.totalWorth, {
-                            [styles.negativePrice]: sortedStocks.previousTotalAssetWorth > sortedStocks.totalAssetWorth,
-                            [styles.positivePrice]: sortedStocks.previousTotalAssetWorth < sortedStocks.totalAssetWorth,
-                        })}
-                    >
+                    <span className={styles.totalWorth}>
                         ${((sortedStocks.totalAssetWorth ?? 0) + userAccount.cashOnHand).toLocaleString()}
                     </span>
                     <div className={styles.breakdownContainer}>
