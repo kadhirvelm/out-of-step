@@ -6,6 +6,8 @@ import { createServer } from "http";
 import { configureAllRoutes } from "./routes/configureAllRoutes";
 import { configureSecurity } from "./security/configureSecurity";
 
+import { generateHistoricalData } from "./cronJobs/stocks/generateHistoricalData";
+
 const app = express();
 const server = createServer(app);
 
@@ -17,6 +19,7 @@ configureSecurity(app);
 configureAllRoutes(app);
 
 // instantiateAllCronJobs();
+// generateHistoricalData("Agri Cola Inc");
 
 if (ORIGIN !== undefined) {
     server.listen(PORT as number | undefined, ORIGIN, () => {

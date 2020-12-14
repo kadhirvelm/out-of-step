@@ -2,19 +2,7 @@
 import { IPriceHistory, IStock } from "@stochastic-exchange/api";
 import _ from "lodash";
 import { postgresPool } from "../../utils/getPostgresPool";
-import { IStockPlugin } from "./types";
-
-const priceSampleStock: IStockPlugin = (_unused, previousPriceHistory?: IPriceHistory) => {
-    return new Promise(resolve => {
-        resolve({ dollarValue: (previousPriceHistory?.dollarValue ?? 10) + Math.random() * 5 });
-    });
-};
-
-const priceBubbaBoys: IStockPlugin = (_unused, previousPriceHistory?: IPriceHistory) => {
-    return new Promise(resolve => {
-        resolve({ dollarValue: (previousPriceHistory?.dollarValue ?? 10) + Math.random() * 15 });
-    });
-};
+import { STOCK_PRICER_PLUGINS } from "./stockPricerPlugins";
 
 export async function pricingStocksCronJob() {
     const [allStocks, latestPriceHistory, totalOwned] = await Promise.all([
@@ -29,21 +17,21 @@ export async function pricingStocksCronJob() {
 
     const latestPriceKeyedByStock = _.keyBy(latestPriceHistory.rows, priceHistory => priceHistory.stock);
     const totalOwnedKeyedByStock = _.keyBy(totalOwned.rows, owned => owned.stockId);
-    const stockPlugins: { [stockName: string]: IStockPlugin } = {
-        "Sample stock": priceSampleStock,
-        "Bubba Boys": priceBubbaBoys,
-    };
+
+    const priceForDate = new Date();
 
     const allPriceHistoryInserts = _.compact(
         await Promise.all(
             allStocks.rows.map(async stock => {
-                const pricingFunction = stockPlugins[stock.name];
+                const pricingFunction = STOCK_PRICER_PLUGINS[stock.name];
                 if (pricingFunction === undefined) {
                     return undefined;
                 }
 
                 try {
                     const nextDollarValue = await pricingFunction(
+                        priceForDate,
+                        stock,
                         totalOwnedKeyedByStock[stock.id]?.totalOwned ?? 0,
                         latestPriceKeyedByStock[stock.id],
                     );
