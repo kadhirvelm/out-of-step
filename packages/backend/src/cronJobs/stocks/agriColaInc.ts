@@ -1,15 +1,11 @@
+import { getPriceForAgriColaInc, IAgriColaIncInputData } from "@stochastic-exchange/ml-models";
 import { callOnExternalEndpoint } from "../../utils/callOnExternalEndpoint";
 import { averageOfNumberArray, averageOfObjectsArray } from "../../utils/mathUtils";
 import { IStockPricerPlugin } from "./types";
 
-export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwnedStock, previousPriceHistory) => {
-    // for a given date
-    // get the historical average
-    // UV reading
-    // and weather
-    // delta --> historical_low * temp_in_C - historical_high * UV_reading
-    // new dollar --> previousPriceHistory + (delta * (1.1 - %ownership))
+const DEFAULT_VALUE = 25;
 
+export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwnedStock, previousPriceHistory) => {
     const [historicalStockData, weatherHistoricalCast] = await Promise.all([
         callOnExternalEndpoint(
             `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${new Date(
@@ -17,23 +13,38 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
             ).valueOf() / 1000}&to=${date.valueOf() / 1000}&token=${process.env.FINNHUB_TOKEN}`,
         ),
         callOnExternalEndpoint(
-            `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.739071&lon=-75.539787&dt=${date.valueOf() /
-                1000}&appid=${process.env.OPEN_WEATHER_MAP}`,
+            `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.739071&lon=-75.539787&dt=${Math.round(
+                date.valueOf() / 1000,
+            )}&appid=${process.env.OPEN_WEATHER_MAP}`,
         ),
     ]);
 
     const lowPriceAverage = averageOfNumberArray(historicalStockData?.l ?? []);
     const highPriceAverage = averageOfNumberArray(historicalStockData?.h ?? []);
 
-    const averageTemperateInCelsius = (averageOfObjectsArray(weatherHistoricalCast.hourly, "temp") ?? 274.15) - 273.15;
-    const averageWeatherSpeed = averageOfObjectsArray(weatherHistoricalCast.hourly, "wind_speed") ?? 1;
+    const averageTemperateInCelsius = (averageOfObjectsArray(weatherHistoricalCast.hourly, "temp") ?? 273.15) - 273.15;
+    const averageWindSpeed = averageOfObjectsArray(weatherHistoricalCast.hourly, "wind_speed") ?? 0;
 
-    const deltaFromPreviousDollar =
-        (lowPriceAverage ?? 0) * Math.max(averageTemperateInCelsius, 1) - (highPriceAverage ?? 0) * averageWeatherSpeed;
+    const percentOwnership = totalOwnedStock / stock.totalQuantity;
 
-    const accountForOwnership = 1 - totalOwnedStock / stock.totalQuantity;
+    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
-    // TODO: come up with some ML model that will price this automatically...this is painful af
+    const inputToModel: IAgriColaIncInputData = {
+        averageTemperateInCelsius,
+        averageWindSpeed,
+        highPriceAverage: highPriceAverage ?? previousPrice,
+        lowPriceAverage: lowPriceAverage ?? previousPrice,
+        percentOwnership,
+        previousPrice,
+    };
+    const dollarValue = await getPriceForAgriColaInc(inputToModel);
 
-    return { dollarValue: (previousPriceHistory?.dollarValue ?? 25) + deltaFromPreviousDollar * accountForOwnership };
+    if (dollarValue === undefined) {
+        return { dollarValue: previousPriceHistory?.dollarValue ?? DEFAULT_VALUE };
+    }
+
+    return {
+        calculationNotes: JSON.stringify(inputToModel),
+        dollarValue,
+    };
 };

@@ -40,9 +40,9 @@ export async function pricingStocksCronJob() {
                             ? `'${nextDollarValue.calculationNotes}'`
                             : "NULL"
                     })`;
-                } catch {
+                } catch (e) {
                     // eslint-disable-next-line no-console
-                    console.error(`Something went wrong when pricing: ${stock.name}, ${stock.id}.`);
+                    console.error(`Something went wrong when pricing: ${stock.name}, ${stock.id}.`, e);
                     return undefined;
                 }
             }),

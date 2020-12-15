@@ -21,6 +21,7 @@ function maybeGetExistingCronJob() {
 }
 
 function scheduleNextStocksCronJob() {
+    // TODO: make the market open only from 6 AM - 9 PM, M - F
     const nextDate = Date.now() + _.random(10, 60) * 1000; // * 60;
     writeFileSync(STOCKS_CONFIG_FILE, JSON.stringify({ nextDate }));
 
@@ -40,6 +41,9 @@ function getNextStocksCronJobDate(): Date {
 function instantiateStocksCronJob() {
     scheduleJob(getNextStocksCronJobDate(), async () => {
         await pricingStocksCronJob();
+
+        // eslint-disable-next-line no-console
+        console.log("Price stocks for: ", new Date().toLocaleString());
 
         scheduleNextStocksCronJob();
         instantiateStocksCronJob();
