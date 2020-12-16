@@ -1,6 +1,8 @@
-import { IPriceHistory } from "@stochastic-exchange/api";
+import { IPriceHistory, IStock } from "@stochastic-exchange/api";
 
-export type IStockPlugin = (
+export type IStockPricerPlugin = (
+    date: Date,
+    stock: IStock,
     totalOwnedStock: number,
-    previousPriceHistory?: IPriceHistory,
+    previousPriceHistory?: Pick<IPriceHistory, "dollarValue" | "calculationNotes">,
 ) => Promise<Pick<IPriceHistory, "dollarValue" | "calculationNotes">>;

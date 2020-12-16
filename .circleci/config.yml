@@ -20,6 +20,21 @@ jobs:
                 paths:
                     - node_modules
                 key: v1-dependencies-{{ checksum "package.json" }}
+    test:
+        docker:
+            - image: circleci/node:14.15.1
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "package.json" }}
+                    - v1-dependencies-
+            - run:
+                name: Install dependencies
+                command: NODE_ENV=development yarn
+            - run:
+                name: Test
+                command: NODE_ENV=production yarn test
     build:
         docker:
             - image: circleci/node:14.15.1
@@ -67,6 +82,9 @@ workflows:
         jobs:
             - setup
             - clean-lock
+            - test:
+                requires:
+                    - setup
             - build:
                 requires:
                     - setup
