@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import compression from "compression";
 import express from "express";
 import { createServer } from "http";
+import { instantiateAllCronJobs } from "./cronJobs/instantiateAllCronJobs";
 import { configureAllRoutes } from "./routes/configureAllRoutes";
 import { configureSecurity } from "./security/configureSecurity";
 
@@ -16,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 configureSecurity(app);
 configureAllRoutes(app);
 
-// instantiateAllCronJobs();
+instantiateAllCronJobs();
 
 if (ORIGIN !== undefined) {
     server.listen(PORT as number | undefined, ORIGIN, () => {
