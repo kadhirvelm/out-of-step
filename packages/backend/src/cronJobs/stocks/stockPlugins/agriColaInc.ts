@@ -1,7 +1,7 @@
 import { getPriceForAgriColaInc, IAgriColaIncInputData } from "@stochastic-exchange/ml-models";
-import { callOnExternalEndpoint } from "../../utils/callOnExternalEndpoint";
-import { averageOfNumberArray, averageOfObjectsArray } from "../../utils/mathUtils";
-import { IStockPricerPlugin } from "./types";
+import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
+import { averageOfNumberArray, averageOfObjectsArray } from "../../../utils/mathUtils";
+import { IStockPricerPlugin } from "../types";
 
 const DEFAULT_VALUE = 25;
 

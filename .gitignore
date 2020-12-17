@@ -104,4 +104,4 @@ compiled_types/
 
 .DS_Store
 
-stochastic_exchange_stocks.json
+packages/stochastic_exchange_stocks.json

@@ -34,7 +34,7 @@ export async function updateAccount(
 
     await postgresPool.query(
         // eslint-disable-next-line prettier/prettier
-        "UPDATE account SET \"hashedPassword\" = $2, email = $3, name = $4 \"portfolioName\" = $5 WHERE id = $1",
+        "UPDATE account SET \"hashedPassword\" = $2, email = $3, name = $4, \"portfolioName\" = $5 WHERE id = $1",
         [accountId, updatedUser.hashedPassword, updatedUser.email, updatedUser.name, updatedUser.portfolioName],
     );
 
