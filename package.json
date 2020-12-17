@@ -30,7 +30,6 @@
     "build": "lerna run build",
     "clean": "node scripts/cleanPackages",
     "clean:lock": "npx yarn-deduplicate yarn.lock",
-    "dev": "lerna run dev --parallel",
     "lint": "lerna run lint",
     "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
     "test": "lerna run test"
