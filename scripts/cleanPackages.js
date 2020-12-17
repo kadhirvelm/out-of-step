@@ -28,4 +28,3 @@ function getPackageNames(namespace) {
 }
 
 getPackageNames().forEach(packageName => cleanPackage(packageName));
-getPackageNames("puzzles").forEach(packageName => cleanPackage(packageName, "puzzles"));
