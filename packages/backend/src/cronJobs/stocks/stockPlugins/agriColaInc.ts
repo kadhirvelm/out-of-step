@@ -1,15 +1,17 @@
 import { getPriceForAgriColaInc, IAgriColaIncInputData } from "@stochastic-exchange/ml-models";
-import { callOnExternalEndpoint } from "../../utils/callOnExternalEndpoint";
-import { averageOfNumberArray, averageOfObjectsArray } from "../../utils/mathUtils";
-import { IStockPricerPlugin } from "./types";
+import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
+import { changeDateByDays } from "../../../utils/dateUtil";
+import { averageOfNumberArray, averageOfObjectsArray } from "../../../utils/mathUtils";
+import { IStockPricerPlugin } from "../types";
 
 const DEFAULT_VALUE = 25;
 
 export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwnedStock, previousPriceHistory) => {
     const [historicalStockData, weatherHistoricalCast] = await Promise.all([
         callOnExternalEndpoint(
-            `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${new Date(
-                date.valueOf() - 1000 * 60 * 60 * 12,
+            `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${changeDateByDays(
+                new Date(),
+                -0.5,
             ).valueOf() / 1000}&to=${date.valueOf() / 1000}&token=${process.env.FINNHUB_TOKEN}`,
         ),
         callOnExternalEndpoint(
