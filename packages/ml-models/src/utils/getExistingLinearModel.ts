@@ -1,4 +1,4 @@
-import tf from "@tensorflow/tfjs-node";
+import * as tf from "@tensorflow/tfjs-node";
 import { getModelPath } from "./getModelPath";
 import { ITrainLinearModelOptions } from "./trainLinearModel";
 

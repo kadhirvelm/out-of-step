@@ -1,4 +1,4 @@
-import tf from "@tensorflow/tfjs-node";
+import * as tf from "@tensorflow/tfjs-node";
 import { getExistingLinearModel } from "../utils/getExistingLinearModel";
 import { getValuesFromTensor } from "../utils/getValuesFromTensor";
 import { ITrainLinearModelOptions, trainLinearModel } from "../utils/trainLinearModel";
@@ -36,38 +36,6 @@ export async function getPriceForAgriColaInc(input: IAgriColaIncInputData): Prom
 
     const predictedValue = trainedModel.predict(tf.tensor2d(dataArray, [1, dataArray.length]));
     return getValuesFromTensor(predictedValue)[0];
-}
-
-export async function testModelForAgriCola() {
-    const prices = await Promise.all([
-        getPriceForAgriColaInc({
-            averageTemperateInCelsius: 5.03,
-            averageWindSpeed: 3.71,
-            highPriceAverage: 39.06,
-            lowPriceAverage: 38.9,
-            percentOwnership: 0,
-            previousPrice: 24,
-        }),
-        getPriceForAgriColaInc({
-            averageTemperateInCelsius: 2.03,
-            averageWindSpeed: 3.71,
-            highPriceAverage: 39.06,
-            lowPriceAverage: 38.9,
-            percentOwnership: 0,
-            previousPrice: 24,
-        }),
-        getPriceForAgriColaInc({
-            averageTemperateInCelsius: 8.03,
-            averageWindSpeed: 3.71,
-            highPriceAverage: 39.06,
-            lowPriceAverage: 38.9,
-            percentOwnership: 0,
-            previousPrice: 24,
-        }),
-    ]);
-
-    // eslint-disable-next-line no-console
-    console.log(prices);
 }
 
 export async function trainModelForAgriCola() {

@@ -5,6 +5,7 @@ export function pingServerToPreventSleep() {
         try {
             fetch(`${process.env.HOSTNAME}/`);
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error("Something went wrong trying to ping the server.", e);
         } finally {
             pingServerToPreventSleep();
