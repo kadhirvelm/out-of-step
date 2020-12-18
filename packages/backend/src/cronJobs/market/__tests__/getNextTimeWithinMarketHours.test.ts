@@ -40,7 +40,7 @@ describe("can correctly increment the time", () => {
         );
     });
 
-    it.only("can return a valid time in Europe/London", () => {
+    it("can return a valid time in Europe/London", () => {
         const currentDate = dayjs("2020-12-15 23:00 GMT", "Europe/London");
         expect(getNextTimeWithinMarketHours(currentDate).valueOf()).toEqual(currentDate.valueOf());
     });
