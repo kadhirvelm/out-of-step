@@ -10,7 +10,7 @@ async function maybeGetExistingCronJob() {
         const date = await postgresPool.query<{ date: string }>('SELECT * FROM "nextCronJob"');
 
         const parsedDate = new Date(date.rows[0]?.date);
-        if (parsedDate.valueOf() < Date.now()) {
+        if (date.rows[0] === undefined || parsedDate.valueOf() < Date.now()) {
             return undefined;
         }
 
@@ -27,7 +27,7 @@ const getRandomTimeBetweenMinutesFromNow = (minimumMinutes: number, maximumMinut
 async function scheduleNextStocksCronJob() {
     await postgresPool.query('DELETE FROM "nextCronJob"');
 
-    const nextDate = getNextTimeWithinMarketHours(getRandomTimeBetweenMinutesFromNow(0.25, 1.25));
+    const nextDate = getNextTimeWithinMarketHours(getRandomTimeBetweenMinutesFromNow(10, 45));
 
     await postgresPool.query('INSERT INTO "nextCronJob" (date) VALUES ($1)', [nextDate]);
 
