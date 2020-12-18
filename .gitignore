@@ -103,5 +103,3 @@ dist
 compiled_types/
 
 .DS_Store
-
-packages/stochastic_exchange_stocks.json

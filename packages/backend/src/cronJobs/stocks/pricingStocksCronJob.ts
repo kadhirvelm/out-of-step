@@ -3,8 +3,9 @@ import { IPriceHistory, IStock } from "@stochastic-exchange/api";
 import _ from "lodash";
 import { postgresPool } from "../../utils/getPostgresPool";
 import { STOCK_PRICER_PLUGINS } from "./stockPricerPlugins";
+import { IStockPricerPlugin } from "./types";
 
-export async function pricingStocksCronJob() {
+async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: IStockPricerPlugin }) {
     const [allStocks, latestPriceHistory, totalOwned] = await Promise.all([
         postgresPool.query<IStock>(`SELECT * FROM stock WHERE status = 'AVAILABLE'`),
         postgresPool.query<IPriceHistory>(
@@ -23,7 +24,7 @@ export async function pricingStocksCronJob() {
     const allPriceHistoryInserts = _.compact(
         await Promise.all(
             allStocks.rows.map(async stock => {
-                const pricingFunction = STOCK_PRICER_PLUGINS[stock.name];
+                const pricingFunction = stockPricerPlugins[stock.name];
                 if (pricingFunction === undefined) {
                     return undefined;
                 }
@@ -35,7 +36,16 @@ export async function pricingStocksCronJob() {
                         totalOwnedKeyedByStock[stock.id]?.totalOwned ?? 0,
                         latestPriceKeyedByStock[stock.id],
                     );
-                    return `(${Math.round(nextDollarValue.dollarValue * 100) / 100},'${stock.id}',${
+
+                    const stabilizedDollarValue = Math.max(
+                        Math.max(
+                            nextDollarValue.dollarValue,
+                            (latestPriceKeyedByStock[stock.id]?.dollarValue ?? 0) * 0.8,
+                        ),
+                        0.1,
+                    );
+
+                    return `(${Math.round(stabilizedDollarValue * 100) / 100},'${stock.id}',${
                         nextDollarValue.calculationNotes !== undefined
                             ? `'${nextDollarValue.calculationNotes}'`
                             : "NULL"
@@ -49,9 +59,18 @@ export async function pricingStocksCronJob() {
         ),
     );
 
-    return postgresPool.query(
-        `INSERT INTO "priceHistory" ("dollarValue", stock, "calculationNotes") VALUES ${allPriceHistoryInserts.join(
-            ",",
-        )}`,
-    );
+    return `INSERT INTO "priceHistory" ("dollarValue", stock, "calculationNotes") VALUES ${allPriceHistoryInserts.join(
+        ",",
+    )}`;
+}
+
+export async function testPriceChange(stockPricerPlugins: { [name: string]: IStockPricerPlugin }) {
+    const insertStatement = await getAllPriceInserts(stockPricerPlugins);
+    // eslint-disable-next-line no-console
+    console.log(insertStatement);
+}
+
+export async function pricingStocksCronJob() {
+    const insertStatement = await getAllPriceInserts(STOCK_PRICER_PLUGINS);
+    return postgresPool.query(insertStatement);
 }
