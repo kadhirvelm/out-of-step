@@ -25,8 +25,6 @@ if (ORIGIN !== undefined) {
     server.listen(PORT as number | undefined, ORIGIN, () => {
         // eslint-disable-next-line no-console
         console.log({ level: "info", message: `Server started, listening on http://${ORIGIN}:${PORT}` });
-
-        pingServerToPreventSleep();
     });
 } else {
     // PRODUCTION
