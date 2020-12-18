@@ -1,3 +1,4 @@
+// NOTE: Market hours are in PST, but the server exists in UTC
 const MARKET_HOURS = {
     startTime: 6,
     endTime: 21,
@@ -20,12 +21,19 @@ const goToNextDay = (startDate: Date) => {
     return newTime;
 };
 
+const adjustDateToPST = (date: Date) => new Date(date.valueOf() - (480 - date.getTimezoneOffset()) * 1000 * 60);
+
 export function getNextTimeWithinMarketHours(nextTime: Date): Date {
-    if (!MARKET_HOURS.openDays.includes(nextTime.getDay()) || nextTime.getHours() >= MARKET_HOURS.endTime) {
+    const dateAdjustedToPst = adjustDateToPST(nextTime);
+
+    if (
+        !MARKET_HOURS.openDays.includes(dateAdjustedToPst.getDay()) ||
+        dateAdjustedToPst.getHours() >= MARKET_HOURS.endTime
+    ) {
         return getNextTimeWithinMarketHours(goToNextDay(nextTime));
     }
 
-    if (nextTime.getHours() < MARKET_HOURS.startTime) {
+    if (dateAdjustedToPst.getHours() < MARKET_HOURS.startTime) {
         return getNextTimeWithinMarketHours(goToMarketStartTime(nextTime));
     }
 
