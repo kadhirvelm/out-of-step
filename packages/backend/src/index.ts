@@ -6,6 +6,7 @@ import { createServer } from "http";
 import { instantiateAllCronJobs } from "./cronJobs/instantiateAllCronJobs";
 import { configureAllRoutes } from "./routes/configureAllRoutes";
 import { configureSecurity } from "./security/configureSecurity";
+import { pingServerToPreventSleep } from "./utils/pingServerToPreventSleep";
 
 const app = express();
 const server = createServer(app);
@@ -24,11 +25,15 @@ if (ORIGIN !== undefined) {
     server.listen(PORT as number | undefined, ORIGIN, () => {
         // eslint-disable-next-line no-console
         console.log({ level: "info", message: `Server started, listening on http://${ORIGIN}:${PORT}` });
+
+        pingServerToPreventSleep();
     });
 } else {
     // PRODUCTION
     server.listen(PORT || 3000, () => {
         // eslint-disable-next-line no-console
         console.log({ level: "info", message: `Server started, listening on ${PORT}` });
+
+        pingServerToPreventSleep();
     });
 }
