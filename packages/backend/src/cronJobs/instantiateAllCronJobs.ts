@@ -13,7 +13,7 @@ async function maybeGetExistingCronJob() {
     try {
         const date = await postgresPool.query<{ date: string }>('SELECT * FROM "nextCronJob"');
 
-        const parsedDate = dayjs(date.rows[0]?.date, "America/Los_Angeles");
+        const parsedDate = dayjs(date.rows[0]?.date);
         if (date.rows[0] === undefined || parsedDate.valueOf() < Date.now()) {
             return undefined;
         }
