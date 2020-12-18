@@ -1,33 +1,35 @@
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+// NOTE: Market hours are in PST, but the server exists in UTC
 const MARKET_HOURS = {
     startTime: 6,
     endTime: 21,
     openDays: [1, 2, 3, 4, 5],
 };
 
-const goToMarketStartTime = (startDate: Date) => {
-    const newTime = new Date(startDate);
-
-    newTime.setHours(MARKET_HOURS.startTime);
-
-    return newTime;
+const goToMarketStartTime = (startDate: dayjs.Dayjs) => {
+    return startDate.set("hour", MARKET_HOURS.startTime);
 };
 
-const goToNextDay = (startDate: Date) => {
-    const newTime = goToMarketStartTime(startDate);
-
-    newTime.setDate(startDate.getDate() + 1);
-
-    return newTime;
+const goToNextDay = (startDate: dayjs.Dayjs) => {
+    return goToMarketStartTime(startDate).add(1, "day");
 };
 
-export function getNextTimeWithinMarketHours(nextTime: Date): Date {
-    if (!MARKET_HOURS.openDays.includes(nextTime.getDay()) || nextTime.getHours() >= MARKET_HOURS.endTime) {
-        return getNextTimeWithinMarketHours(goToNextDay(nextTime));
+export function getNextTimeWithinMarketHours(nextTime: dayjs.Dayjs): dayjs.Dayjs {
+    const dateAdjustedToPst = nextTime.tz("America/Los_Angeles");
+
+    if (!MARKET_HOURS.openDays.includes(dateAdjustedToPst.day()) || dateAdjustedToPst.hour() >= MARKET_HOURS.endTime) {
+        return getNextTimeWithinMarketHours(goToNextDay(dateAdjustedToPst));
     }
 
-    if (nextTime.getHours() < MARKET_HOURS.startTime) {
-        return getNextTimeWithinMarketHours(goToMarketStartTime(nextTime));
+    if (dateAdjustedToPst.hour() < MARKET_HOURS.startTime) {
+        return getNextTimeWithinMarketHours(goToMarketStartTime(dateAdjustedToPst));
     }
 
-    return nextTime;
+    return dateAdjustedToPst;
 }

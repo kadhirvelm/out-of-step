@@ -2,8 +2,8 @@ import cors from "cors";
 import { Express } from "express";
 
 const CORS_OPTIONS: cors.CorsOptions = {
-    origin: [...(process.env.NODE_ENV === "production" ? ["stochastic.live", "www.stochastic.live"] : [])],
-    methods: ["GET"],
+    origin: [/\.*stochastic.live$/],
+    methods: ["GET", "POST", "PUT", "DELETE"],
 };
 
 export function configureSecurity(app: Express) {
