@@ -2,7 +2,7 @@ import cors from "cors";
 import { Express } from "express";
 
 const CORS_OPTIONS: cors.CorsOptions = {
-    origin: [...(process.env.NODE_ENV === "production" ? [] : [])],
+    origin: [...(process.env.NODE_ENV === "production" ? ["stochastic.live", "www.stochastic.live"] : [])],
     methods: ["GET"],
 };
 

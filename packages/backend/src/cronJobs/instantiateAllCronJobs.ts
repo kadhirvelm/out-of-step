@@ -1,21 +1,20 @@
-import { readFileSync, writeFileSync } from "fs";
+/* eslint-disable @typescript-eslint/quotes */
 import _ from "lodash";
 import { scheduleJob } from "node-schedule";
-import { join } from "path";
+import { postgresPool } from "../utils/getPostgresPool";
 import { getNextTimeWithinMarketHours } from "./market/getNextTimeWithinMarketHours";
 import { pricingStocksCronJob } from "./stocks/pricingStocksCronJob";
 
-const STOCKS_CONFIG_FILE = join(process.cwd(), "../stochastic_exchange_stocks.json");
-
-function maybeGetExistingCronJob() {
+async function maybeGetExistingCronJob() {
     try {
-        const date: string = readFileSync(STOCKS_CONFIG_FILE)?.toString();
-        const jsonDate = parseInt(JSON.parse(date).nextDate, 10);
-        if (jsonDate < Date.now()) {
+        const date = await postgresPool.query<{ date: string }>('SELECT * FROM "nextCronJob"');
+
+        const parsedDate = new Date(date.rows[0]?.date);
+        if (parsedDate.valueOf() < Date.now()) {
             return undefined;
         }
 
-        return new Date(jsonDate);
+        return parsedDate;
     } catch {
         return undefined;
     }
@@ -25,16 +24,18 @@ const getRandomTimeBetweenMinutesFromNow = (minimumMinutes: number, maximumMinut
     return new Date(Date.now() + _.random(minimumMinutes, maximumMinutes) * 1000 * 60);
 };
 
-function scheduleNextStocksCronJob() {
+async function scheduleNextStocksCronJob() {
+    await postgresPool.query('DELETE FROM "nextCronJob"');
+
     const nextDate = getNextTimeWithinMarketHours(getRandomTimeBetweenMinutesFromNow(0.25, 1.25));
 
-    writeFileSync(STOCKS_CONFIG_FILE, JSON.stringify({ nextDate: nextDate.valueOf() }));
+    await postgresPool.query('INSERT INTO "nextCronJob" (date) VALUES ($1)', [nextDate]);
 
     return nextDate;
 }
 
-function getNextStocksCronJobDate(): Date {
-    const existingCronJobDate = maybeGetExistingCronJob();
+async function getNextStocksCronJobDate(): Promise<Date> {
+    const existingCronJobDate = await maybeGetExistingCronJob();
 
     if (existingCronJobDate !== undefined) {
         return existingCronJobDate;
@@ -51,9 +52,9 @@ function instantiateStocksCronJob() {
     }
 
     // Give the system a second to catch up from the last file write
-    setTimeout(() => {
+    setTimeout(async () => {
         isJobRunning = true;
-        scheduleJob(getNextStocksCronJobDate(), async () => {
+        scheduleJob(await getNextStocksCronJobDate(), async () => {
             await pricingStocksCronJob();
 
             // eslint-disable-next-line no-console
