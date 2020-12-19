@@ -1,4 +1,4 @@
-import { Button } from "@blueprintjs/core";
+import { Button, NonIdealState } from "@blueprintjs/core";
 import {
     IOwnedStock,
     IStockValueAtTransactionTime,
@@ -91,8 +91,16 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
         );
     };
 
+    const maybeRenderTransactionHistory = () => {
+        if (transactionHistory?.length === 0) {
+            return <NonIdealState description="No transaction to display" />;
+        }
+
+        return transactionHistory?.map(renderSingleTransaction);
+    };
+
     const totalStockWorth =
-        (transactionHistory?.[0].stockValueAtTransactionTime ?? 0) +
+        (transactionHistory?.[0]?.stockValueAtTransactionTime ?? 0) +
         (userOwnedStockOfStockWithLatestPrice?.quantity ?? 0) * viewTransactionsForStock.dollarValue;
 
     return (
@@ -118,7 +126,7 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
                 <span className={styles.transactionsTableLabel}>Transaction</span>
                 <span className={styles.transactionsTableLabel}>Total value</span>
             </div>
-            <div className={styles.transactionsTable}>{transactionHistory?.map(renderSingleTransaction)}</div>
+            <div className={styles.transactionsTable}>{maybeRenderTransactionHistory()}</div>
         </div>
     );
 };
