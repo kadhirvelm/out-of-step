@@ -13,7 +13,10 @@ const MARKET_HOURS = {
 };
 
 const goToMarketStartTime = (startDate: dayjs.Dayjs) => {
-    return startDate.set("hour", MARKET_HOURS.startTime);
+    return startDate
+        .set("hour", MARKET_HOURS.startTime)
+        .set("minute", 0)
+        .set("second", 0);
 };
 
 const goToNextDay = (startDate: dayjs.Dayjs) => {
@@ -32,4 +35,14 @@ export function getNextTimeWithinMarketHours(nextTime: dayjs.Dayjs): dayjs.Dayjs
     }
 
     return dateAdjustedToPst;
+}
+
+export function isTimeInMarketHours(nextTime: Date): boolean {
+    const dayjsTime = dayjs(nextTime);
+
+    return dayjsTime.valueOf() === getNextTimeWithinMarketHours(dayjsTime).valueOf();
+}
+
+export function getNextTimeWithinMarketHoursJSDate(nextTime: Date): Date {
+    return new Date(getNextTimeWithinMarketHours(dayjs(nextTime)).valueOf());
 }

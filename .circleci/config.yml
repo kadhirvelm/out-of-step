@@ -88,7 +88,8 @@ workflows:
             - build:
                 requires:
                     - setup
-            - lint:
-                requires:
-                    - setup
-                    - build
+            # This is disabled because it takes up too much memory on the CI container to run
+            # - lint:
+            #     requires:
+            #         - setup
+            #         - build

@@ -11,6 +11,7 @@ import { SetViewStockWithLatestPrice } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { formatNumber } from "../../utils/formatNumber";
+import { MarketStatus } from "../common/marketStatus";
 import styles from "./portfolioManager.module.scss";
 
 interface IStoreProps {
@@ -140,6 +141,7 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
                     </div>
                 </div>
             </div>
+            <MarketStatus />
             <span className={styles.typeOfStockLabel}>Your portfolio</span>
             <div className={styles.stocksContainer}>{maybeRenderUserPortfolioStocks()}</div>
             <span className={classNames(styles.typeOfStockLabel, styles.otherStocks)}>Other stocks</span>

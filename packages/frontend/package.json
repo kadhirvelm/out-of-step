@@ -27,6 +27,7 @@
   "dependencies": {
     "@blueprintjs/core": "^3.36.0",
     "@stochastic-exchange/api": "^0.1.0",
+    "@stochastic-exchange/utils": "^0.1.0",
     "chartist": "^0.11.4",
     "classnames": "^2.2.6",
     "crypto-js": "^4.0.0",

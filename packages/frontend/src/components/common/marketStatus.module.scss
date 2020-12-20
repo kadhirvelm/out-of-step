@@ -1,0 +1,20 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.market-open {
+    color: $green2;
+}
+
+.market-closed {
+    color: $red2;
+}
+
+.market-closed-date {
+    margin: 0 3px;
+    font-weight: 550;
+}
