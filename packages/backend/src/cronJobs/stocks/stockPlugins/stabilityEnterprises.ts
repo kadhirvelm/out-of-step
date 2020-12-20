@@ -5,6 +5,10 @@ import { IStockPricerPlugin } from "../types";
 
 const DEFAULT_VALUE = 12;
 
+interface IStabilityEnterprisesCalculationNotes extends IStabilityEnterprisesInputData {
+    earthquakesInThisMeasure: number;
+}
+
 export const priceStabilityEnterprises: IStockPricerPlugin = async (
     date,
     stock,
@@ -25,11 +29,16 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
         ),
     ]);
 
+    const previousCalculationNotes: Partial<IStabilityEnterprisesCalculationNotes> = JSON.parse(
+        previousPriceHistory?.calculationNotes ?? "{}",
+    );
+
     const allEarthquakeMagnitudes: number[] = earthquakeData.features.map((f: any) => f.properties.mag);
-    const minimumMagnitude = Math.min(...allEarthquakeMagnitudes);
     const maximumMagnitude = Math.max(...allEarthquakeMagnitudes);
-    const totalEarthquakes = allEarthquakeMagnitudes.reduce((previous, next) => previous + next, 0);
-    const averageMagnitude = totalEarthquakes / allEarthquakeMagnitudes.length;
+
+    const earthquakesInThisMeasure = allEarthquakeMagnitudes.reduce((previous, next) => previous + next, 0);
+    const earthquakesInPreviousMeasure =
+        previousCalculationNotes.earthquakesInThisMeasure ?? earthquakesInThisMeasure ?? 0;
 
     const totalUpcomingElectionEvents = fecCalendarEvents.pagination.count;
 
@@ -38,12 +47,11 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: IStabilityEnterprisesInputData = {
-        averageMagnitude,
+        changeInEarthquakesSinceLastMeasure:
+            (earthquakesInThisMeasure ?? earthquakesInPreviousMeasure) - earthquakesInPreviousMeasure,
         maximumMagnitude,
-        minimumMagnitude,
         percentOwnership,
         previousPrice,
-        totalEarthquakes,
         totalUpcomingElectionEvents,
     };
 

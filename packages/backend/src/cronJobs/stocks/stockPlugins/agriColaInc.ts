@@ -4,15 +4,26 @@ import { changeDateByDays } from "../../../utils/dateUtil";
 import { averageOfNumberArray, averageOfObjectsArray } from "../../../utils/mathUtils";
 import { IStockPricerPlugin } from "../types";
 
-const DEFAULT_VALUE = 25;
+const DEFAULT_PRICE = 25;
+
+interface IAgriColaCalculationNotes extends IAgriColaIncInputData {
+    averagePrice: number;
+}
+
+function normalizeCelsiusIfDefined(maybeKelvinValue: number | undefined) {
+    if (maybeKelvinValue === undefined) {
+        return undefined;
+    }
+
+    return maybeKelvinValue - 273.15;
+}
 
 export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwnedStock, previousPriceHistory) => {
-    const [historicalStockData, weatherHistoricalCast] = await Promise.all([
+    const [historicalStockDataOfCTVA, weatherHistoricalCast] = await Promise.all([
         callOnExternalEndpoint(
-            `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${changeDateByDays(
-                new Date(),
-                -0.5,
-            ).valueOf() / 1000}&to=${date.valueOf() / 1000}&token=${process.env.FINNHUB_TOKEN}`,
+            `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${Math.round(
+                changeDateByDays(new Date(), -10).valueOf() / 1000,
+            )}&to=${Math.round(date.valueOf() / 1000)}&token=${process.env.FINNHUB_TOKEN}`,
         ),
         callOnExternalEndpoint(
             `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.739071&lon=-75.539787&dt=${Math.round(
@@ -21,32 +32,41 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
         ),
     ]);
 
-    const lowPriceAverage = averageOfNumberArray(historicalStockData?.l ?? []);
-    const highPriceAverage = averageOfNumberArray(historicalStockData?.h ?? []);
+    const previousCalculationNotes: Partial<IAgriColaCalculationNotes> = JSON.parse(
+        previousPriceHistory?.calculationNotes ?? "{}",
+    );
 
-    const averageTemperateInCelsius = (averageOfObjectsArray(weatherHistoricalCast.hourly, "temp") ?? 273.15) - 273.15;
-    const averageWindSpeed = averageOfObjectsArray(weatherHistoricalCast.hourly, "wind_speed") ?? 0;
+    const currentAverageOfCTVA = averageOfNumberArray(historicalStockDataOfCTVA?.c ?? []);
+    const previousAverageOfCTVA = previousCalculationNotes.averagePrice ?? currentAverageOfCTVA ?? 0;
+
+    const previousAverageTemperatureInCelsius = previousCalculationNotes.averageTemperateInCelsius ?? 1;
+    const averageTemperateInCelsius = normalizeCelsiusIfDefined(
+        averageOfObjectsArray(weatherHistoricalCast.hourly, "temp"),
+    );
+
+    const previousAverageWindSpeed = previousCalculationNotes.averageWindSpeed ?? 0;
+    const averageWindSpeed = averageOfObjectsArray(weatherHistoricalCast.hourly ?? [], "wind_speed");
 
     const percentOwnership = totalOwnedStock / stock.totalQuantity;
 
-    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
+    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: IAgriColaIncInputData = {
-        averageTemperateInCelsius,
-        averageWindSpeed,
-        highPriceAverage: highPriceAverage ?? previousPrice,
-        lowPriceAverage: lowPriceAverage ?? previousPrice,
+        averageTemperateInCelsius: averageTemperateInCelsius ?? previousAverageTemperatureInCelsius,
+        averageWindSpeed: averageWindSpeed ?? previousAverageWindSpeed,
+        changeInAveragePrice: (currentAverageOfCTVA ?? previousAverageOfCTVA) - previousAverageOfCTVA,
         percentOwnership,
         previousPrice,
     };
     const dollarValue = await getPriceForAgriColaInc(inputToModel);
 
-    if (dollarValue === undefined) {
-        return { dollarValue: previousPriceHistory?.dollarValue ?? DEFAULT_VALUE };
-    }
+    const calculationNotes: IAgriColaCalculationNotes = {
+        ...inputToModel,
+        averagePrice: currentAverageOfCTVA ?? previousAverageOfCTVA,
+    };
 
     return {
-        calculationNotes: JSON.stringify(inputToModel),
-        dollarValue,
+        calculationNotes: JSON.stringify(calculationNotes),
+        dollarValue: dollarValue ?? previousPrice,
     };
 };

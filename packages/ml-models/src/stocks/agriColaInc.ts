@@ -11,8 +11,7 @@ const optionsForAgriColaInc: ITrainLinearModelOptions = {
 export interface IAgriColaIncInputData {
     averageTemperateInCelsius: number;
     averageWindSpeed: number;
-    highPriceAverage: number;
-    lowPriceAverage: number;
+    changeInAveragePrice: number;
     percentOwnership: number;
     previousPrice: number;
 }
@@ -20,8 +19,7 @@ export interface IAgriColaIncInputData {
 const convertAgriColaIncInputToArray = (input: IAgriColaIncInputData) => [
     input.averageTemperateInCelsius,
     input.averageWindSpeed,
-    input.highPriceAverage,
-    input.lowPriceAverage,
+    input.changeInAveragePrice,
     input.percentOwnership,
     input.previousPrice,
 ];
@@ -38,14 +36,43 @@ export async function getPriceForAgriColaInc(input: IAgriColaIncInputData): Prom
     return getValuesFromTensor(predictedValue)[0];
 }
 
-export async function trainModelForAgriCola() {
+export async function trainModelForAgriColaInc() {
     const trainingData: Array<{ input: IAgriColaIncInputData; output: number }> = [
         {
             input: {
-                averageTemperateInCelsius: 5.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 0,
+                percentOwnership: 0,
+                previousPrice: 25,
+            },
+            output: 25,
+        },
+        {
+            input: {
+                averageTemperateInCelsius: -2,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 0,
+                percentOwnership: 0,
+                previousPrice: 25,
+            },
+            output: 24.5,
+        },
+        {
+            input: {
+                averageTemperateInCelsius: 2,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 0,
+                percentOwnership: 0,
+                previousPrice: 25,
+            },
+            output: 25.5,
+        },
+        {
+            input: {
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 5,
+                changeInAveragePrice: 0,
                 percentOwnership: 0,
                 previousPrice: 25,
             },
@@ -53,135 +80,167 @@ export async function trainModelForAgriCola() {
         },
         {
             input: {
-                averageTemperateInCelsius: 5.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 10,
+                changeInAveragePrice: 0,
+                percentOwnership: 0,
+                previousPrice: 25,
+            },
+            output: 27,
+        },
+        {
+            input: {
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 3,
+                percentOwnership: 0,
+                previousPrice: 25,
+            },
+            output: 25.5,
+        },
+        {
+            input: {
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 0,
+                changeInAveragePrice: -3,
+                percentOwnership: 0,
+                previousPrice: 25,
+            },
+            output: 24.5,
+        },
+
+        /** Change in percent ownership */
+        {
+            input: {
+                averageTemperateInCelsius: -2,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 0,
                 percentOwnership: 100,
                 previousPrice: 25,
             },
-            output: 25.1,
+            output: 24.75,
         },
         {
             input: {
-                averageTemperateInCelsius: 1.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
-                percentOwnership: 0,
+                averageTemperateInCelsius: 2,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 0,
+                percentOwnership: 100,
                 previousPrice: 25,
             },
-            output: 22,
+            output: 25.25,
         },
         {
             input: {
-                averageTemperateInCelsius: 5.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
-                percentOwnership: 0,
-                previousPrice: 12,
-            },
-            output: 12.8,
-        },
-        {
-            input: {
-                averageTemperateInCelsius: 5.03,
-                averageWindSpeed: 10.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
-                percentOwnership: 0,
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 5,
+                changeInAveragePrice: 0,
+                percentOwnership: 100,
                 previousPrice: 25,
             },
-            output: 28.75,
+            output: 25.5,
         },
         {
             input: {
-                averageTemperateInCelsius: 10.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
-                percentOwnership: 0,
-                previousPrice: 25,
-            },
-            output: 30,
-        },
-        {
-            input: {
-                averageTemperateInCelsius: 5.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 42.06,
-                lowPriceAverage: 38.9,
-                percentOwnership: 0,
-                previousPrice: 25,
-            },
-            output: 29.5,
-        },
-        {
-            input: {
-                averageTemperateInCelsius: 5.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 34.9,
-                percentOwnership: 0,
-                previousPrice: 25,
-            },
-            output: 29,
-        },
-        {
-            input: {
-                averageTemperateInCelsius: 5.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 24.06,
-                lowPriceAverage: 23.9,
-                percentOwnership: 0,
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 10,
+                changeInAveragePrice: 0,
+                percentOwnership: 100,
                 previousPrice: 25,
             },
             output: 26,
         },
         {
             input: {
-                averageTemperateInCelsius: 5.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 34.9,
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 3,
                 percentOwnership: 100,
                 previousPrice: 25,
             },
-            output: 26.9,
+            output: 25.25,
         },
         {
             input: {
-                averageTemperateInCelsius: 5.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
-                percentOwnership: 0,
-                previousPrice: 100,
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 0,
+                changeInAveragePrice: -3,
+                percentOwnership: 100,
+                previousPrice: 25,
             },
-            output: 105,
+            output: 24.75,
+        },
+
+        /** Different previous price */
+        {
+            input: {
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 0,
+                percentOwnership: 0,
+                previousPrice: 50,
+            },
+            output: 50,
         },
         {
             input: {
-                averageTemperateInCelsius: 10.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averageTemperateInCelsius: -2,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 0,
                 percentOwnership: 0,
-                previousPrice: 100,
+                previousPrice: 50,
             },
-            output: 109,
+            output: 49,
         },
         {
             input: {
-                averageTemperateInCelsius: 1.03,
-                averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averageTemperateInCelsius: 2,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 0,
                 percentOwnership: 0,
-                previousPrice: 100,
+                previousPrice: 50,
             },
-            output: 98,
+            output: 51,
+        },
+        {
+            input: {
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 5,
+                changeInAveragePrice: 0,
+                percentOwnership: 0,
+                previousPrice: 50,
+            },
+            output: 52,
+        },
+        {
+            input: {
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 10,
+                changeInAveragePrice: 0,
+                percentOwnership: 0,
+                previousPrice: 50,
+            },
+            output: 54,
+        },
+        {
+            input: {
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 0,
+                changeInAveragePrice: 3,
+                percentOwnership: 0,
+                previousPrice: 50,
+            },
+            output: 51,
+        },
+        {
+            input: {
+                averageTemperateInCelsius: 0,
+                averageWindSpeed: 0,
+                changeInAveragePrice: -3,
+                percentOwnership: 0,
+                previousPrice: 50,
+            },
+            output: 49,
         },
     ];
 

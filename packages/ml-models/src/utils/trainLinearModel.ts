@@ -35,7 +35,7 @@ export async function trainLinearModel(
         verbose: 1,
     });
 
-    model.save(getModelPath(options.name));
+    await model.save(getModelPath(options.name));
 
     return model;
 }
