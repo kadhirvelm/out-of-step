@@ -7,7 +7,6 @@ import { hideBin } from "yargs/helpers";
 import chalk from "chalk";
 import { existsSync } from "fs";
 import { join } from "path";
-import { execSync } from "child_process";
 
 const { argv } = yargs(hideBin(process.argv));
 

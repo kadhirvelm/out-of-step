@@ -9,10 +9,9 @@ const DEFAULT_VALUE = 25;
 export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwnedStock, previousPriceHistory) => {
     const [historicalStockData, weatherHistoricalCast] = await Promise.all([
         callOnExternalEndpoint(
-            `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${changeDateByDays(
-                new Date(),
-                -0.5,
-            ).valueOf() / 1000}&to=${date.valueOf() / 1000}&token=${process.env.FINNHUB_TOKEN}`,
+            `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${Math.round(
+                changeDateByDays(new Date(), -0.5).valueOf() / 1000,
+            )}&to=${Math.round(date.valueOf() / 1000)}&token=${process.env.FINNHUB_TOKEN}`,
         ),
         callOnExternalEndpoint(
             `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.739071&lon=-75.539787&dt=${Math.round(
@@ -20,6 +19,10 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
             )}&appid=${process.env.OPEN_WEATHER_MAP}`,
         ),
     ]);
+
+    console.log("REACHING HERE @@@@");
+
+    console.log(historicalStockData);
 
     const lowPriceAverage = averageOfNumberArray(historicalStockData?.l ?? []);
     const highPriceAverage = averageOfNumberArray(historicalStockData?.h ?? []);

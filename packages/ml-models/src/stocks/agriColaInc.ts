@@ -11,8 +11,7 @@ const optionsForAgriColaInc: ITrainLinearModelOptions = {
 export interface IAgriColaIncInputData {
     averageTemperateInCelsius: number;
     averageWindSpeed: number;
-    highPriceAverage: number;
-    lowPriceAverage: number;
+    averagePrice: number;
     percentOwnership: number;
     previousPrice: number;
 }
@@ -20,8 +19,7 @@ export interface IAgriColaIncInputData {
 const convertAgriColaIncInputToArray = (input: IAgriColaIncInputData) => [
     input.averageTemperateInCelsius,
     input.averageWindSpeed,
-    input.highPriceAverage,
-    input.lowPriceAverage,
+    input.averagePrice,
     input.percentOwnership,
     input.previousPrice,
 ];
@@ -44,8 +42,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 5.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averagePrice: 39.06,
                 percentOwnership: 0,
                 previousPrice: 25,
             },
@@ -55,8 +52,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 5.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averagePrice: 38.9,
                 percentOwnership: 100,
                 previousPrice: 25,
             },
@@ -66,8 +62,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 1.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averagePrice: 38.9,
                 percentOwnership: 0,
                 previousPrice: 25,
             },
@@ -77,8 +72,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 5.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averagePrice: 38.9,
                 percentOwnership: 0,
                 previousPrice: 12,
             },
@@ -88,8 +82,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 5.03,
                 averageWindSpeed: 10.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averagePrice: 38.9,
                 percentOwnership: 0,
                 previousPrice: 25,
             },
@@ -99,8 +92,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 10.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averagePrice: 38.9,
                 percentOwnership: 0,
                 previousPrice: 25,
             },
@@ -110,8 +102,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 5.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 42.06,
-                lowPriceAverage: 38.9,
+                averagePrice: 38.9,
                 percentOwnership: 0,
                 previousPrice: 25,
             },
@@ -121,8 +112,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 5.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 34.9,
+                averagePrice: 34.9,
                 percentOwnership: 0,
                 previousPrice: 25,
             },
@@ -132,8 +122,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 5.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 24.06,
-                lowPriceAverage: 23.9,
+                averagePrice: 23.9,
                 percentOwnership: 0,
                 previousPrice: 25,
             },
@@ -143,8 +132,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 5.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 34.9,
+                averagePrice: 34.9,
                 percentOwnership: 100,
                 previousPrice: 25,
             },
@@ -154,8 +142,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 5.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averagePrice: 38.9,
                 percentOwnership: 0,
                 previousPrice: 100,
             },
@@ -165,8 +152,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 10.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averagePrice: 38.9,
                 percentOwnership: 0,
                 previousPrice: 100,
             },
@@ -176,8 +162,7 @@ export async function trainModelForAgriColaInc() {
             input: {
                 averageTemperateInCelsius: 1.03,
                 averageWindSpeed: 3.71,
-                highPriceAverage: 39.06,
-                lowPriceAverage: 38.9,
+                averagePrice: 38.9,
                 percentOwnership: 0,
                 previousPrice: 100,
             },
