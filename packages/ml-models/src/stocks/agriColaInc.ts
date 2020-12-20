@@ -38,7 +38,7 @@ export async function getPriceForAgriColaInc(input: IAgriColaIncInputData): Prom
     return getValuesFromTensor(predictedValue)[0];
 }
 
-export async function trainModelForAgriCola() {
+export async function trainModelForAgriColaInc() {
     const trainingData: Array<{ input: IAgriColaIncInputData; output: number }> = [
         {
             input: {

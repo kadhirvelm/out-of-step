@@ -15,13 +15,16 @@
     "build": "tsc -d",
     "dev": "tsc -d --watch",
     "start": "yarn build && node --experimental-modules --es-module-specifier-resolution=node dist/index.js",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "train-model": "node --experimental-modules --es-module-specifier-resolution=node scripts/train-model.js"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",
     "@types/lodash": "^4.14.165",
+    "chalk": "^4.1.0",
     "jest": "^26.6.3",
     "ts-jest": "^26.4.4",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "yargs": "^16.2.0"
   }
 }
