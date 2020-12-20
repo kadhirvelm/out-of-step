@@ -2,8 +2,8 @@
 import _ from "lodash";
 import { scheduleJob } from "node-schedule";
 import dayjs from "dayjs";
+import { getNextTimeWithinMarketHours } from "@stochastic-exchange/utils";
 import { postgresPool } from "../utils/getPostgresPool";
-import { getNextTimeWithinMarketHours } from "./market/getNextTimeWithinMarketHours";
 import { pricingStocksCronJob } from "./stocks/pricingStocksCronJob";
 
 const MINIMUM_MINUTES_FROM_NOW = 10;
