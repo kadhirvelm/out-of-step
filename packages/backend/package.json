@@ -30,7 +30,7 @@
     "start:watch": "nodemon --experimental-modules --es-module-specifier-resolution=node dist/index.js --watch . --watch ../api/*",
     "dev": "yarn build:watch & yarn start:watch",
     "lint": "eslint . --ext .ts,.tsx",
-    "test": "jest --coverage",
+    "test": "jest --coverage --passWithNoTests",
     "test-pricing": "node --experimental-modules --es-module-specifier-resolution=node scripts/test-pricing-function.js"
   },
   "engines": {
