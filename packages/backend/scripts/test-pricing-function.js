@@ -7,6 +7,7 @@ import { hideBin } from "yargs/helpers";
 import chalk from "chalk";
 import { existsSync } from "fs";
 import { join } from "path";
+import { execSync } from "child_process";
 
 const { argv } = yargs(hideBin(process.argv));
 
@@ -14,6 +15,10 @@ if (argv.pricer == null) {
     console.error(chalk.red("Please supply a pricing function to test via --pricer=YOUR_PRICER_FUNCTION."));
     process.exit(1);
 }
+
+execSync("yarn build");
+
+console.log(chalk.green("\nSuccessfully built the package again.\n"));
 
 const pricingFunctionPath = join(process.cwd(), "dist/cronJobs/stocks/pricingStocksCronJob.js");
 const pricerPluginsPath = join(process.cwd(), "dist/cronJobs/stocks/stockPricerPlugins.js");
