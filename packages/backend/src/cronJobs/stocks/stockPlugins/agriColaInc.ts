@@ -6,8 +6,20 @@ import { IStockPricerPlugin } from "../types";
 
 const DEFAULT_PRICE = 25;
 
+interface IAgriColaCalculationNotes extends IAgriColaIncInputData {
+    averagePrice: number;
+}
+
+function normalizeCelsiusIfDefined(maybeKelvinValue: number | undefined) {
+    if (maybeKelvinValue === undefined) {
+        return undefined;
+    }
+
+    return maybeKelvinValue - 273.15;
+}
+
 export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwnedStock, previousPriceHistory) => {
-    const [historicalStockData, weatherHistoricalCast] = await Promise.all([
+    const [historicalStockDataOfCTVA, weatherHistoricalCast] = await Promise.all([
         callOnExternalEndpoint(
             `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${Math.round(
                 changeDateByDays(new Date(), -10).valueOf() / 1000,
@@ -20,13 +32,17 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
         ),
     ]);
 
-    const previousCalculationNotes = JSON.parse(previousPriceHistory?.calculationNotes ?? "{}");
+    const previousCalculationNotes: Partial<IAgriColaCalculationNotes> = JSON.parse(
+        previousPriceHistory?.calculationNotes ?? "{}",
+    );
 
-    const previousAverage = previousCalculationNotes.averagePrice ?? DEFAULT_PRICE;
-    const currentAverage = averageOfNumberArray(historicalStockData?.c ?? []);
+    const currentAverageOfCTVA = averageOfNumberArray(historicalStockDataOfCTVA?.c ?? []);
+    const previousAverageOfCTVA = previousCalculationNotes.averagePrice ?? currentAverageOfCTVA ?? 0;
 
     const previousAverageTemperatureInCelsius = previousCalculationNotes.averageTemperateInCelsius ?? 1;
-    const averageTemperateInCelsius = averageOfObjectsArray(weatherHistoricalCast.hourly, "temp");
+    const averageTemperateInCelsius = normalizeCelsiusIfDefined(
+        averageOfObjectsArray(weatherHistoricalCast.hourly, "temp"),
+    );
 
     const previousAverageWindSpeed = previousCalculationNotes.averageWindSpeed ?? 0;
     const averageWindSpeed = averageOfObjectsArray(weatherHistoricalCast.hourly ?? [], "wind_speed");
@@ -38,18 +54,19 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
     const inputToModel: IAgriColaIncInputData = {
         averageTemperateInCelsius: averageTemperateInCelsius ?? previousAverageTemperatureInCelsius,
         averageWindSpeed: averageWindSpeed ?? previousAverageWindSpeed,
-        averagePrice: currentAverage ?? previousAverage,
+        changeInAveragePrice: (currentAverageOfCTVA ?? previousAverageOfCTVA) - previousAverageOfCTVA,
         percentOwnership,
         previousPrice,
     };
     const dollarValue = await getPriceForAgriColaInc(inputToModel);
 
-    if (dollarValue === undefined) {
-        return { dollarValue: previousPrice };
-    }
+    const calculationNotes: IAgriColaCalculationNotes = {
+        ...inputToModel,
+        averagePrice: currentAverageOfCTVA ?? previousAverageOfCTVA,
+    };
 
     return {
-        calculationNotes: JSON.stringify(inputToModel),
-        dollarValue,
+        calculationNotes: JSON.stringify(calculationNotes),
+        dollarValue: dollarValue ?? previousPrice,
     };
 };
