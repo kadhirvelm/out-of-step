@@ -7,10 +7,18 @@ function sendUndefinedOrNumber(number: number) {
     return number;
 }
 
-export function averageOfNumberArray(numArray: number[]) {
+export function averageOfNumberArray(numArray: number[] | undefined) {
+    if (numArray === undefined) {
+        return undefined;
+    }
+
     return sendUndefinedOrNumber(numArray.reduce((p, n) => p + n, 0) / numArray.length);
 }
 
-export function averageOfObjectsArray(array: any[], key: string) {
+export function averageOfObjectsArray(array: any[] | undefined, key: string) {
+    if (array === undefined) {
+        return undefined;
+    }
+
     return sendUndefinedOrNumber(array.reduce((p, n) => p + n[key], 0) / array.length);
 }
