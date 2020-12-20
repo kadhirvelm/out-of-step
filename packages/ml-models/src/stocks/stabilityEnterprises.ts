@@ -9,22 +9,18 @@ const optionsForStabilityEnterprises: ITrainLinearModelOptions = {
 };
 
 export interface IStabilityEnterprisesInputData {
-    averageMagnitude: number;
+    changeInEarthquakesSinceLastMeasure: number;
     maximumMagnitude: number;
-    minimumMagnitude: number;
     percentOwnership: number;
     previousPrice: number;
-    totalEarthquakes: number;
     totalUpcomingElectionEvents: number;
 }
 
 const convertStabilityEnterprisesInputToArray = (input: IStabilityEnterprisesInputData) => [
-    input.averageMagnitude,
+    input.changeInEarthquakesSinceLastMeasure,
     input.maximumMagnitude,
-    input.minimumMagnitude,
     input.percentOwnership,
     input.previousPrice,
-    input.totalEarthquakes,
     input.totalUpcomingElectionEvents,
 ];
 
@@ -46,99 +42,267 @@ export async function trainModelForStabilityEnterprises() {
     const trainingData: Array<{ input: IStabilityEnterprisesInputData; output: number }> = [
         {
             input: {
-                averageMagnitude: 4.6,
-                maximumMagnitude: 6.2,
-                minimumMagnitude: 4,
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 6,
                 percentOwnership: 0,
                 previousPrice: 12,
-                totalEarthquakes: 14,
-                totalUpcomingElectionEvents: 12,
-            },
-            output: 13,
-        },
-        {
-            input: {
-                averageMagnitude: 6,
-                maximumMagnitude: 6.2,
-                minimumMagnitude: 4,
-                percentOwnership: 0,
-                previousPrice: 12,
-                totalEarthquakes: 14,
-                totalUpcomingElectionEvents: 12,
-            },
-            output: 10,
-        },
-        {
-            input: {
-                averageMagnitude: 4,
-                maximumMagnitude: 6.2,
-                minimumMagnitude: 4,
-                percentOwnership: 0,
-                previousPrice: 12,
-                totalEarthquakes: 14,
-                totalUpcomingElectionEvents: 12,
-            },
-            output: 16,
-        },
-        {
-            input: {
-                averageMagnitude: 4.6,
-                maximumMagnitude: 6.2,
-                minimumMagnitude: 4,
-                percentOwnership: 0,
-                previousPrice: 12,
-                totalEarthquakes: 20,
-                totalUpcomingElectionEvents: 12,
+                totalUpcomingElectionEvents: 10,
             },
             output: 12,
         },
         {
             input: {
-                averageMagnitude: 4.6,
-                maximumMagnitude: 6.2,
-                minimumMagnitude: 4,
+                changeInEarthquakesSinceLastMeasure: 10,
+                maximumMagnitude: 6,
                 percentOwnership: 0,
                 previousPrice: 12,
-                totalEarthquakes: 14,
-                totalUpcomingElectionEvents: 14,
+                totalUpcomingElectionEvents: 10,
             },
-            output: 18,
+            output: 11.75,
         },
         {
             input: {
-                averageMagnitude: 4.6,
-                maximumMagnitude: 6.2,
-                minimumMagnitude: 4,
+                changeInEarthquakesSinceLastMeasure: 20,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 11.5,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: -10,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 12.5,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: -20,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 13,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 7,
+                percentOwnership: 0,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 11.5,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 5,
+                percentOwnership: 0,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 12.5,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 12,
+            },
+            output: 12.5,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 8,
+            },
+            output: 11.5,
+        },
+
+        /** Increase in percent ownership */
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 10,
+                maximumMagnitude: 6,
                 percentOwnership: 100,
                 previousPrice: 12,
-                totalEarthquakes: 14,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 11.88,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 20,
+                maximumMagnitude: 6,
+                percentOwnership: 100,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 11.75,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: -10,
+                maximumMagnitude: 6,
+                percentOwnership: 100,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 12.25,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: -20,
+                maximumMagnitude: 6,
+                percentOwnership: 100,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 12.5,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 7,
+                percentOwnership: 100,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 11.75,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 5,
+                percentOwnership: 100,
+                previousPrice: 12,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 12.25,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 6,
+                percentOwnership: 100,
+                previousPrice: 12,
                 totalUpcomingElectionEvents: 12,
             },
             output: 12.25,
         },
         {
             input: {
-                averageMagnitude: 4.6,
-                maximumMagnitude: 6.2,
-                minimumMagnitude: 4,
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 6,
                 percentOwnership: 100,
                 previousPrice: 12,
-                totalEarthquakes: 14,
-                totalUpcomingElectionEvents: 14,
+                totalUpcomingElectionEvents: 8,
             },
-            output: 15,
+            output: 11.75,
+        },
+
+        /** Different previous price */
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 24,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 24,
         },
         {
             input: {
-                averageMagnitude: 4.6,
-                maximumMagnitude: 6.2,
-                minimumMagnitude: 4,
+                changeInEarthquakesSinceLastMeasure: 10,
+                maximumMagnitude: 6,
                 percentOwnership: 0,
-                previousPrice: 50,
-                totalEarthquakes: 14,
+                previousPrice: 24,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 23.5,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 20,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 24,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 23,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: -10,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 24,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 25,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: -20,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 24,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 26,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 7,
+                percentOwnership: 0,
+                previousPrice: 24,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 23,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 5,
+                percentOwnership: 0,
+                previousPrice: 24,
+                totalUpcomingElectionEvents: 10,
+            },
+            output: 25,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 24,
                 totalUpcomingElectionEvents: 12,
             },
-            output: 55,
+            output: 25,
+        },
+        {
+            input: {
+                changeInEarthquakesSinceLastMeasure: 0,
+                maximumMagnitude: 6,
+                percentOwnership: 0,
+                previousPrice: 24,
+                totalUpcomingElectionEvents: 8,
+            },
+            output: 23,
         },
     ];
 

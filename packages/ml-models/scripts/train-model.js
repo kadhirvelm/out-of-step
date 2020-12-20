@@ -7,6 +7,7 @@ import { hideBin } from "yargs/helpers";
 import chalk from "chalk";
 import { existsSync } from "fs";
 import { join } from "path";
+import { execSync } from "child_process";
 
 const { argv } = yargs(hideBin(process.argv));
 
@@ -14,6 +15,10 @@ if (argv.model == null) {
     console.error(chalk.red("Please supply a model to train via --model=YOUR_MODEL_HERE."));
     process.exit(1);
 }
+
+execSync("yarn build");
+
+console.log(chalk.green("\nSuccessfully built the package again.\n"));
 
 const filePath = join(process.cwd(), "dist/stocks/", `${argv.model}.js`);
 if (!existsSync(filePath)) {

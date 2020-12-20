@@ -1,4 +1,3 @@
-import { clone } from "lodash";
 import { assert } from "../../utils/testUtils";
 import { getPriceForAgriColaInc } from "../agriColaInc";
 
