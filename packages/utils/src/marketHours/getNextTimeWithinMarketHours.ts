@@ -24,7 +24,8 @@ const goToNextDay = (startDate: dayjs.Dayjs) => {
 };
 
 export function getNextTimeWithinMarketHours(nextTime: dayjs.Dayjs): dayjs.Dayjs {
-    const dateAdjustedToPst = nextTime.tz("America/Los_Angeles");
+    // Note: we re-parse in dayjs to add the "tz" plugin
+    const dateAdjustedToPst = dayjs(nextTime).tz("America/Los_Angeles");
 
     if (!MARKET_HOURS.openDays.includes(dateAdjustedToPst.day()) || dateAdjustedToPst.hour() >= MARKET_HOURS.endTime) {
         return getNextTimeWithinMarketHours(goToNextDay(dateAdjustedToPst));

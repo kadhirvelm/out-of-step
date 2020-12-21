@@ -7,7 +7,8 @@
   "style": "dist/main.css",
   "scripts": {
     "dev": "webpack-dev-server",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "eslint . --ext .ts,.tsx --cache",
+    "lint:fix": "yarn lint --fix",
     "build": "webpack"
   },
   "sideEffects": [

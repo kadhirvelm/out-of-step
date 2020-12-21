@@ -29,7 +29,8 @@
     "start": "node --experimental-modules --es-module-specifier-resolution=node dist/index.js",
     "start:watch": "nodemon --experimental-modules --es-module-specifier-resolution=node dist/index.js --watch . --watch ../api/*",
     "dev": "yarn build:watch & yarn start:watch",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "eslint . --ext .ts,.tsx --cache",
+    "lint:fix": "yarn lint --fix",
     "test": "jest --coverage --passWithNoTests",
     "test-pricing": "node --experimental-modules --es-module-specifier-resolution=node scripts/test-pricing-function.js"
   },

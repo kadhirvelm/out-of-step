@@ -16,6 +16,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.15.1",
     "eslint-plugin-react-hooks": "^2.0.0",
+    "husky": "^4.3.6",
     "lerna": "^3.22.1",
     "prettier": "^1.19.1",
     "typescript": "^3.7.2"
@@ -23,6 +24,11 @@
   "workspaces": [
     "packages/*"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint:fix"
+    }
+  },
   "engines": {
     "node": "14.15.1"
   },
@@ -31,6 +37,7 @@
     "clean": "node scripts/cleanPackages",
     "clean:lock": "npx yarn-deduplicate yarn.lock",
     "lint": "lerna run lint",
+    "lint:fix": "lerna run lint:fix",
     "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
     "test": "lerna run test"
   },

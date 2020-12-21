@@ -14,7 +14,8 @@
     "build": "tsc -d",
     "dev": "tsc -d --watch",
     "test": "jest --coverage --passWithNoTests",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx --cache",
+    "lint:fix": "yarn lint --fix"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",
