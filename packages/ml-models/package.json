@@ -15,7 +15,8 @@
     "build": "tsc -d",
     "dev": "tsc -d --watch",
     "start": "yarn build && node --experimental-modules --es-module-specifier-resolution=node dist/index.js",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "eslint . --ext .ts,.tsx --cache",
+    "lint:fix": "yarn lint --fix",
     "test": "jest --coverage --passWithNoTests",
     "train-model": "node --experimental-modules --es-module-specifier-resolution=node scripts/train-model.js"
   },

@@ -13,7 +13,8 @@
   "scripts": {
     "build": "tsc -d",
     "dev": "tsc -d --watch",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx --cache",
+    "lint:fix": "yarn lint --fix"
   },
   "devDependencies": {
     "@types/express": "^4.17.9",
