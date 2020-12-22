@@ -73,6 +73,13 @@
 .basic-information-container {
     display: flex;
     padding: 10px 0;
+    box-shadow: 0 -1px $pt-divider-black;
+}
+
+.summary-label {
+    color: $pt-text-color-muted;
+    margin-left: 10px;
+    margin-bottom: 3px;
 }
 
 .column-container {

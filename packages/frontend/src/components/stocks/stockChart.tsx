@@ -1,9 +1,11 @@
 import { IPriceHistoryInBuckets, ITimeBucket } from "@stochastic-exchange/api";
-import * as React from "react";
 import Chartist from "chartist";
 import { times } from "lodash-es";
+import * as React from "react";
+import classNames from "classnames";
+import { formatDollar } from "../../utils/formatNumber";
+import { customTapValueIndicator } from "./customTapValueIndicator";
 import styles from "./stockChart.module.scss";
-import { formatNumber } from "../../utils/formatNumber";
 
 export const StockChart: React.FC<{
     previousClosePrice: number | undefined;
@@ -12,9 +14,24 @@ export const StockChart: React.FC<{
 }> = React.memo(({ previousClosePrice, pricePoints, timeBucket }) => {
     const chartRef = React.useRef<HTMLDivElement>(null);
 
-    const firstIndex = Math.round(pricePoints.length * 0.05);
-    const secondIndex = Math.round(pricePoints.length * 0.4);
-    const thirdIndex = Math.round(pricePoints.length * 0.75);
+    const maybeIncludeBaselineFromYesterday =
+        timeBucket === "day" ? times(pricePoints.length, () => ({ value: previousClosePrice ?? 0 })) : [];
+
+    const minimumOfGraph = Math.min(
+        ...maybeIncludeBaselineFromYesterday.map(p => p.value),
+        ...pricePoints.map(p => p.dollarValue),
+    );
+
+    const stockConditionalFormattingClassName = () => {
+        const baselineValue =
+            timeBucket === "day" ? maybeIncludeBaselineFromYesterday.slice(-1)[0].value : pricePoints[0].dollarValue;
+        const currentValue = pricePoints.slice(-1)[0].dollarValue;
+
+        return {
+            [styles.positiveTrend]: currentValue > baselineValue,
+            [styles.negativeTrend]: currentValue < baselineValue,
+        };
+    };
 
     const plotLineGraph = () => {
         if (chartRef.current == null) {
@@ -25,35 +42,29 @@ export const StockChart: React.FC<{
         new Chartist.Line(
             chartRef.current,
             {
-                labels: [...pricePoints.map(p => p.timestamp)],
+                labels: [],
                 series: [
-                    [...pricePoints.map(p => p.dollarValue)],
-                    timeBucket === "day" ? times(pricePoints.length, () => previousClosePrice ?? 0) : [],
+                    [...pricePoints.map(p => ({ value: p.dollarValue, meta: p.timestamp }))],
+                    maybeIncludeBaselineFromYesterday,
                 ],
             },
             {
                 axisX: {
-                    labelInterpolationFnc: (value: number, index: number) => {
-                        if (index !== firstIndex && index !== secondIndex && index !== thirdIndex) {
-                            return null;
-                        }
-
-                        return timeBucket === "day"
-                            ? new Date(value).toLocaleTimeString()
-                            : new Date(value).toLocaleDateString();
-                    },
                     showGrid: false,
                 },
                 axisY: {
-                    labelInterpolationFnc: (value: number): string => `$${formatNumber(value)}`,
+                    labelInterpolationFnc: (value: number): string => formatDollar(value),
+                    low: minimumOfGraph,
                     showGrid: true,
+                    type: Chartist.AutoScaleAxis,
                 },
-                classNames: { area: styles.area, line: styles.line },
+                classNames: { area: styles.area, line: styles.line, point: styles.point },
+                fullWidth: true,
                 height: chartRef.current.clientHeight,
-                lineSmooth: true,
+                lineSmooth: false,
                 low: 0,
-                showPoint: false,
                 showArea: true,
+                plugins: [customTapValueIndicator()],
             },
         );
     };
@@ -62,5 +73,5 @@ export const StockChart: React.FC<{
         plotLineGraph();
     }, [pricePoints]);
 
-    return <div className={styles.chartContainer} ref={chartRef} />;
+    return <div className={classNames(styles.chartContainer, stockConditionalFormattingClassName())} ref={chartRef} />;
 });

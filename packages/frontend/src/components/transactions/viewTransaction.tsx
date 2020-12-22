@@ -47,6 +47,47 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
         stockId: viewTransactionsForStock.id,
     });
 
+    const totalStockWorthToUser = () => {
+        // Note: remember, this total stock worth is a rolling aggregate of all the transaction, so the latest one gives us how much the user is up or down
+        const totalStockWorthAtLatestTransaction = transactionHistory?.[0]?.stockValueAtTransactionTime ?? 0;
+        const totalStockWorthIfSoldToday =
+            (userOwnedStockOfStockWithLatestPrice?.quantity ?? 0) * viewTransactionsForStock.dollarValue;
+
+        // And adding that to how much they'll get if they sold all their shares today will give us a player's delta on the given stock
+        return totalStockWorthAtLatestTransaction + totalStockWorthIfSoldToday;
+    };
+
+    const renderHypotheticalSaleToday = (userOwnedQuantity: number) => {
+        const transaction = {
+            purchasedQuantity: 0,
+            soldQuantity: userOwnedQuantity,
+        };
+
+        const totalStockWorthBySelling =
+            (userOwnedStockOfStockWithLatestPrice?.quantity ?? 0) * viewTransactionsForStock.dollarValue;
+
+        return (
+            <div className={classNames(styles.singleExchangeTransaction, styles.netHypothetical)}>
+                <div className={styles.leftContainer}>
+                    <div className={styles.timestampAndExchangeContainer}>
+                        <span className={styles.timestamp}>If all shares sold today</span>
+                        <div className={styles.exchangeContainer}>
+                            <span>Sell {transaction.soldQuantity} shares</span>
+                            <span className={styles.atPriceContainer}>
+                                at ${viewTransactionsForStock.dollarValue.toFixed(2)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div className={styles.rightContainer}>
+                    <span className={classNames(styles.stockValueAtTransaction, styles.positiveStockValue)}>
+                        {formatDollar(totalStockWorthBySelling)}
+                    </span>
+                </div>
+            </div>
+        );
+    };
+
     const renderSingleTransaction = (transaction: ITransactionHistoryComplete & IStockValueAtTransactionTime) => {
         if (transaction.type === "acquisition-transaction") {
             return null;
@@ -96,12 +137,26 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
             return <NonIdealState description="No transaction to display" />;
         }
 
-        return transactionHistory?.map(renderSingleTransaction);
+        const maybeRenderHypotheticalSaleToday = () => {
+            if (
+                userOwnedStockOfStockWithLatestPrice?.quantity === undefined ||
+                userOwnedStockOfStockWithLatestPrice.quantity === 0
+            ) {
+                return undefined;
+            }
+
+            return renderHypotheticalSaleToday(userOwnedStockOfStockWithLatestPrice.quantity);
+        };
+
+        return (
+            <>
+                {maybeRenderHypotheticalSaleToday()}
+                {transactionHistory?.map(renderSingleTransaction)}
+            </>
+        );
     };
 
-    const totalStockWorth =
-        (transactionHistory?.[0]?.stockValueAtTransactionTime ?? 0) +
-        (userOwnedStockOfStockWithLatestPrice?.quantity ?? 0) * viewTransactionsForStock.dollarValue;
+    const totalStockWorth = totalStockWorthToUser();
 
     return (
         <div className={styles.overallContainer}>

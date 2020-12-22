@@ -9,3 +9,7 @@ export function formatNumber(number: number) {
 export function formatDollar(number: number) {
     return d3Format.format("$,.2f")(number);
 }
+
+export function formatAsPercent(number: number) {
+    return `${Math.round(number * 10000) / 100}%`;
+}
