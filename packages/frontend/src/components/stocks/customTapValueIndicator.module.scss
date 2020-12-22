@@ -1,0 +1,27 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.value-indicator {
+    position: absolute;
+    top: 0;
+    left: 50px;
+    bottom: 40px;
+    width: 1px;
+    border-left: dotted $blue2 1px;
+}
+
+.value-indicator-point {
+    position: absolute;
+    left: 50px;
+    height: 6px;
+    width: 6px;
+    background: $blue2;
+    border-radius: 50%;
+    transform: translateX(-50%);
+}
+
+.value-label {
+    position: absolute;
+    left: 50px;
+    bottom: 15px;
+    color: $blue2;
+}

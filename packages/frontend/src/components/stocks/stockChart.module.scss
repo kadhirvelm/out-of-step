@@ -1,6 +1,7 @@
 @import "~@blueprintjs/core/lib/scss/variables";
 
 .chart-container {
+    position: relative;
     height: 100%;
     width: 100%;
 }
@@ -17,6 +18,12 @@
     fill-opacity: 0.1;
 }
 
+.point {
+    stroke: $lime3;
+    stroke-width: 4px;
+    stroke-linecap: round;
+}
+
 :global(.ct-series-b) {
     .line {
         stroke: $gray2;
@@ -25,5 +32,9 @@
 
     .area {
         fill: none;
+    }
+
+    .point {
+        display: none;
     }
 }
