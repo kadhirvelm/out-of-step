@@ -11,7 +11,7 @@ import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../
 import { IStoreState } from "../../store/state";
 import { SetOwnedStockQuantity } from "../../store/stocks/actions";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
-import { formatDollar, formatNumber } from "../../utils/formatNumber";
+import { formatAsPercent, formatDollar, formatNumber } from "../../utils/formatNumber";
 import { StockChart } from "./stockChart";
 import styles from "./stockInformation.module.scss";
 import { BuyStocksDialog, SellStocksDialog } from "./stocksDialog";
@@ -224,6 +224,19 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
 
     const setBucketCurried = (timeBucket: ITimeBucket) => () => setBucket(timeBucket);
 
+    const maybeRenderYesterdaysClose = () => {
+        if (bucket !== "day") {
+            return undefined;
+        }
+
+        return (
+            <div className={styles.rowContainer}>
+                <span className={styles.label}>Previous close:</span>
+                <span>{formatDollar(viewStockWithLatestPrice.previousPriceHistory?.dollarValue ?? 0)}</span>
+            </div>
+        );
+    };
+
     return (
         <div className={styles.stockInformationContainer}>
             {renderBackButton()}
@@ -251,6 +264,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                     timeBucket={bucket}
                 />
             </div>
+            <span className={styles.summaryLabel}>Summary</span>
             <div className={styles.basicInformationContainer}>
                 <div className={styles.columnContainer}>
                     <div className={styles.rowContainer}>
@@ -269,9 +283,9 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                     <div className={styles.rowContainer}>
                         <span className={styles.label}>Available shares:</span>
                         <span>
-                            {formatNumber(
-                                viewStockWithLatestPrice.totalQuantity -
-                                    (ownedStockQuantity ?? stockInformation.ownedStockQuantity),
+                            {formatAsPercent(
+                                (viewStockWithLatestPrice.totalQuantity - (ownedStockQuantity ?? 0)) /
+                                    viewStockWithLatestPrice.totalQuantity,
                             )}
                         </span>
                     </div>
@@ -285,6 +299,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                         <span className={styles.label}>Low:</span>
                         <span>{formatDollar(stockInformation.low)}</span>
                     </div>
+                    {maybeRenderYesterdaysClose()}
                 </div>
             </div>
             {maybeRenderTransactStock()}

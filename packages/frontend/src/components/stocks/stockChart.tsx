@@ -2,6 +2,7 @@ import { IPriceHistoryInBuckets, ITimeBucket } from "@stochastic-exchange/api";
 import Chartist from "chartist";
 import { times } from "lodash-es";
 import * as React from "react";
+import classNames from "classnames";
 import { formatDollar } from "../../utils/formatNumber";
 import { customTapValueIndicator } from "./customTapValueIndicator";
 import styles from "./stockChart.module.scss";
@@ -20,6 +21,17 @@ export const StockChart: React.FC<{
         ...maybeIncludeBaselineFromYesterday.map(p => p.value),
         ...pricePoints.map(p => p.dollarValue),
     );
+
+    const stockConditionalFormattingClassName = () => {
+        const baselineValue =
+            timeBucket === "day" ? maybeIncludeBaselineFromYesterday.slice(-1)[0].value : pricePoints[0].dollarValue;
+        const currentValue = pricePoints.slice(-1)[0].dollarValue;
+
+        return {
+            [styles.positiveTrend]: currentValue > baselineValue,
+            [styles.negativeTrend]: currentValue < baselineValue,
+        };
+    };
 
     const plotLineGraph = () => {
         if (chartRef.current == null) {
@@ -49,7 +61,7 @@ export const StockChart: React.FC<{
                 classNames: { area: styles.area, line: styles.line, point: styles.point },
                 fullWidth: true,
                 height: chartRef.current.clientHeight,
-                lineSmooth: true,
+                lineSmooth: false,
                 low: 0,
                 showArea: true,
                 plugins: [customTapValueIndicator()],
@@ -61,5 +73,5 @@ export const StockChart: React.FC<{
         plotLineGraph();
     }, [pricePoints]);
 
-    return <div className={styles.chartContainer} ref={chartRef} />;
+    return <div className={classNames(styles.chartContainer, stockConditionalFormattingClassName())} ref={chartRef} />;
 });

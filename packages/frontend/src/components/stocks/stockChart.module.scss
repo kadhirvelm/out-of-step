@@ -9,19 +9,47 @@
 .line {
     fill: none;
     stroke-width: 1.25px;
-    stroke: $lime2;
+    stroke: $gray2;
 }
 
 .area {
-    fill: $lime4;
+    fill: $gray4;
     stroke: none;
     fill-opacity: 0.1;
 }
 
 .point {
-    stroke: $lime3;
+    stroke: $gray3;
     stroke-width: 4px;
     stroke-linecap: round;
+}
+
+.positive-trend {
+    .line {
+        stroke: $lime2;
+    }
+
+    .point {
+        stroke: $lime3;
+    }
+
+    .area {
+        fill: $lime4;
+    }
+}
+
+.negative-trend {
+    .line {
+        stroke: $rose2;
+    }
+
+    .point {
+        stroke: $rose3;
+    }
+
+    .area {
+        fill: $rose4;
+    }
 }
 
 :global(.ct-series-b) {

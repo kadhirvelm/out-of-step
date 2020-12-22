@@ -32,7 +32,7 @@ export async function viewTransactionsForStock(
     }
 
     const allTransactionHistoryForStock = await postgresPool.query<ITransactionHistory>(
-        'SELECT * FROM "transactionHistory" WHERE account = $1 AND stock = $2 ORDER BY timestamp DESC',
+        'SELECT * FROM "transactionHistory" WHERE account = $1 AND stock = $2 ORDER BY timestamp ASC',
         [accountId, payload.stockId],
     );
 
