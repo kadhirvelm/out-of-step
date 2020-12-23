@@ -3,7 +3,7 @@ import Chartist from "chartist";
 import { times } from "lodash-es";
 import * as React from "react";
 import classNames from "classnames";
-import { formatDollar } from "../../utils/formatNumber";
+import { formatDollar } from "../../../utils/formatNumber";
 import { customTapValueIndicator } from "./customTapValueIndicator";
 import styles from "./stockChart.module.scss";
 

@@ -40,7 +40,7 @@ export async function trainModelForAgriColaInc() {
     const trainingData: Array<{ input: IAgriColaIncInputData; output: number }> = [
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
@@ -50,7 +50,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: -2,
+                averageTemperateInCelsius: 2,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
@@ -60,7 +60,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 2,
+                averageTemperateInCelsius: 6,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
@@ -70,7 +70,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 5,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
@@ -80,7 +80,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 10,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
@@ -90,7 +90,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 3,
                 percentOwnership: 0,
@@ -100,7 +100,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 0,
                 changeInAveragePrice: -3,
                 percentOwnership: 0,
@@ -112,7 +112,7 @@ export async function trainModelForAgriColaInc() {
         /** Change in percent ownership */
         {
             input: {
-                averageTemperateInCelsius: -2,
+                averageTemperateInCelsius: 2,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 0,
                 percentOwnership: 100,
@@ -122,7 +122,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 2,
+                averageTemperateInCelsius: 6,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 0,
                 percentOwnership: 100,
@@ -132,7 +132,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 5,
                 changeInAveragePrice: 0,
                 percentOwnership: 100,
@@ -142,7 +142,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 10,
                 changeInAveragePrice: 0,
                 percentOwnership: 100,
@@ -152,7 +152,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 3,
                 percentOwnership: 100,
@@ -162,7 +162,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 0,
                 changeInAveragePrice: -3,
                 percentOwnership: 100,
@@ -174,7 +174,7 @@ export async function trainModelForAgriColaInc() {
         /** Different previous price */
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
@@ -184,7 +184,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: -2,
+                averageTemperateInCelsius: 2,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
@@ -194,7 +194,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 2,
+                averageTemperateInCelsius: 6,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
@@ -204,7 +204,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 5,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
@@ -214,7 +214,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 10,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
@@ -224,7 +224,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 0,
                 changeInAveragePrice: 3,
                 percentOwnership: 0,
@@ -234,7 +234,7 @@ export async function trainModelForAgriColaInc() {
         },
         {
             input: {
-                averageTemperateInCelsius: 0,
+                averageTemperateInCelsius: 4,
                 averageWindSpeed: 0,
                 changeInAveragePrice: -3,
                 percentOwnership: 0,

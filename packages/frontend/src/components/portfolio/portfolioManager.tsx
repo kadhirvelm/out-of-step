@@ -11,7 +11,7 @@ import { SetViewStockWithLatestPrice } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { formatNumber } from "../../utils/formatNumber";
-import { MarketStatus } from "../common/marketStatus";
+import { MarketStatus } from "./helperComponents/marketStatus";
 import styles from "./portfolioManager.module.scss";
 
 interface IStoreProps {

@@ -160,7 +160,7 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageWindSpeed: 10,
                 changeInAveragePrice: 0,
                 percentOwnership: 0,
-                previousPrice: 50,
+                previousPrice: 75,
             }),
         ]);
 
