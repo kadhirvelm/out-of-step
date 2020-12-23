@@ -1,7 +1,7 @@
 import * as chartist from "chartist";
 import { range } from "lodash-es";
-import { constrainNumber } from "../../utils/constrainNumber";
-import { formatDollar } from "../../utils/formatNumber";
+import { constrainNumber } from "../../../utils/constrainNumber";
+import { formatDollar } from "../../../utils/formatNumber";
 import styles from "./customTapValueIndicator.module.scss";
 
 const PADDING_ON_GRAPH = {

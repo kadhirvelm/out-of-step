@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/quotes */
 import { IPriceHistory, IStock } from "@stochastic-exchange/api";
 import _ from "lodash";
+import { getNumberWithinRange } from "../../utils/getNumberWithinRange";
 import { postgresPool } from "../../utils/getPostgresPool";
 import { STOCK_PRICER_PLUGINS } from "./stockPricerPlugins";
 import { IStockPricerPlugin } from "./types";
@@ -38,9 +39,10 @@ async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: ISt
                     );
 
                     const stabilizedDollarValue = Math.max(
-                        Math.max(
+                        getNumberWithinRange(
                             nextDollarValue.dollarValue,
-                            (latestPriceKeyedByStock[stock.id]?.dollarValue ?? 0) * 0.8,
+                            nextDollarValue.dollarValue * 0.85,
+                            nextDollarValue.dollarValue * 1.15,
                         ),
                         0.1,
                     );

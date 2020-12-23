@@ -6,15 +6,15 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
 import { Routes } from "../../common/routes";
-import { selectOwnedStockQuantityOfViewStock, selectUserOwnedStock } from "../../selectors/stocksSelector";
+import { selectOwnedStockQuantityOfViewStock, selectUserOwnedStock } from "../../selectors/selector";
 import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { SetOwnedStockQuantity } from "../../store/stocks/actions";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { formatAsPercent, formatDollar, formatNumber } from "../../utils/formatNumber";
-import { StockChart } from "./stockChart";
+import { StockChart } from "./helperComponents/stockChart";
 import styles from "./stockInformation.module.scss";
-import { BuyStocksDialog, SellStocksDialog } from "./stocksDialog";
+import { TransactStock } from "./helperComponents/transactStocks";
 
 interface IStoreProps {
     cashOnHand: number | undefined;
@@ -30,103 +30,6 @@ interface IDispatchProps {
 }
 
 const VALID_TIME_BUCKETS: ITimeBucket[] = ["day", "5 days", "month", "all"];
-
-const TransactStock: React.FC<{
-    cashOnHand: number | undefined;
-    setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
-    totalOwnedStock: number;
-    userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
-    viewStockWithLatestPrice: IStockWithDollarValue;
-}> = ({
-    cashOnHand,
-    setViewTransactionsForStock,
-    totalOwnedStock,
-    userOwnedStockOfStockWithLatestPrice,
-    viewStockWithLatestPrice,
-}) => {
-    const history = useHistory();
-
-    const [isBuyDialogOpen, setBuyDialogOpenState] = React.useState<boolean>(false);
-    const [isSellDialogOpen, setSellDialogOpenState] = React.useState<boolean>(false);
-
-    const openBuyStocksDialog = () => setBuyDialogOpenState(true);
-    const closeBuyStocksDialog = () => setBuyDialogOpenState(false);
-
-    const openSellStocksDialog = () => setSellDialogOpenState(true);
-    const closeSellStocksDialog = () => setSellDialogOpenState(false);
-
-    const viewTransactionHistory = () => {
-        setViewTransactionsForStock(viewStockWithLatestPrice);
-        history.push(Routes.TRANSACTIONS);
-    };
-
-    return (
-        <div className={styles.transactContainer}>
-            <span className={styles.yourPortfolioLabel}>Your portfolio</span>
-            <div className={styles.transactInformationContainer}>
-                <div className={styles.rowContainer}>
-                    <div className={styles.transactColumnContainer}>
-                        <div className={styles.transactRowContainer}>
-                            <div className={styles.transactLabel}>
-                                <span className={styles.label}>Cash on hand:</span>
-                                <span>${cashOnHand?.toLocaleString()}</span>
-                            </div>
-                            <div className={styles.transactButtonContainer}>
-                                <Button
-                                    className={styles.transactButton}
-                                    disabled={
-                                        (cashOnHand ?? 0) < viewStockWithLatestPrice.dollarValue ||
-                                        viewStockWithLatestPrice.totalQuantity - totalOwnedStock === 0
-                                    }
-                                    intent="success"
-                                    text="Buy"
-                                    onClick={openBuyStocksDialog}
-                                />
-                                <BuyStocksDialog
-                                    isOpen={isBuyDialogOpen}
-                                    onClose={closeBuyStocksDialog}
-                                    stock={viewStockWithLatestPrice}
-                                    totalOwnedStock={totalOwnedStock}
-                                />
-                            </div>
-                        </div>
-                        <div className={styles.transactRowContainer}>
-                            <div className={styles.transactLabel}>
-                                <span className={styles.label}>You own:</span>
-                                <span>{userOwnedStockOfStockWithLatestPrice?.quantity ?? 0} shares</span>
-                            </div>
-                            <div className={styles.transactButtonContainer}>
-                                <Button
-                                    className={styles.transactButton}
-                                    disabled={
-                                        userOwnedStockOfStockWithLatestPrice?.quantity === undefined ||
-                                        userOwnedStockOfStockWithLatestPrice.quantity <= 0
-                                    }
-                                    intent="primary"
-                                    text="Sell"
-                                    onClick={openSellStocksDialog}
-                                />
-                                <Button className={styles.transactButton} disabled text="Limit order" />
-                                <SellStocksDialog
-                                    isOpen={isSellDialogOpen}
-                                    onClose={closeSellStocksDialog}
-                                    stock={viewStockWithLatestPrice}
-                                    totalOwnedStock={totalOwnedStock}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <Button
-                    className={styles.viewTransactionHistory}
-                    minimal
-                    onClick={viewTransactionHistory}
-                    text="View your transaction history"
-                />
-            </div>
-        </div>
-    );
-};
 
 const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
     cashOnHand,

@@ -52,9 +52,10 @@ export async function getSingleStockInformation(
             )} GROUP BY ${dateBucketPostgresString} ORDER BY ${dateBucketPostgresString} ASC`,
             [payload.stock],
         ),
+        // NOTE: seems postgres converts sum to a string instead of an integer, so we need to recast as an integer
         postgresPool.query<{ ownedStockQuantity: number }>(
             // eslint-disable-next-line @typescript-eslint/quotes
-            'SELECT SUM(quantity) as "ownedStockQuantity" FROM "ownedStock" WHERE stock = $1',
+            'SELECT CAST (SUM(quantity) AS INTEGER) as "ownedStockQuantity" FROM "ownedStock" WHERE stock = $1',
             [payload.stock],
         ),
     ]);

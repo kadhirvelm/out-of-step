@@ -4,18 +4,18 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { CompoundAction } from "redoodle";
 import { Dispatch } from "redux";
-import { selectUserOwnedStock } from "../../selectors/stocksSelector";
-import { IUpdateUserAccountOnTransaction, UpdateUserAccountOnTransaction } from "../../store/account/actions";
-import { IStoreState } from "../../store/state";
-import { SetOwnedStockQuantity } from "../../store/stocks/actions";
-import { executePrivateEndpoint } from "../../utils/executePrivateEndpoint";
-import { formatDollar } from "../../utils/formatNumber";
-import { showToast } from "../../utils/toaster";
+import { selectUserOwnedStock } from "../../../selectors/selector";
+import { IUpdateUserAccountOnTransaction, UpdateUserAccountOnTransaction } from "../../../store/account/actions";
+import { IStoreState } from "../../../store/state";
+import { SetOwnedStockQuantity } from "../../../store/stocks/actions";
+import { executePrivateEndpoint } from "../../../utils/executePrivateEndpoint";
+import { formatDollar } from "../../../utils/formatNumber";
+import { showToast } from "../../../utils/toaster";
 import styles from "./stocksDialog.module.scss";
 
 interface IStoreProps {
     account: Omit<IAccount, "hashedPassword"> | undefined;
-    userOwnedStockOfBuyStock: IOwnedStock | undefined;
+    userOwnedStockOfTransactingStock: IOwnedStock | undefined;
 }
 
 interface IDispatchProps {
@@ -41,7 +41,7 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
     type,
     totalOwnedStock,
     updateStateOnTrasaction,
-    userOwnedStockOfBuyStock,
+    userOwnedStockOfTransactingStock,
 }) => {
     if (account === undefined) {
         return null;
@@ -109,7 +109,7 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
         Math.floor(account.cashOnHand / stock.dollarValue),
         stock.totalQuantity - totalOwnedStock,
     );
-    const maximumSellable = userOwnedStockOfBuyStock?.quantity ?? 0;
+    const maximumSellable = userOwnedStockOfTransactingStock?.quantity ?? 0;
     const maximumNumber = type === "buy" ? maximumSharesPurchaseAble : maximumSellable;
 
     const updateParsedQuantity = () => {
@@ -155,7 +155,9 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
                 </div>
                 <div className={styles.currentSeparatorContainer}>
                     <span className={styles.label}>Current shares:</span>
-                    <span className={styles.value}>{userOwnedStockOfBuyStock?.quantity.toLocaleString() ?? 0}</span>
+                    <span className={styles.value}>
+                        {userOwnedStockOfTransactingStock?.quantity.toLocaleString() ?? 0}
+                    </span>
                 </div>
                 <div className={styles.sharesToBuyContainer}>
                     <span className={styles.sharesToBuySentence}>{type === "buy" ? "Buy" : "Sell"}</span>
@@ -180,7 +182,7 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
                     After this transaction, you will have{" "}
                     <span className={styles.value}>
                         {(
-                            (userOwnedStockOfBuyStock?.quantity ?? 0) +
+                            (userOwnedStockOfTransactingStock?.quantity ?? 0) +
                             parsedQuantity * (type === "buy" ? 1 : -1)
                         ).toLocaleString()}
                     </span>{" "}
@@ -211,7 +213,7 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
                         parsedQuantity === 0 ||
                         (type === "buy"
                             ? parsedQuantity * stock.dollarValue > account.cashOnHand
-                            : parsedQuantity > (userOwnedStockOfBuyStock?.quantity ?? 0))
+                            : parsedQuantity > (userOwnedStockOfTransactingStock?.quantity ?? 0))
                     }
                     intent={type === "buy" ? "success" : "primary"}
                     loading={isLoading}
@@ -226,7 +228,7 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
 function mapStateToProps(state: IStoreState, ownProps: IOwnProps): IStoreProps {
     return {
         account: state.account.userAccount,
-        userOwnedStockOfBuyStock: selectUserOwnedStock(ownProps.stock)(state),
+        userOwnedStockOfTransactingStock: selectUserOwnedStock(ownProps.stock)(state),
     };
 }
 

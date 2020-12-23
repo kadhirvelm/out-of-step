@@ -13,7 +13,7 @@ import { useHistory } from "react-router-dom";
 import { CompoundAction } from "redoodle";
 import { Dispatch } from "redux";
 import { Routes } from "../../common/routes";
-import { selectUserOwnedStock } from "../../selectors/selectUserOwnedStock";
+import { selectUserOwnedStock } from "../../selectors/selector";
 import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";

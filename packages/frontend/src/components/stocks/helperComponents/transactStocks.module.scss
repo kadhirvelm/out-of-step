@@ -1,0 +1,71 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.transact-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0 0;
+}
+
+.your-portfolio-label {
+    color: $pt-text-color-muted;
+    margin-left: 10px;
+    margin-bottom: 3px;
+}
+
+.row-container {
+    display: flex;
+    align-items: center;
+}
+
+.label {
+    margin-right: 5px;
+    color: $pt-text-color-muted;
+}
+
+.transact-information-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 1px $pt-divider-black, 0 -1px $pt-divider-black;
+}
+
+.transact-column-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    > :not(:last-child) {
+        margin-bottom: 15px;
+    }
+}
+
+.transact-row-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.transact-label {
+    margin-top: 5px;
+}
+
+.transact-button-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    max-width: 150px;
+
+    > :not(:first-child) {
+        margin-top: 15px;
+    }
+}
+
+.transact-button {
+    display: flex;
+    flex: 1;
+}
+
+.view-transaction-history {
+    margin-top: 15px
+}
