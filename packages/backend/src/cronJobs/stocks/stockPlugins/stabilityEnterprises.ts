@@ -42,7 +42,7 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
 
     const totalUpcomingElectionEvents = fecCalendarEvents.pagination.count;
 
-    const percentOwnership = totalOwnedStock / stock.totalQuantity;
+    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
@@ -57,12 +57,13 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
 
     const dollarValue = await getPriceForStabilityEnterprises(inputToModel);
 
-    if (dollarValue === undefined) {
-        return { dollarValue: previousPriceHistory?.dollarValue ?? DEFAULT_VALUE };
-    }
+    const calculationNotes: IStabilityEnterprisesCalculationNotes = {
+        ...inputToModel,
+        earthquakesInThisMeasure,
+    };
 
     return {
-        calculationNotes: JSON.stringify(inputToModel),
-        dollarValue,
+        calculationNotes: JSON.stringify(calculationNotes),
+        dollarValue: dollarValue ?? previousPrice,
     };
 };

@@ -47,7 +47,7 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
     const previousAverageWindSpeed = previousCalculationNotes.averageWindSpeed ?? 0;
     const averageWindSpeed = averageOfObjectsArray(weatherHistoricalCast.hourly ?? [], "wind_speed");
 
-    const percentOwnership = totalOwnedStock / stock.totalQuantity;
+    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
