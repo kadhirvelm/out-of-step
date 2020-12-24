@@ -122,7 +122,7 @@ describe("it can price Agri Cola Inc as expected", () => {
         done();
     });
 
-    it("Lessens the change when the percent ownership goes up", async done => {
+    it("lessens the change when the percent ownership goes up", async done => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageTemperateInCelsius: 0,

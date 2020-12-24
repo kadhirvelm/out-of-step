@@ -56,7 +56,7 @@ export const priceBitAndGamble: IStockPricerPlugin = async (date, stock, totalOw
     const changeInBitCoinValue =
         (previousCalculationNotes.previousBitCoinValue ?? currentBitCoinPrice) - currentBitCoinPrice;
 
-    const percentOwnership = totalOwnedStock / stock.totalQuantity;
+    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 

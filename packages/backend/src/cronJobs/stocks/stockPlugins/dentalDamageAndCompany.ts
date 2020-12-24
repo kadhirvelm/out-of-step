@@ -92,7 +92,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
         (previousCalculationNotes.previousAveragePlatinumPrice ?? averagePlatinumPriceToday) -
         averagePlatinumPriceToday;
 
-    const percentOwnership = totalOwnedStock / stock.totalQuantity;
+    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 

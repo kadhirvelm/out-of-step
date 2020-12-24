@@ -30,7 +30,7 @@ export const priceViruzMeNot: IStockPricerPlugin = async (_date, stock, totalOwn
         (previousCalculationNotes.previousCriticalCommunityThreatsFromIpAddresses ??
             totalCriticalCommunityThreatsFromIpAddresses) - totalCriticalCommunityThreatsFromIpAddresses;
 
-    const percentOwnership = totalOwnedStock / stock.totalQuantity;
+    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
