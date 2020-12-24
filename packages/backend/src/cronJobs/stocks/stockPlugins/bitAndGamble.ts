@@ -68,7 +68,7 @@ export const priceBitAndGamble: IStockPricerPlugin = async (date, stock, totalOw
         previousPrice,
     };
 
-    const dollarValue = await getPriceForBitAndGamble(inputToModel);
+    const dollarValue = getPriceForBitAndGamble(inputToModel);
 
     const calculationNotes: IBitAndGambleCalculationNotes = {
         ...inputToModel,
