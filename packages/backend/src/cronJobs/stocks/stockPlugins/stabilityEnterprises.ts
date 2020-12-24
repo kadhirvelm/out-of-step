@@ -23,9 +23,8 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
             ).toLocaleDateString()}&endtime=${date.toLocaleDateString()}&minmagnitude=4`,
         ),
         callOnExternalEndpoint(
-            `https://api.open.fec.gov/v1/calendar-dates/?min_start_date=${date.toLocaleDateString()}&api_key=${
-                process.env.DATA_GOV
-            }&page=1&per_page=1`,
+            `https://api.open.fec.gov/v1/calendar-dates/?min_start_date=${date.toLocaleDateString()}&api_key=${process
+                .env.DATA_GOV ?? ""}&page=1&per_page=1`,
         ),
     ]);
 
@@ -33,7 +32,8 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
         previousPriceHistory?.calculationNotes ?? "{}",
     );
 
-    const allEarthquakeMagnitudes: number[] = earthquakeData.features.map((f: any) => f.properties.mag);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const allEarthquakeMagnitudes: number[] = earthquakeData.features.map((f: any) => f.properties.mag as number);
     const maximumMagnitude = Math.max(...allEarthquakeMagnitudes);
 
     const earthquakesInThisMeasure = allEarthquakeMagnitudes.reduce((previous, next) => previous + next, 0);

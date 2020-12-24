@@ -10,7 +10,7 @@ export async function getCurrentStandings(): Promise<IGetCurrentStandings["respo
     const [latestPricePoints, allOwnedStocks, allAccounts] = await Promise.all([
         postgresPool.query<{ stock: IStockId; dollarValue: number }>("SELECT DISTINCT ON (stock) \"dollarValue\", stock FROM \"priceHistory\" ORDER BY stock, timestamp DESC"),
         postgresPool.query<IOwnedStock>("SELECT * FROM \"ownedStock\""),
-        postgresPool.query<{ id: IAccountId; cashOnHand: number; portfolioName: string }>("SELECT id, \"cashOnHand\", \"portfolioName\" FROM account"),
+        postgresPool.query<{ id: IAccountId; cashOnHand: number; portfolioName: string; name: string }>("SELECT id, \"cashOnHand\", \"portfolioName\", name FROM account"),
     ]);
 
     const keyedPricePoints = _.keyBy(latestPricePoints.rows, "stock");
@@ -28,6 +28,7 @@ export async function getCurrentStandings(): Promise<IGetCurrentStandings["respo
     return allAccounts.rows.map(account => {
         return {
             accountId: account.id,
+            accountName: account.name,
             portfolioName: account.portfolioName,
             netWorth: account.cashOnHand + calculateAccountAssetWorth(account.id),
         }

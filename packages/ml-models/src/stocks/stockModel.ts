@@ -20,8 +20,9 @@ export class StockModel<InputData> {
 
     public trainModel = (trainingData: Array<{ input: InputData; output: number }>) => {
         return async () => {
-            const trainX: number[][] = trainingData.map(td => this.convertInputToArray(td.input));
-            const trainY: number[] = trainingData.map(td => td.output);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            const trainX: any[][] = trainingData.map(td => this.convertInputToArray(td.input));
+            const trainY: any[] = trainingData.map(td => td.output);
 
             await trainLinearModel(trainX, trainY, this.options);
         };

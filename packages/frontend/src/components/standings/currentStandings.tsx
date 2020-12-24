@@ -12,7 +12,12 @@ interface IStoreProps {
 }
 
 const UnconnectedCurrentStandings: React.FC<IStoreProps> = ({ userAccountId }) => {
-    const currentStandings = callOnPrivateEndpoint(AccountServiceFrontend.getCurrentStandings, undefined);
+    const currentStandings = callOnPrivateEndpoint(
+        AccountServiceFrontend.getCurrentStandings,
+        undefined,
+        undefined,
+        "current-standings",
+    );
 
     if (currentStandings === undefined) {
         return (
@@ -39,7 +44,9 @@ const UnconnectedCurrentStandings: React.FC<IStoreProps> = ({ userAccountId }) =
                             <span>{index + 1}</span>
                             <div className={styles.informationContainer}>
                                 <span className={styles.portfolioName}>{standing.portfolioName}</span>
-                                <span className={styles.netWorth}>${standing.netWorth.toLocaleString()}</span>
+                                <span className={styles.netWorth}>
+                                    {standing.accountName} – ${standing.netWorth.toLocaleString()}
+                                </span>
                             </div>
                         </div>
                         <div>{standing.accountId === userAccountId ? "You" : ""}</div>

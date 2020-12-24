@@ -20,7 +20,7 @@ export async function loginToAccount(
     try {
         const user = await postgresPool.query<IAccount>(
             // eslint-disable-next-line prettier/prettier
-            "SELECT \"hashedPassword\", id FROM account WHERE username = $1",
+            "SELECT \"hashedPassword\", id FROM account WHERE LOWER(username) = LOWER($1)",
             [username],
         );
 

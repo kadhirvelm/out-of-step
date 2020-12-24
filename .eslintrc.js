@@ -48,6 +48,10 @@ module.exports = {
       "lines-between-class-members": 0,
       "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "_" }],
       "react/prop-types": 0,
+      "import/namespace": 0,
+      "@typescript-eslint/no-floating-promises": 0,
+      "@typescript-eslint/no-unsafe-assignment": 0,
+      "@typescript-eslint/no-unsafe-member-access": 0,
     },
 
     settings: {

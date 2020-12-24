@@ -17,7 +17,12 @@ function getAverageOf2020Values(data: any[][]) {
         return undefined;
     }
 
-    return data.filter(d => d[5].includes("2020")).reduce((previous, next) => previous + next[7], 0) / data.length;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    return (
+        data
+            .filter(d => (d[5] as string).includes("2020"))
+            .reduce((previous, next) => previous + (next[7] as number), 0) / data.length
+    );
 }
 
 function getAverageUsPriceOfMetal(data: any[]) {
@@ -25,7 +30,7 @@ function getAverageUsPriceOfMetal(data: any[]) {
         return undefined;
     }
 
-    return (data[1] + data[4]) / 2;
+    return ((data[1] as number) + (data[4] as number)) / 2;
 }
 
 export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
@@ -40,20 +45,20 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
 
     const [usDairyPrices, usMilkSupply, palladiumPrices, platinumPrices] = await Promise.all([
         callOnExternalEndpoint(
-            `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=DAIRY_US_34&report_month=${date.getFullYear()}-${date.getMonth()}&api_key=${
-                process.env.QUANDL_KEY
-            }`,
+            `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=DAIRY_US_34&report_month=${date.getFullYear()}-${date.getMonth()}&api_key=${process
+                .env.QUANDL_KEY ?? ""}`,
         ),
         callOnExternalEndpoint(
-            `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=MILK_US_33&report_month=${date.getFullYear()}-${date.getMonth()}&api_key=${
-                process.env.QUANDL_KEY
-            }`,
+            `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=MILK_US_33&report_month=${date.getFullYear()}-${date.getMonth()}&api_key=${process
+                .env.QUANDL_KEY ?? ""}`,
         ),
         callOnExternalEndpoint(
-            `https://www.quandl.com/api/v3/datasets/LPPM/PALL?start_date=${yesterdayHyphenSeparated}&end_date=${yesterdayHyphenSeparated}&api_key=${process.env.QUANDL_KEY}`,
+            `https://www.quandl.com/api/v3/datasets/LPPM/PALL?start_date=${yesterdayHyphenSeparated}&end_date=${yesterdayHyphenSeparated}&api_key=${process
+                .env.QUANDL_KEY ?? ""}`,
         ),
         callOnExternalEndpoint(
-            `https://www.quandl.com/api/v3/datasets/LPPM/PLAT?start_date=${yesterdayHyphenSeparated}&end_date=${yesterdayHyphenSeparated}&api_key=${process.env.QUANDL_KEY}`,
+            `https://www.quandl.com/api/v3/datasets/LPPM/PLAT?start_date=${yesterdayHyphenSeparated}&end_date=${yesterdayHyphenSeparated}&api_key=${process
+                .env.QUANDL_KEY ?? ""}`,
         ),
     ]);
 

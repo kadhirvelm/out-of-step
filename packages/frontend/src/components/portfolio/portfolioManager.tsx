@@ -10,7 +10,7 @@ import { Routes } from "../../common/routes";
 import { SetViewStockWithLatestPrice } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
-import { formatNumber } from "../../utils/formatNumber";
+import { formatDollar, formatNumber } from "../../utils/formatNumber";
 import { MarketStatus } from "./helperComponents/marketStatus";
 import styles from "./portfolioManager.module.scss";
 
@@ -41,7 +41,12 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
         | undefined
     >(undefined);
 
-    const allStocksWithPrice = callOnPrivateEndpoint(StocksFrontendService.getAllStocks, undefined);
+    const allStocksWithPrice = callOnPrivateEndpoint(
+        StocksFrontendService.getAllStocks,
+        undefined,
+        undefined,
+        "get-all-stocks",
+    );
 
     React.useEffect(() => {
         if (allStocksWithPrice === undefined || userOwnedStocks === undefined) {
@@ -84,7 +89,9 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
 
     const renderSingleStock = (stock: IStockWithDollarValue, ownedStock?: IOwnedStock) => {
         const stockNameLabel =
-            ownedStock === undefined ? `Price: $${stock.dollarValue.toFixed(2)}` : `Shares: ${ownedStock.quantity}`;
+            ownedStock === undefined
+                ? `Price: ${formatDollar(stock.dollarValue)}`
+                : `Shares: ${formatNumber(ownedStock.quantity)}`;
 
         const maybeTotalAssertWorth =
             ownedStock !== undefined && `$${formatNumber(ownedStock.quantity * stock.dollarValue)}`;
@@ -127,6 +134,14 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
         return sortedStocks.inUserPortfolio.map(s => renderSingleStock(s, sortedStocks?.keyedUserOwnedStocks[s.id]));
     };
 
+    const maybeRenderOtherStocks = () => {
+        if (sortedStocks.notInUserPortfolio.length === 0) {
+            return <NonIdealState className={styles.nonIdealStateStocks} description="None to display" />;
+        }
+
+        return sortedStocks.notInUserPortfolio.map(s => renderSingleStock(s));
+    };
+
     return (
         <div className={styles.overallContainer}>
             <div className={styles.userInformationContainer}>
@@ -145,9 +160,7 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
             <span className={styles.typeOfStockLabel}>Your portfolio</span>
             <div className={styles.stocksContainer}>{maybeRenderUserPortfolioStocks()}</div>
             <span className={classNames(styles.typeOfStockLabel, styles.otherStocks)}>Other stocks</span>
-            <div className={styles.stocksContainer}>
-                {sortedStocks.notInUserPortfolio.map(s => renderSingleStock(s))}
-            </div>
+            <div className={styles.stocksContainer}>{maybeRenderOtherStocks()}</div>
         </div>
     );
 };

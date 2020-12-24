@@ -23,12 +23,12 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
         callOnExternalEndpoint(
             `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${Math.round(
                 changeDateByDays(new Date(), -10).valueOf() / 1000,
-            )}&to=${Math.round(date.valueOf() / 1000)}&token=${process.env.FINNHUB_TOKEN}`,
+            )}&to=${Math.round(date.valueOf() / 1000)}&token=${process.env.FINNHUB_TOKEN ?? ""}`,
         ),
         callOnExternalEndpoint(
             `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.739071&lon=-75.539787&dt=${Math.round(
                 date.valueOf() / 1000,
-            )}&appid=${process.env.OPEN_WEATHER_MAP}`,
+            )}&appid=${process.env.OPEN_WEATHER_MAP ?? ""}`,
         ),
     ]);
 

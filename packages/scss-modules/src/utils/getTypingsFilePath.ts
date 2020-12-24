@@ -8,7 +8,7 @@ export function getTypingsFilePath(this: webpack.loader.LoaderContext) {
     const srcPath =
         options.namespace === undefined
             ? this.resourcePath.match(/.*\/packages\/[\w\-_@]*\//g)
-            : RegExp(`.*\\/packages\\/${options.namespace}\\/[\\w\\-_@]*\\/`).exec(this.resourcePath);
+            : RegExp(`.*\\/packages\\/${options.namespace as string}\\/[\\w\\-_@]*\\/`).exec(this.resourcePath);
 
     if (srcPath == null || srcPath?.length === 0) {
         throw new Error("Could not identify where the src path is.");

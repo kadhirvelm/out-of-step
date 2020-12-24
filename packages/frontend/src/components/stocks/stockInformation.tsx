@@ -54,6 +54,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
             bucket,
         },
         [bucket],
+        `stock-information-${viewStockWithLatestPrice.id}-${bucket}`,
     );
 
     React.useEffect(() => {

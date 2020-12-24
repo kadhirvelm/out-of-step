@@ -15,6 +15,7 @@ function getAverageFromFREDData(data: any) {
         return undefined;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     return data.reduce((previous: number, next: [string, number]) => previous + next[1], 0) / data.length;
 }
 
@@ -24,13 +25,14 @@ export const priceBitAndGamble: IStockPricerPlugin = async (date, stock, totalOw
             `https://www.quandl.com/api/v3/datasets/FRED/DFF?start_date=${changeDateByDays(
                 date,
                 -5,
-            ).toDateString()}&end_date=${changeDateByDays(date, -4).toDateString()}&api_key=${process.env.QUANDL_KEY}`,
+            ).toDateString()}&end_date=${changeDateByDays(date, -4).toDateString()}&api_key=${process.env.QUANDL_KEY ??
+                ""}`,
         ),
         callOnExternalEndpoint(
             `https://www.quandl.com/api/v3/datasets/FRED/ICSA?start_date=${changeDateByDays(
                 date,
                 -20,
-            ).toDateString()}&end_date=${date.toDateString()}&api_key=${process.env.QUANDL_KEY}`,
+            ).toDateString()}&end_date=${date.toDateString()}&api_key=${process.env.QUANDL_KEY ?? ""}`,
         ),
         callOnExternalEndpoint("https://api.coindesk.com/v1/bpi/currentprice.json"),
     ]);
