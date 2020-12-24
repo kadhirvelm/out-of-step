@@ -3,6 +3,7 @@ import Chartist from "chartist";
 import { times } from "lodash-es";
 import * as React from "react";
 import classNames from "classnames";
+import { NonIdealState } from "@blueprintjs/core";
 import { formatDollar } from "../../../utils/formatNumber";
 import { customTapValueIndicator } from "./customTapValueIndicator";
 import styles from "./stockChart.module.scss";
@@ -12,6 +13,14 @@ export const StockChart: React.FC<{
     pricePoints: IPriceHistoryInBuckets[];
     timeBucket: ITimeBucket;
 }> = React.memo(({ previousClosePrice, pricePoints, timeBucket }) => {
+    if (pricePoints.length === 0) {
+        return (
+            <div className={styles.chartContainer}>
+                <NonIdealState description="No price points to display." />
+            </div>
+        );
+    }
+
     const chartRef = React.useRef<HTMLDivElement>(null);
 
     const maybeIncludeBaselineFromYesterday =

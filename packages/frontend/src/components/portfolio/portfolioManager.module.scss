@@ -67,7 +67,7 @@
     flex-direction: column;
     box-shadow: 0 -1px $pt-divider-black;
 
-    > :nth-child(2).single-stock-container {
+    > :nth-child(even).single-stock-container {
         background: $light-gray3;
     }
 }

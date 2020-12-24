@@ -21,7 +21,7 @@ export interface IAccountService extends IService {
     };
     getCurrentStandings: {
         payload: undefined;
-        response: Array<{ accountId: IAccountId; portfolioName: string; netWorth: number }>;
+        response: Array<{ accountId: IAccountId; portfolioName: string; accountName: string; netWorth: number }>;
     };
     loginToAccount: {
         payload: { hashedPassword: string; username: string };

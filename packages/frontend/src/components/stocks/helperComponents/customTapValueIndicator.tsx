@@ -1,5 +1,5 @@
-import * as chartist from "chartist";
 import { range } from "lodash-es";
+import Chartist from "chartist";
 import { constrainNumber } from "../../../utils/constrainNumber";
 import { formatDollar } from "../../../utils/formatNumber";
 import styles from "./customTapValueIndicator.module.scss";
@@ -20,8 +20,8 @@ function calculatePercentBetweenRanges(percent: number, lowerBound: number, uppe
 }
 
 export function customTapValueIndicator() {
-    return (chart: chartist.IChartistLineChart) => {
-        if (!(chart instanceof chartist.Line)) {
+    return (chart: Chartist.IChartistLineChart) => {
+        if (!(chart instanceof Chartist.Line)) {
             return;
         }
 

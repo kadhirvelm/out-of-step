@@ -20,5 +20,6 @@ export function averageOfObjectsArray(array: any[] | undefined, key: string) {
         return undefined;
     }
 
-    return sendUndefinedOrNumber(array.reduce((p, n) => p + n[key], 0) / array.length);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return sendUndefinedOrNumber(array.reduce((p, n) => (p as number) + (n[key] as number), 0) / array.length);
 }
