@@ -1,18 +1,3 @@
-import { StockModel } from "./stockModel";
-
-const convertBitAndGambleInputToArray = (input: IBitAndGambleInputData) => [
-    input.averageEffectiveFederalFundsRate,
-    input.changeInAverageInitialClaimsForUnemployment,
-    input.changeInBitCoinValue,
-    input.percentOwnership,
-    input.previousPrice,
-];
-
-const BitAndGambleModel = new StockModel<IBitAndGambleInputData>(
-    { epochs: 200, name: "bit-and-gamble-v1" },
-    convertBitAndGambleInputToArray,
-);
-
 export interface IBitAndGambleInputData {
     averageEffectiveFederalFundsRate: number;
     changeInAverageInitialClaimsForUnemployment: number;
@@ -21,6 +6,11 @@ export interface IBitAndGambleInputData {
     previousPrice: number;
 }
 
-export const getPriceForBitAndGamble = BitAndGambleModel.getPrice;
+export const getPriceForBitAndGamble = (input: IBitAndGambleInputData) => {
+    const bitCoinChange = input.changeInBitCoinValue * input.averageEffectiveFederalFundsRate;
+    const initialClaimsChange =
+        -input.changeInAverageInitialClaimsForUnemployment * input.averageEffectiveFederalFundsRate;
+    const percentOwnershipAdjustment = 1 - input.percentOwnership;
 
-export const trainModelForBitAndGamble = BitAndGambleModel.trainModel([]);
+    return input.previousPrice + (bitCoinChange + initialClaimsChange) * percentOwnershipAdjustment;
+};

@@ -1,7 +1,7 @@
 {
   "name": "@stochastic-exchange/utils",
   "version": "0.1.0",
-  "description": "The utils to stochastic exchange.",
+  "description": "The utility methods to stochastic exchange that are shared between the FE and BE.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "repository": "https://github.com/kadhirvelm/stochastic-exchange",

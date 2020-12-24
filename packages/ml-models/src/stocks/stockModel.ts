@@ -6,7 +6,7 @@ import { ITrainLinearModelOptions, trainLinearModel } from "../utils/trainLinear
 export class StockModel<InputData> {
     constructor(private options: ITrainLinearModelOptions, private convertInputToArray: (input: InputData) => any[]) {}
 
-    public async getPrice(input: InputData) {
+    public getPrice = async (input: InputData) => {
         const trainedModel = await getExistingLinearModel(this.options);
         if (trainedModel === undefined) {
             return undefined;
@@ -16,14 +16,14 @@ export class StockModel<InputData> {
 
         const predictedValue = trainedModel.predict(tf.tensor2d(dataArray, [1, dataArray.length]));
         return getValuesFromTensor(predictedValue)[0];
-    }
+    };
 
-    public trainModel(trainingData: Array<{ input: InputData; output: number }>) {
+    public trainModel = (trainingData: Array<{ input: InputData; output: number }>) => {
         return async () => {
             const trainX: number[][] = trainingData.map(td => this.convertInputToArray(td.input));
             const trainY: number[] = trainingData.map(td => td.output);
 
             await trainLinearModel(trainX, trainY, this.options);
         };
-    }
+    };
 }
