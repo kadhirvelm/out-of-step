@@ -57,12 +57,13 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
 
     const dollarValue = await getPriceForStabilityEnterprises(inputToModel);
 
-    if (dollarValue === undefined) {
-        return { dollarValue: previousPriceHistory?.dollarValue ?? DEFAULT_VALUE };
-    }
+    const calculationNotes: IStabilityEnterprisesCalculationNotes = {
+        ...inputToModel,
+        earthquakesInThisMeasure,
+    };
 
     return {
-        calculationNotes: JSON.stringify(inputToModel),
-        dollarValue,
+        calculationNotes: JSON.stringify(calculationNotes),
+        dollarValue: dollarValue ?? previousPrice,
     };
 };
