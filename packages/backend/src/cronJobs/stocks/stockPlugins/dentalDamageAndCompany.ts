@@ -20,13 +20,14 @@ function getAverageOf2020Values(data: any[][]) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     return (
         data
+            .slice()
             .filter(d => (d[5] as string).includes("2020"))
             .reduce((previous, next) => previous + (next[7] as number), 0) / data.length
     );
 }
 
 function getAverageUsPriceOfMetal(data: any[]) {
-    if (data.length === 0) {
+    if (data === undefined || data.length === 0) {
         return undefined;
     }
 
@@ -39,9 +40,8 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
     totalOwnedStock,
     previousPriceHistory,
 ) => {
-    const yesterdayDate = changeDateByDays(date, -1);
-    const yesterdayHyphenSeparated = `${yesterdayDate.getFullYear()}-${yesterdayDate.getMonth() +
-        1}-${yesterdayDate.getDate()}`;
+    const previousDay = changeDateByDays(date, -10);
+    const previousDayHyphenated = `${previousDay.getFullYear()}-${previousDay.getMonth() + 1}-${previousDay.getDate()}`;
 
     const [usDairyPrices, usMilkSupply, palladiumPrices, platinumPrices] = await Promise.all([
         callOnExternalEndpoint(
@@ -53,11 +53,11 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
                 .env.QUANDL_KEY ?? ""}`,
         ),
         callOnExternalEndpoint(
-            `https://www.quandl.com/api/v3/datasets/LPPM/PALL?start_date=${yesterdayHyphenSeparated}&end_date=${yesterdayHyphenSeparated}&api_key=${process
+            `https://www.quandl.com/api/v3/datasets/LPPM/PALL?start_date=${previousDayHyphenated}&end_date=${previousDayHyphenated}&api_key=${process
                 .env.QUANDL_KEY ?? ""}`,
         ),
         callOnExternalEndpoint(
-            `https://www.quandl.com/api/v3/datasets/LPPM/PLAT?start_date=${yesterdayHyphenSeparated}&end_date=${yesterdayHyphenSeparated}&api_key=${process
+            `https://www.quandl.com/api/v3/datasets/LPPM/PLAT?start_date=${previousDayHyphenated}&end_date=${previousDayHyphenated}&api_key=${process
                 .env.QUANDL_KEY ?? ""}`,
         ),
     ]);
