@@ -49,7 +49,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
             percentOwnership: 0,
             previousPrice: 25,
         },
-        output: 24.5,
+        output: 24,
     },
     {
         input: {
@@ -111,7 +111,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
             percentOwnership: 100,
             previousPrice: 25,
         },
-        output: 24.75,
+        output: 24.5,
     },
     {
         input: {
@@ -183,7 +183,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
             percentOwnership: 0,
             previousPrice: 50,
         },
-        output: 49,
+        output: 48,
     },
     {
         input: {

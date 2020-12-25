@@ -151,7 +151,7 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
             <div className={styles.mainDialogBody}>
                 <div className={styles.currentSeparatorContainer}>
                     <span className={styles.label}>Cash on hand:</span>
-                    <span className={styles.value}>${account.cashOnHand.toLocaleString()}</span>
+                    <span className={styles.value}>{formatDollar(account.cashOnHand)}</span>
                 </div>
                 <div className={styles.currentSeparatorContainer}>
                     <span className={styles.label}>Current shares:</span>
@@ -174,8 +174,8 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
                 <div className={styles.summarySentence}>
                     You will {type} <span className={styles.value}>{parsedQuantity ?? 0}</span> shares of{" "}
                     <span className={styles.value}>{stock.name}</span>
-                    {maybeRenderWarningValue()} at <span className={styles.value}>${stock.dollarValue.toFixed(2)}</span>{" "}
-                    per share for a total of{" "}
+                    {maybeRenderWarningValue()} at{" "}
+                    <span className={styles.value}>{formatDollar(stock.dollarValue)}</span> per share for a total of{" "}
                     <span className={styles.value}>{formatDollar(parsedQuantity * stock.dollarValue)}</span>.
                 </div>
                 <div className={styles.summarySentence}>

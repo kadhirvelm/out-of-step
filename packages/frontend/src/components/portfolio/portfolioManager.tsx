@@ -88,11 +88,6 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
     };
 
     const renderSingleStock = (stock: IStockWithDollarValue, ownedStock?: IOwnedStock) => {
-        const stockNameLabel =
-            ownedStock === undefined
-                ? `Price: ${formatDollar(stock.dollarValue)}`
-                : `Shares: ${formatNumber(ownedStock.quantity)}`;
-
         const maybeTotalAssertWorth =
             ownedStock !== undefined && `$${formatNumber(ownedStock.quantity * stock.dollarValue)}`;
 
@@ -104,7 +99,7 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
             >
                 <div className={styles.leftContainer}>
                     <span className={styles.stockTitle}>{stock.name}</span>
-                    <span className={styles.stockMarketCap}>{stockNameLabel}</span>
+                    <span className={styles.stockMarketCap}>Price: {formatDollar(stock.dollarValue)}</span>
                 </div>
                 <div className={styles.rightContainer}>
                     <span

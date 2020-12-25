@@ -3,6 +3,7 @@ import { IStockWithDollarValue, IOwnedStock } from "@stochastic-exchange/api";
 import * as React from "react";
 import { useHistory } from "react-router-dom";
 import { Routes } from "../../../common/routes";
+import { formatDollar } from "../../../utils/formatNumber";
 import { BuyStocksDialog, SellStocksDialog } from "./stocksDialog";
 import styles from "./transactStocks.module.scss";
 
@@ -35,6 +36,25 @@ export const TransactStock: React.FC<{
         history.push(Routes.TRANSACTIONS);
     };
 
+    if (viewStockWithLatestPrice.status === "ACQUIRED") {
+        return (
+            <div className={styles.transactContainer}>
+                <div className={styles.acquiredInfoContainer}>
+                    <span className={styles.hasBeenAcquiredLabel}>This stock has been acquired.</span>
+                    <span className={styles.hasBeenAcquiredDescription}>
+                        All shareholders have been paid {formatDollar(viewStockWithLatestPrice.dollarValue)} per share.
+                    </span>
+                    <Button
+                        className={styles.viewTransactionHistory}
+                        minimal
+                        onClick={viewTransactionHistory}
+                        text="View your transaction history"
+                    />
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className={styles.transactContainer}>
             <span className={styles.yourPortfolioLabel}>Your portfolio</span>
@@ -44,7 +64,7 @@ export const TransactStock: React.FC<{
                         <div className={styles.transactRowContainer}>
                             <div className={styles.transactLabel}>
                                 <span className={styles.label}>Cash on hand:</span>
-                                <span>${cashOnHand?.toLocaleString()}</span>
+                                <span>{formatDollar(cashOnHand ?? 0)}</span>
                             </div>
                             <div className={styles.transactButtonContainer}>
                                 <Button
@@ -94,6 +114,7 @@ export const TransactStock: React.FC<{
                 </div>
                 <Button
                     className={styles.viewTransactionHistory}
+                    icon="history"
                     minimal
                     onClick={viewTransactionHistory}
                     text="View your transaction history"

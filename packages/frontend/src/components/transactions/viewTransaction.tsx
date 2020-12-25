@@ -74,7 +74,7 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
                         <div className={styles.exchangeContainer}>
                             <span>Sell {transaction.soldQuantity} shares</span>
                             <span className={styles.atPriceContainer}>
-                                at ${viewTransactionsForStock.dollarValue.toFixed(2)}
+                                at {formatDollar(viewTransactionsForStock.dollarValue)}
                             </span>
                         </div>
                     </div>
@@ -113,7 +113,7 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
                             )}
                             {transaction.soldQuantity > 0 && <span>Sold {transaction.soldQuantity} shares</span>}
                             <span className={styles.atPriceContainer}>
-                                at ${transaction.priceHistory.dollarValue.toFixed(2)}
+                                at {formatDollar(transaction.priceHistory.dollarValue)}
                             </span>
                         </div>
                     </div>

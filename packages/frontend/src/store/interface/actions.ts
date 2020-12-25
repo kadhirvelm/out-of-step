@@ -8,3 +8,5 @@ export const SetViewStockWithLatestPrice = defineAction("set-view-stock-with-lat
 export const SetViewTransactionsForStock = defineAction("SetViewTransactionsForStock")<
     IStockWithDollarValue | undefined
 >();
+
+export const SetViewStockDetails = defineAction("SetViewStockDetails")<IStockWithDollarValue | undefined>();

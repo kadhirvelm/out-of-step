@@ -7,7 +7,11 @@ import { useHistory } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
 import { Routes } from "../../common/routes";
 import { selectOwnedStockQuantityOfViewStock, selectUserOwnedStock } from "../../selectors/selector";
-import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../store/interface/actions";
+import {
+    SetViewStockDetails,
+    SetViewStockWithLatestPrice,
+    SetViewTransactionsForStock,
+} from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { SetOwnedStockQuantity } from "../../store/stocks/actions";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
@@ -27,6 +31,7 @@ interface IDispatchProps {
     removeViewStockWithLatestPrice: () => void;
     setOwnedStockQuantity: (newOwnedStockWithQuantity: { [stock: string]: number }) => void;
     setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
+    setViewStockDetails: (stockWithDollarValue: IStockWithDollarValue) => void;
 }
 
 const VALID_TIME_BUCKETS: ITimeBucket[] = ["day", "5 days", "month", "all"];
@@ -37,6 +42,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
     removeViewStockWithLatestPrice,
     viewStockWithLatestPrice,
     setOwnedStockQuantity,
+    setViewStockDetails,
     setViewTransactionsForStock,
     userOwnedStockOfStockWithLatestPrice,
 }) => {
@@ -89,43 +95,6 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
         );
     }
 
-    const viewTransactionHistory = () => {
-        setViewTransactionsForStock(viewStockWithLatestPrice);
-        history.push(Routes.TRANSACTIONS);
-    };
-
-    const maybeRenderTransactStock = () => {
-        if (viewStockWithLatestPrice.status === "ACQUIRED") {
-            return (
-                <div className={styles.transactContainer}>
-                    <div className={styles.acquiredInfoContainer}>
-                        <span className={styles.hasBeenAcquiredLabel}>This stock has been acquired.</span>
-                        <span className={styles.hasBeenAcquiredDescription}>
-                            All shareholders have been paid {formatDollar(viewStockWithLatestPrice.dollarValue)} per
-                            share.
-                        </span>
-                        <Button
-                            className={styles.viewTransactionHistory}
-                            minimal
-                            onClick={viewTransactionHistory}
-                            text="View your transaction history"
-                        />
-                    </div>
-                </div>
-            );
-        }
-
-        return (
-            <TransactStock
-                cashOnHand={cashOnHand}
-                setViewTransactionsForStock={setViewTransactionsForStock}
-                totalOwnedStock={ownedStockQuantity ?? stockInformation.ownedStockQuantity}
-                userOwnedStockOfStockWithLatestPrice={userOwnedStockOfStockWithLatestPrice}
-                viewStockWithLatestPrice={viewStockWithLatestPrice}
-            />
-        );
-    };
-
     const setBucketCurried = (timeBucket: ITimeBucket) => () => setBucket(timeBucket);
 
     const maybeRenderYesterdaysClose = () => {
@@ -139,6 +108,11 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                 <span>{formatDollarForGraph(viewStockWithLatestPrice.previousPriceHistory?.dollarValue ?? 0)}</span>
             </div>
         );
+    };
+
+    const viewStockDetails = () => {
+        setViewStockDetails(viewStockWithLatestPrice);
+        history.push(Routes.STOCK_INFORMATION);
     };
 
     return (
@@ -206,8 +180,20 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                     {maybeRenderYesterdaysClose()}
                 </div>
             </div>
-            {maybeRenderTransactStock()}
-            <Button className={styles.seeStockInformation} disabled minimal text="See stock information" />
+            <Button
+                className={styles.seeStockDetails}
+                icon="info-sign"
+                minimal
+                onClick={viewStockDetails}
+                text="See more stock details"
+            />
+            <TransactStock
+                cashOnHand={cashOnHand}
+                setViewTransactionsForStock={setViewTransactionsForStock}
+                totalOwnedStock={ownedStockQuantity ?? stockInformation.ownedStockQuantity}
+                userOwnedStockOfStockWithLatestPrice={userOwnedStockOfStockWithLatestPrice}
+                viewStockWithLatestPrice={viewStockWithLatestPrice}
+            />
         </div>
     );
 };
@@ -225,6 +211,7 @@ function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
     const boundActions = bindActionCreators(
         {
             setOwnedStockQuantity: SetOwnedStockQuantity,
+            setViewStockDetails: SetViewStockDetails,
             setViewTransactionsForStock: SetViewTransactionsForStock,
         },
         dispatch,

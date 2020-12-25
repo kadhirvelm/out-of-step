@@ -1,0 +1,44 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.information-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.first-section-label {
+    color: $pt-text-color-muted;
+}
+
+.section-label {
+    color: $pt-text-color-muted;
+    padding-top: 10px;
+}
+
+.divider {
+    margin: 5px 0;
+}
+
+.underline {
+    height: 1px;
+    width: 200px;
+    box-shadow: 0 1px $pt-divider-black;
+}
+
+.paragraph {
+    padding-top: 5px;
+}
+
+.row {
+    display: flex;
+    margin-top: 5px;
+}
+
+.row-label {
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.link {
+    margin-top: 5px;
+}
