@@ -11,10 +11,10 @@ import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../
 import { IStoreState } from "../../store/state";
 import { SetOwnedStockQuantity } from "../../store/stocks/actions";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
-import { formatAsPercent, formatDollar, formatNumber } from "../../utils/formatNumber";
+import { formatAsPercent, formatDollar, formatDollarForGraph, formatNumber } from "../../utils/formatNumber";
 import { StockChart } from "./helperComponents/stockChart";
-import styles from "./stockInformation.module.scss";
 import { TransactStock } from "./helperComponents/transactStocks";
+import styles from "./stockInformation.module.scss";
 
 interface IStoreProps {
     cashOnHand: number | undefined;
@@ -136,7 +136,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
         return (
             <div className={styles.rowContainer}>
                 <span className={styles.label}>Previous close:</span>
-                <span>{formatDollar(viewStockWithLatestPrice.previousPriceHistory?.dollarValue ?? 0)}</span>
+                <span>{formatDollarForGraph(viewStockWithLatestPrice.previousPriceHistory?.dollarValue ?? 0)}</span>
             </div>
         );
     };
@@ -146,7 +146,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
             {renderBackButton()}
             <div className={styles.stockDetailsContainer}>
                 <span className={styles.stockName}>{viewStockWithLatestPrice.name}</span>
-                <span className={styles.stockLatestPrice}>${viewStockWithLatestPrice.dollarValue.toFixed(2)}</span>
+                <span className={styles.stockLatestPrice}>{formatDollar(viewStockWithLatestPrice.dollarValue)}</span>
             </div>
             <div className={styles.timeBucketsContainer}>
                 {VALID_TIME_BUCKETS.map(timeBucket => (

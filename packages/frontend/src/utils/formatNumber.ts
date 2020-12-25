@@ -11,8 +11,20 @@ export function formatNumber(number: number) {
     return greaterThanOne(number).replace(/G/, "B");
 }
 
+const dollarToTwoFixed = d3Format.format("$,.2f");
+
 export function formatDollar(number: number) {
-    return d3Format.format("$,.2f")(number);
+    return dollarToTwoFixed(number);
+}
+
+const dollarToThree = d3Format.format("$,.3s");
+
+export function formatDollarForGraph(number: number) {
+    if (number < 1) {
+        return formatDollar(number);
+    }
+
+    return dollarToThree(number);
 }
 
 export function formatAsPercent(number: number) {
