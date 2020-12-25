@@ -1,4 +1,5 @@
 import { getPriceForAgriColaInc, IAgriColaIncInputData } from "@stochastic-exchange/ml-models";
+import _ from "lodash";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { changeDateByDays } from "../../../utils/dateUtil";
 import { averageOfNumberArray, averageOfObjectsArray } from "../../../utils/mathUtils";
@@ -40,18 +41,24 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
     const previousAverageOfCTVA = previousCalculationNotes.averagePrice ?? currentAverageOfCTVA ?? 0;
 
     const previousAverageTemperatureInCelsius = previousCalculationNotes.averageTemperateInCelsius ?? 1;
-    const averageTemperateInCelsius = normalizeCelsiusIfDefined(
-        averageOfObjectsArray(weatherHistoricalCast.hourly, "temp"),
-    );
+    const averageTemperateInCelsius = normalizeCelsiusIfDefined(weatherHistoricalCast.current.temp);
 
     const previousAverageWindSpeed = previousCalculationNotes.averageWindSpeed ?? 0;
-    const averageWindSpeed = averageOfObjectsArray(weatherHistoricalCast.hourly ?? [], "wind_speed");
+    const averageWindSpeed = weatherHistoricalCast.current.wind_speed;
+
+    const previousAverageRainfall = previousCalculationNotes.averageRainfall ?? 0;
+    const averageRainfall = averageOfObjectsArray(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        _.compact(weatherHistoricalCast.hourly.map((h: any) => h.rain as { "1h": number } | undefined)),
+        "1h",
+    );
 
     const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: IAgriColaIncInputData = {
+        averageRainfall: averageRainfall ?? previousAverageRainfall,
         averageTemperateInCelsius: averageTemperateInCelsius ?? previousAverageTemperatureInCelsius,
         averageWindSpeed: averageWindSpeed ?? previousAverageWindSpeed,
         changeInAveragePrice: (currentAverageOfCTVA ?? previousAverageOfCTVA) - previousAverageOfCTVA,
