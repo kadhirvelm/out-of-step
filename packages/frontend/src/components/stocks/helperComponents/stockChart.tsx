@@ -1,10 +1,10 @@
+import { NonIdealState } from "@blueprintjs/core";
 import { IPriceHistoryInBuckets, ITimeBucket } from "@stochastic-exchange/api";
 import Chartist from "chartist";
+import classNames from "classnames";
 import { times } from "lodash-es";
 import * as React from "react";
-import classNames from "classnames";
-import { NonIdealState } from "@blueprintjs/core";
-import { formatDollar } from "../../../utils/formatNumber";
+import { formatDollarForGraph } from "../../../utils/formatNumber";
 import { customTapValueIndicator } from "./customTapValueIndicator";
 import styles from "./stockChart.module.scss";
 
@@ -62,7 +62,7 @@ export const StockChart: React.FC<{
                     showGrid: false,
                 },
                 axisY: {
-                    labelInterpolationFnc: (value: number): string => formatDollar(value),
+                    labelInterpolationFnc: (value: number): string => formatDollarForGraph(value),
                     low: minimumOfGraph,
                     showGrid: true,
                     type: Chartist.AutoScaleAxis,

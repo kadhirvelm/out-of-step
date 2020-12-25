@@ -15,6 +15,7 @@ import { StockInformation } from "./stocks/stockInformation";
 import { UserManager } from "./userManager/userManager";
 import { ViewTransactions } from "./transactions/viewTransaction";
 import { Routes } from "../common/routes";
+import { StockDetails } from "./stock-details/stockDetails";
 
 interface IDispatchProps {
     setUserAccountAndOwnedStocks: (userAccountAndOwnedStocks: IGetAccountResponse) => void;
@@ -74,11 +75,12 @@ const UnconnectedMainPage: React.FC<IDispatchProps> = ({ setUserAccountAndOwnedS
             </div>
             <div className={styles.mainContentContainer}>
                 <Switch>
-                    <Route path={Routes.USER} component={UserManager} />
                     <Route path={Routes.PORTFOLIO} component={PortfolioManager} />
-                    <Route path={Routes.STOCK} component={StockInformation} />
-                    <Route path={Routes.TRANSACTIONS} component={ViewTransactions} />
                     <Route path={Routes.SCORE} component={CurrentStandings} />
+                    <Route path={Routes.STOCK} component={StockInformation} />
+                    <Route path={Routes.STOCK_INFORMATION} component={StockDetails} />
+                    <Route path={Routes.TRANSACTIONS} component={ViewTransactions} />
+                    <Route path={Routes.USER} component={UserManager} />
                     <Redirect to={Routes.PORTFOLIO} />
                 </Switch>
             </div>

@@ -1,7 +1,8 @@
 export enum Routes {
-    USER = "/user",
     PORTFOLIO = "/portfolio",
-    STOCK = "/stock",
-    TRANSACTIONS = "/transactions",
     SCORE = "/score",
+    STOCK = "/stock",
+    STOCK_INFORMATION = "/stock-information",
+    TRANSACTIONS = "/transactions",
+    USER = "/user",
 }

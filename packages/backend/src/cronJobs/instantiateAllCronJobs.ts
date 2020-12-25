@@ -52,6 +52,13 @@ async function getNextStocksCronJobDate(): Promise<dayjs.Dayjs> {
 
 let isJobRunning = false;
 
+export async function priceAllStocks() {
+    await pricingStocksCronJob();
+
+    // eslint-disable-next-line no-console
+    console.log("Priced stocks at: ", new Date().toLocaleString());
+}
+
 function instantiateStocksCronJob() {
     if (isJobRunning) {
         return;
@@ -61,10 +68,7 @@ function instantiateStocksCronJob() {
     setTimeout(async () => {
         isJobRunning = true;
         scheduleJob((await getNextStocksCronJobDate()).valueOf(), async () => {
-            await pricingStocksCronJob();
-
-            // eslint-disable-next-line no-console
-            console.log("Priced stocks at: ", new Date().toLocaleString());
+            await priceAllStocks();
 
             isJobRunning = false;
 

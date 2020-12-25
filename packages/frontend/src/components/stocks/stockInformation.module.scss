@@ -103,33 +103,6 @@
     color: $pt-text-color-muted;
 }
 
-.acquired-info-container {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    box-shadow: 0 1px $pt-divider-black, 0 -1px $pt-divider-black;
-}
-
-.has-been-acquired-label {
-    font-size: 14px;
-    font-weight: 550;
-}
-
-.has-been-acquired-description {
-    margin-top: 5px;
-    color: $pt-text-color-muted;
-}
-
-.see-stock-information {
-    margin: 10px 0;
-}
-
-.transact-container {
-    display: flex;
-    flex-direction: column;
-    padding: 20px 0 0;
-}
-
-.view-transaction-history {
-    margin-top: 15px
+.see-stock-details {
+    margin: 5px 10px 0 10px;
 }

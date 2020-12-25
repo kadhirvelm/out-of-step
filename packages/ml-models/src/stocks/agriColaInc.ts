@@ -1,3 +1,4 @@
+import * as tf from "@tensorflow/tfjs-node";
 import { StockModel } from "./stockModel";
 
 const convertAgriColaIncInputToArray = (input: IAgriColaIncInputData) => [
@@ -18,7 +19,8 @@ export interface IAgriColaIncInputData {
 
 const AgriColaIncModel = new StockModel<IAgriColaIncInputData>(
     {
-        epochs: 200,
+        epochs: 400,
+        optimizer: tf.train.adam(0.05),
         name: "agri-cola-inc-v1",
     },
     convertAgriColaIncInputToArray,
@@ -26,10 +28,12 @@ const AgriColaIncModel = new StockModel<IAgriColaIncInputData>(
 
 export const getPriceForAgriColaInc = AgriColaIncModel.getPrice;
 
+const AVERAGE_CELSIUS = 6;
+
 export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 0,
             changeInAveragePrice: 0,
             percentOwnership: 0,
@@ -39,17 +43,17 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 2,
+            averageTemperateInCelsius: AVERAGE_CELSIUS - 2,
             averageWindSpeed: 0,
             changeInAveragePrice: 0,
             percentOwnership: 0,
             previousPrice: 25,
         },
-        output: 24.5,
+        output: 24,
     },
     {
         input: {
-            averageTemperateInCelsius: 6,
+            averageTemperateInCelsius: AVERAGE_CELSIUS + 2,
             averageWindSpeed: 0,
             changeInAveragePrice: 0,
             percentOwnership: 0,
@@ -59,7 +63,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 5,
             changeInAveragePrice: 0,
             percentOwnership: 0,
@@ -69,7 +73,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 10,
             changeInAveragePrice: 0,
             percentOwnership: 0,
@@ -79,7 +83,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 0,
             changeInAveragePrice: 3,
             percentOwnership: 0,
@@ -89,7 +93,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 0,
             changeInAveragePrice: -3,
             percentOwnership: 0,
@@ -101,17 +105,17 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     /** Change in percent ownership */
     {
         input: {
-            averageTemperateInCelsius: 2,
+            averageTemperateInCelsius: AVERAGE_CELSIUS - 2,
             averageWindSpeed: 0,
             changeInAveragePrice: 0,
             percentOwnership: 100,
             previousPrice: 25,
         },
-        output: 24.75,
+        output: 24.5,
     },
     {
         input: {
-            averageTemperateInCelsius: 6,
+            averageTemperateInCelsius: AVERAGE_CELSIUS + 2,
             averageWindSpeed: 0,
             changeInAveragePrice: 0,
             percentOwnership: 100,
@@ -121,7 +125,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 5,
             changeInAveragePrice: 0,
             percentOwnership: 100,
@@ -131,7 +135,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 10,
             changeInAveragePrice: 0,
             percentOwnership: 100,
@@ -141,7 +145,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 0,
             changeInAveragePrice: 3,
             percentOwnership: 100,
@@ -151,7 +155,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 0,
             changeInAveragePrice: -3,
             percentOwnership: 100,
@@ -163,7 +167,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     /** Different previous price */
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 0,
             changeInAveragePrice: 0,
             percentOwnership: 0,
@@ -173,17 +177,17 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 2,
+            averageTemperateInCelsius: AVERAGE_CELSIUS - 2,
             averageWindSpeed: 0,
             changeInAveragePrice: 0,
             percentOwnership: 0,
             previousPrice: 50,
         },
-        output: 49,
+        output: 48,
     },
     {
         input: {
-            averageTemperateInCelsius: 6,
+            averageTemperateInCelsius: AVERAGE_CELSIUS + 2,
             averageWindSpeed: 0,
             changeInAveragePrice: 0,
             percentOwnership: 0,
@@ -193,7 +197,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 5,
             changeInAveragePrice: 0,
             percentOwnership: 0,
@@ -203,7 +207,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 10,
             changeInAveragePrice: 0,
             percentOwnership: 0,
@@ -213,7 +217,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 0,
             changeInAveragePrice: 3,
             percentOwnership: 0,
@@ -223,7 +227,7 @@ export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
     },
     {
         input: {
-            averageTemperateInCelsius: 4,
+            averageTemperateInCelsius: AVERAGE_CELSIUS,
             averageWindSpeed: 0,
             changeInAveragePrice: -3,
             percentOwnership: 0,
