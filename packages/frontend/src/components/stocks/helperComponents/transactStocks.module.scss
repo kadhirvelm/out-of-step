@@ -67,7 +67,11 @@
 }
 
 .view-transaction-history {
-    margin-top: 15px
+    margin-top: 15px;
+
+    :global(.bp3-button-text) {
+        text-decoration: underline;
+    }
 }
 
 .acquired-info-container {
