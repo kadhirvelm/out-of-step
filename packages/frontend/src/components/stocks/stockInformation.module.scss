@@ -105,4 +105,14 @@
 
 .see-stock-details {
     margin: 5px 10px 0 10px;
+
+    &:global(.bp3-button) {
+        &:global(.bp3-minimal) {
+            background: rgba($light-gray3, 0.8);
+        }
+    }
+
+    :global(.bp3-button-text) {
+        text-decoration: underline;
+    }
 }
