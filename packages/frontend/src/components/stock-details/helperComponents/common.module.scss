@@ -3,7 +3,7 @@
 .information-container {
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 20px;
 }
 
 .first-section-label {
@@ -41,4 +41,18 @@
 
 .link {
     margin-top: 5px;
+}
+
+:global(.bp3-dark) {
+    .first-section-label {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .section-label {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .underline {
+        box-shadow: 0 1px $pt-dark-divider-white;
+    }
 }

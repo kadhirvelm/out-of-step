@@ -1,5 +1,6 @@
 import { NonIdealState } from "@blueprintjs/core";
 import { IPriceHistoryInBuckets, ITimeBucket } from "@stochastic-exchange/api";
+import { isMarketOpenOnDateDay } from "@stochastic-exchange/utils";
 import Chartist from "chartist";
 import classNames from "classnames";
 import { times } from "lodash-es";
@@ -13,12 +14,14 @@ export const StockChart: React.FC<{
     pricePoints: IPriceHistoryInBuckets[];
     timeBucket: ITimeBucket;
 }> = React.memo(({ previousClosePrice, pricePoints, timeBucket }) => {
+    const isMarketClosedAndDayDisplay = timeBucket === "day" && !isMarketOpenOnDateDay(new Date());
+
+    if (isMarketClosedAndDayDisplay) {
+        return <NonIdealState description="The market is closed today." />;
+    }
+
     if (pricePoints.length === 0) {
-        return (
-            <div className={styles.chartContainer}>
-                <NonIdealState description="No price points to display." />
-            </div>
-        );
+        return <NonIdealState description="No price points to display." />;
     }
 
     const chartRef = React.useRef<HTMLDivElement>(null);
@@ -30,17 +33,6 @@ export const StockChart: React.FC<{
         ...maybeIncludeBaselineFromYesterday.map(p => p.value),
         ...pricePoints.map(p => p.dollarValue),
     );
-
-    const stockConditionalFormattingClassName = () => {
-        const baselineValue =
-            timeBucket === "day" ? maybeIncludeBaselineFromYesterday.slice(-1)[0].value : pricePoints[0].dollarValue;
-        const currentValue = pricePoints.slice(-1)[0].dollarValue;
-
-        return {
-            [styles.positiveTrend]: currentValue > baselineValue,
-            [styles.negativeTrend]: currentValue < baselineValue,
-        };
-    };
 
     const plotLineGraph = () => {
         if (chartRef.current == null) {
@@ -81,6 +73,17 @@ export const StockChart: React.FC<{
     React.useEffect(() => {
         plotLineGraph();
     }, [pricePoints]);
+
+    const stockConditionalFormattingClassName = () => {
+        const baselineValue =
+            timeBucket === "day" ? maybeIncludeBaselineFromYesterday.slice(-1)[0]?.value : pricePoints[0]?.dollarValue;
+        const currentValue = pricePoints.slice(-1)[0]?.dollarValue;
+
+        return {
+            [styles.positiveTrend]: currentValue > baselineValue,
+            [styles.negativeTrend]: currentValue < baselineValue,
+        };
+    };
 
     return <div className={classNames(styles.chartContainer, stockConditionalFormattingClassName())} ref={chartRef} />;
 });

@@ -116,3 +116,42 @@
         text-decoration: underline;
     }
 }
+
+:global(.bp3-dark) {
+    .single-time-bucket {
+        box-shadow: 0 1px $pt-dark-divider-white;
+    }
+
+    .single-time-bucket-active {
+        &.single-time-bucket {
+            background: $light-gray4;
+            color: $pt-text-color;
+        }
+    }
+
+    .price-points-container {
+        > .single-price-point {
+            box-shadow: 0 1px $pt-dark-divider-white;
+        }
+    }
+    
+    .basic-information-container {
+        box-shadow: 0 -1px $pt-dark-divider-white;
+    }
+
+    .summary-label {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .label {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .see-stock-details {    
+        &:global(.bp3-button) {
+            &:global(.bp3-minimal) {
+                background: rgba($dark-gray3, 0.8);
+            }
+        }
+    }
+}

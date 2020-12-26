@@ -25,3 +25,17 @@
     bottom: 15px;
     color: $dark-gray2;
 }
+
+:global(.bp3-dark) {
+    .value-indicator {
+        border-left: dotted $light-gray2 1px;
+    }
+
+    .value-indicator-point {
+        background: $light-gray2;
+    }
+
+    .value-label {
+        color: $light-gray2;
+    }
+}

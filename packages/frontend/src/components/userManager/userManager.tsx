@@ -84,6 +84,7 @@ const UserAccountDetails: React.FC<{
                 className={styles.updateButton}
                 disabled={updatedUser === userAccount}
                 icon="updated"
+                intent={updatedUser === userAccount ? "none" : "warning"}
                 loading={isLoading}
                 onClick={updateUser}
                 text="Update details"

@@ -7,14 +7,24 @@
 }
 
 .market-open {
-    color: $green2;
+    color: $green3;
 }
 
 .market-closed {
-    color: $red2;
+    color: $red3;
 }
 
 .market-closed-date {
     margin: 0 3px;
     font-weight: 550;
+}
+
+:global(.bp3-dark) {
+    .market-open {
+        color: $green4;
+    }
+
+    .market-closed {
+        color: $red4;
+    }
 }

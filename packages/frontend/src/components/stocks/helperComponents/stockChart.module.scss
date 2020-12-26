@@ -66,3 +66,59 @@
         display: none;
     }
 }
+
+:global(.bp3-dark) {
+    .line {
+        stroke: $light-gray2;
+    }
+
+    .area {
+        fill: $light-gray4;
+    }
+
+    .point {
+        stroke: $light-gray3;
+    }
+
+    .positive-trend {
+        .line {
+            stroke: $lime3;
+        }
+    
+        .point {
+            stroke: $lime4;
+        }
+    
+        .area {
+            fill: $lime5;
+        }
+    }
+    
+    .negative-trend {
+        .line {
+            stroke: $rose3;
+        }
+    
+        .point {
+            stroke: $rose4;
+        }
+    
+        .area {
+            fill: $rose5;
+        }
+    }
+
+    :global(.ct-series-b) {
+        .line {
+            stroke: $light-gray2;
+        }
+    }
+
+    :global(.ct-label) {
+        color: rgba($light-gray3, 0.6);
+    }
+
+    :global(.ct-grid) {
+        stroke: rgba($light-gray3, 0.2);
+    }
+}

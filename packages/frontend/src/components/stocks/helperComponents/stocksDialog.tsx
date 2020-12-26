@@ -1,9 +1,11 @@
-import { Button, Checkbox, Dialog, InputGroup } from "@blueprintjs/core";
+import { Button, Checkbox, Classes, Dialog, InputGroup } from "@blueprintjs/core";
 import { IAccount, IOwnedStock, IStockWithDollarValue, TransactionFrontendService } from "@stochastic-exchange/api";
+import { isTimeInMarketHours } from "@stochastic-exchange/utils";
 import * as React from "react";
 import { connect } from "react-redux";
 import { CompoundAction } from "redoodle";
 import { Dispatch } from "redux";
+import classNames from "classnames";
 import { selectUserOwnedStock } from "../../../selectors/selector";
 import { IUpdateUserAccountOnTransaction, UpdateUserAccountOnTransaction } from "../../../store/account/actions";
 import { IStoreState } from "../../../store/state";
@@ -113,7 +115,7 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
     const maximumNumber = type === "buy" ? maximumSharesPurchaseAble : maximumSellable;
 
     const updateParsedQuantity = () => {
-        const parsedNumber = Math.min(parseInt(rawQuantity, 10), maximumNumber);
+        const parsedNumber = Math.min(parseInt(rawQuantity.replace(/,/g, ""), 10), maximumNumber);
 
         // eslint-disable-next-line no-restricted-globals
         if (isNaN(parsedNumber)) {
@@ -141,7 +143,7 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
 
     return (
         <Dialog
-            className={styles.dialogContainer}
+            className={classNames(styles.dialogContainer, { [Classes.DARK]: !isTimeInMarketHours(new Date()) })}
             icon="exchange"
             isOpen={isOpen}
             lazy
@@ -172,8 +174,8 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
                     <span className={styles.sharesToBuySentence}>shares</span>
                 </div>
                 <div className={styles.summarySentence}>
-                    You will {type} <span className={styles.value}>{parsedQuantity ?? 0}</span> shares of{" "}
-                    <span className={styles.value}>{stock.name}</span>
+                    You will {type} <span className={styles.value}>{parsedQuantity?.toLocaleString() ?? 0}</span> shares
+                    of <span className={styles.value}>{stock.name}</span>
                     {maybeRenderWarningValue()} at{" "}
                     <span className={styles.value}>{formatDollar(stock.dollarValue)}</span> per share for a total of{" "}
                     <span className={styles.value}>{formatDollar(parsedQuantity * stock.dollarValue)}</span>.

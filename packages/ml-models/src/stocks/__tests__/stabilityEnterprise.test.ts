@@ -2,7 +2,7 @@ import { assert } from "../../utils/testUtils";
 import { getPriceForStabilityEnterprises } from "../stabilityEnterprises";
 
 describe("it can price Stability Enterprise as expected", () => {
-    it("decreases the price when the change in earthquakes goes up", async done => {
+    it("decreases the price when the change in earthquakes goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
@@ -22,11 +22,9 @@ describe("it can price Stability Enterprise as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("increases the price when the change in earthquakes goes down", async done => {
+    it("increases the price when the change in earthquakes goes down", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
@@ -46,11 +44,9 @@ describe("it can price Stability Enterprise as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
-
-        done();
     });
 
-    it("increases the price when the maximum magnitude is less than 6", async done => {
+    it("increases the price when the maximum magnitude is less than 6", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
@@ -70,11 +66,9 @@ describe("it can price Stability Enterprise as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
-
-        done();
     });
 
-    it("decreases the price when the max magnitude is greater than 6", async done => {
+    it("decreases the price when the max magnitude is greater than 6", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
@@ -94,11 +88,9 @@ describe("it can price Stability Enterprise as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("increases the price when the total election events goes up beyond 10", async done => {
+    it("increases the price when the total election events goes up beyond 10", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
@@ -118,11 +110,9 @@ describe("it can price Stability Enterprise as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
-
-        done();
     });
 
-    it("smaller change when the ownership goes up", async done => {
+    it("smaller change when the ownership goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: -20,
@@ -142,11 +132,9 @@ describe("it can price Stability Enterprise as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("changes the price more when the previous price is higher", async done => {
+    it("changes the price more when the previous price is higher", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: -20,
@@ -166,7 +154,5 @@ describe("it can price Stability Enterprise as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice - 12).toBeLessThan(changedPrice - 24);
-
-        done();
     });
 });

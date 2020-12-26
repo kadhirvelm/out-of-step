@@ -2,7 +2,7 @@ import { assert } from "../../utils/testUtils";
 import { getPriceForBitAndGamble } from "../bitAndGamble";
 
 describe("it can price Bit & Gamble as expected", () => {
-    it("increases the price when the bitcoin value goes up", async done => {
+    it("increases the price when the bitcoin value goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
@@ -22,11 +22,9 @@ describe("it can price Bit & Gamble as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
-
-        done();
     });
 
-    it("decreases the price when the bitcoin value goes down", async done => {
+    it("decreases the price when the bitcoin value goes down", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
@@ -46,11 +44,9 @@ describe("it can price Bit & Gamble as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("uses more of the bit coin value when the federal funds rate goes up", async done => {
+    it("uses more of the bit coin value when the federal funds rate goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
@@ -90,11 +86,9 @@ describe("it can price Bit & Gamble as expected", () => {
 
         assert(originalPriceTwo !== undefined && changedPriceTwo !== undefined);
         expect(originalPriceTwo).toBeGreaterThan(changedPriceTwo);
-
-        done();
     });
 
-    it("increases the price when unemployment is down", async done => {
+    it("increases the price when unemployment is down", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
@@ -114,11 +108,9 @@ describe("it can price Bit & Gamble as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
-
-        done();
     });
 
-    it("decreases the price when unemployment is up", async done => {
+    it("decreases the price when unemployment is up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
@@ -138,11 +130,9 @@ describe("it can price Bit & Gamble as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("uses more of the claims value when the federal funds rate goes up", async done => {
+    it("uses more of the claims value when the federal funds rate goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
@@ -182,11 +172,9 @@ describe("it can price Bit & Gamble as expected", () => {
 
         assert(originalPriceTwo !== undefined && changedPriceTwo !== undefined);
         expect(originalPriceTwo).toBeLessThan(changedPriceTwo);
-
-        done();
     });
 
-    it("lessens the change when the percent ownership goes up", async done => {
+    it("lessens the change when the percent ownership goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
@@ -206,11 +194,9 @@ describe("it can price Bit & Gamble as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("adds to the existing price linearly", async done => {
+    it("adds to the existing price linearly", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
@@ -231,7 +217,5 @@ describe("it can price Bit & Gamble as expected", () => {
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
         expect(originalPrice - 22000).toEqual(changedPrice - 44000);
-
-        done();
     });
 });

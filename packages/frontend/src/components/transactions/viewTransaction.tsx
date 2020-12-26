@@ -10,11 +10,10 @@ import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { CompoundAction } from "redoodle";
-import { Dispatch } from "redux";
+import { bindActionCreators, Dispatch } from "redux";
 import { Routes } from "../../common/routes";
 import { selectUserOwnedStock } from "../../selectors/selector";
-import { SetViewStockWithLatestPrice, SetViewTransactionsForStock } from "../../store/interface/actions";
+import { SetViewStockWithLatestPrice } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { formatDollar } from "../../utils/formatNumber";
@@ -41,7 +40,10 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
         return null;
     }
 
-    const goBackToStockInformationPage = () => setViewStockWithLatestPrice(viewTransactionsForStock);
+    const goBackToStockInformationPage = () => {
+        setViewStockWithLatestPrice(viewTransactionsForStock);
+        history.push(Routes.STOCK);
+    };
 
     const transactionHistory = callOnPrivateEndpoint(TransactionFrontendService.viewTransactionsForStock, {
         stockId: viewTransactionsForStock.id,
@@ -194,15 +196,7 @@ function mapStateToProps(state: IStoreState): IStoreProps {
 }
 
 function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
-    return {
-        setViewStockWithLatestPrice: (stockWithDollarValue: IStockWithDollarValue) =>
-            dispatch(
-                CompoundAction([
-                    SetViewStockWithLatestPrice(stockWithDollarValue),
-                    SetViewTransactionsForStock(undefined),
-                ]),
-            ),
-    };
+    return bindActionCreators({ setViewStockWithLatestPrice: SetViewStockWithLatestPrice }, dispatch);
 }
 
 export const ViewTransactions = connect(mapStateToProps, mapDispatchToProps)(UnconnectViewTransactions);

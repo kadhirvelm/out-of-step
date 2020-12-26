@@ -47,3 +47,13 @@ export function isTimeInMarketHours(nextTime: Date): boolean {
 export function getNextTimeWithinMarketHoursJSDate(nextTime: Date): Date {
     return new Date(getNextTimeWithinMarketHours(dayjs(nextTime)).valueOf());
 }
+
+export function isMarketOpenOnDateDay(date: Date): boolean {
+    const dayjsTime = dayjs(date).tz("America/Los_Angeles");
+    return MARKET_HOURS.openDays.includes(dayjsTime.day());
+}
+
+export function goToStartOfMarketOpenHours(date: Date): Date {
+    const dayjsTime = dayjs(date).tz("America/Los_Angeles");
+    return new Date(goToMarketStartTime(dayjsTime).valueOf());
+}

@@ -1,4 +1,5 @@
 import { IPriceHistory, IStock, IStocksService } from "@stochastic-exchange/api";
+import { goToStartOfMarketOpenHours } from "@stochastic-exchange/utils";
 import _ from "lodash";
 import { convertDateToPostgresTimestamp } from "../utils/convertDateToPostgresTimestamp";
 import { postgresPool } from "../utils/getPostgresPool";
@@ -6,9 +7,6 @@ import { postgresPool } from "../utils/getPostgresPool";
 type IGetAllStocks = IStocksService["getAllStocks"];
 
 export async function getAllStocks(): Promise<IGetAllStocks["response"] | undefined> {
-    const previousDay = new Date();
-    previousDay.setHours(0, 0, 0, 0);
-
     const [allStocks, latestPrice, previousPrice] = await Promise.all([
         postgresPool.query<IStock>("SELECT * FROM stock"),
         postgresPool.query<IPriceHistory>(
@@ -18,7 +16,7 @@ export async function getAllStocks(): Promise<IGetAllStocks["response"] | undefi
         postgresPool.query<IPriceHistory>(
             // eslint-disable-next-line @typescript-eslint/quotes
             `SELECT DISTINCT ON (stock) * FROM "priceHistory" WHERE timestamp < ${convertDateToPostgresTimestamp(
-                previousDay,
+                goToStartOfMarketOpenHours(new Date()),
             )} ORDER BY stock, timestamp DESC`,
         ),
     ]);

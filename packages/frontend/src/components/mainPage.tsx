@@ -1,10 +1,11 @@
-import { Icon } from "@blueprintjs/core";
+import { Classes, Icon } from "@blueprintjs/core";
 import { IGetAccountResponse } from "@stochastic-exchange/api";
 import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
+import { isTimeInMarketHours } from "@stochastic-exchange/utils";
 import { AccountServiceFrontend } from "../../../api/dist";
 import { SetUserAccountAndOwnedStocks } from "../store/account/actions";
 import { executePrivateEndpoint } from "../utils/executePrivateEndpoint";
@@ -43,7 +44,7 @@ const UnconnectedMainPage: React.FC<IDispatchProps> = ({ setUserAccountAndOwnedS
     const onScoreClick = () => history.push(Routes.SCORE);
 
     return (
-        <div className={styles.overallContainer}>
+        <div className={classNames(styles.overallContainer, { [Classes.DARK]: !isTimeInMarketHours(new Date()) })}>
             <div className={styles.headerContainer}>
                 <div className={styles.headerIconContainer} onClick={onUserClick}>
                     <Icon

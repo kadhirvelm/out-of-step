@@ -1,5 +1,6 @@
 import { Button, Spinner } from "@blueprintjs/core";
 import { IOwnedStock, IStockWithDollarValue, ITimeBucket, StocksFrontendService } from "@stochastic-exchange/api";
+import { isMarketOpenOnDateDay } from "@stochastic-exchange/utils";
 import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -52,7 +53,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
         return null;
     }
 
-    const [bucket, setBucket] = React.useState<ITimeBucket>("day");
+    const [bucket, setBucket] = React.useState<ITimeBucket>(isMarketOpenOnDateDay(new Date()) ? "day" : "5 days");
     const stockInformation = callOnPrivateEndpoint(
         StocksFrontendService.getSingleStockInformation,
         {

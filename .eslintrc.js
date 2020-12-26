@@ -8,6 +8,7 @@ module.exports = {
 
     plugins: [
       "@typescript-eslint",
+      "jest",
       "prettier",
       "import"
     ],
@@ -21,6 +22,7 @@ module.exports = {
       "plugin:import/warnings",
       "plugin:import/typescript",
       "prettier/@typescript-eslint",
+      "plugin:jest/recommended",
       "plugin:prettier/recommended"
     ],
 
@@ -52,6 +54,8 @@ module.exports = {
       "@typescript-eslint/no-floating-promises": 0,
       "@typescript-eslint/no-unsafe-assignment": 0,
       "@typescript-eslint/no-unsafe-member-access": 0,
+      "@typescript-eslint/no-unsafe-return": 0,
+      "@typescript-eslint/no-unsafe-call": 0,
     },
 
     settings: {
