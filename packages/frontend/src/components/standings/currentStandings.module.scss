@@ -68,3 +68,33 @@
 .bronze {
     background: rgba($sepia5, 0.35);
 }
+
+:global(.bp3-dark) {
+    .leaderboard-text {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .standings-container {
+        box-shadow: 0 -1px $pt-dark-divider-white;
+
+        > .single-standings-container {
+            box-shadow: 0 1px $pt-dark-divider-white;
+        }
+    }
+
+    .net-worth {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .gold {
+        background: rgba($gold3, 0.35);
+    }
+
+    .silver {
+        background: rgba($light-gray2, 0.25);
+    }
+
+    .bronze {
+        background: rgba($sepia3, 0.25);
+    }
+}

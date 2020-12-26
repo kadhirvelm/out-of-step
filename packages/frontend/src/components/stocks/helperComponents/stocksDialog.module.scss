@@ -69,3 +69,25 @@
 .warning-value {
     color: $orange3;
 }
+
+:global(.bp3-dark) {
+    .label {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .shares-to-buy-sentence {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .summary-sentence {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .value {
+        color: $pt-dark-text-color;
+    }
+
+    .warning-value {
+        color: $orange4;
+    }
+}

@@ -117,3 +117,41 @@
     color: $pt-text-color-muted;
     margin-left: 10px;
 }
+
+:global() {
+    .breakdown-container {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .type-of-stock-label {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .non-ideal-state-stocks {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .stocks-container {
+        box-shadow: 0 -1px $pt-dark-divider-white;
+
+        > :nth-child(even).single-stock-container {
+            background: $dark-gray3;
+        }
+    }
+
+    .stock-market-cap {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .negative-price {
+        color: $red4;
+    }
+
+    .positive-price {
+        color: $green4;
+    }
+
+    .chevron-right-indicator {
+        color: $pt-dark-text-color-muted;
+    }
+}

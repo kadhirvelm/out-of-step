@@ -6,6 +6,7 @@
     flex: 1;
     flex-direction: column;
     max-width: 100%;
+    background: $light-gray5;
 }
 
 .main-content-container {
@@ -47,5 +48,26 @@
 
     &.active {
         color: $blue3;
+    }
+}
+
+:global(.bp3-dark) {
+    &.overall-container {
+        background: $dark-gray5;
+    }
+
+    .header-container {
+        box-shadow: 0 1px $pt-dark-divider-white, 0 -1px $pt-dark-divider-white;
+        background: $dark-gray4;
+
+        > :not(:last-child) {
+            box-shadow: 1px 0 $pt-dark-divider-white;
+        }
+    }
+
+    .header-icon {
+        &.active {
+            color: $blue4;
+        }
     }
 }

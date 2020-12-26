@@ -38,3 +38,9 @@
 .logout-button {
     margin: 10px;
 }
+
+:global(.bp3-dark) {
+    .field-label {
+        color: $pt-dark-text-color-muted;
+    }
+}

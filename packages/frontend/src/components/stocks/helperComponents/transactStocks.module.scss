@@ -90,3 +90,25 @@
     margin-top: 5px;
     color: $pt-text-color-muted;
 }
+
+:global(.bp3-dark) {
+    .your-portfolio-label {
+        color: $pt-dark-text-color-muted;
+    }
+    
+    .label {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .transact-information-container {
+        box-shadow: 0 -1px $pt-dark-divider-white;
+    }
+
+    .acquired-info-container {
+        box-shadow: 0 1px $pt-dark-divider-white, 0 -1px $pt-dark-divider-white;
+    }
+
+    .has-been-acquired-description {
+        color: $pt-dark-text-color-muted;
+    }
+}

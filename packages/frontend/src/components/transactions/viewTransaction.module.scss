@@ -127,3 +127,45 @@
 .negative-stock-value {
     color: $red2;
 }
+
+:global(.bp3-dark) {
+    .total-quantity-owned-label {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .transactions-table-label {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .transactions-table {
+        box-shadow: 0 -1px $pt-dark-divider-white;
+
+        > .single-exchange-transaction {
+            box-shadow: 0 1px $pt-dark-divider-white;
+        }
+    }
+
+    .net-purchase {
+        background: rgba($green4, 0.1);
+    }
+
+    .net-sold {
+        background: rgba($blue4, 0.1);
+    }
+
+    .net-hypothetical {
+        background: rgba($orange4, 0.1);
+    }
+
+    .timestamp {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .positive-stock-value {
+        color: $green3;
+    }
+
+    .negative-stock-value {
+        color: $red3;
+    }
+}
