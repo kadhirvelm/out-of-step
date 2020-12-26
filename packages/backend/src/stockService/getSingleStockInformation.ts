@@ -1,11 +1,10 @@
 import { IPriceHistoryInBuckets, IStocksService, ITimeBucket } from "@stochastic-exchange/api";
+import { goToStartOfMarketOpenHours } from "@stochastic-exchange/utils";
 import { convertDateToPostgresTimestamp } from "../utils/convertDateToPostgresTimestamp";
+import { changeDateByDays } from "../utils/dateUtil";
 import { postgresPool } from "../utils/getPostgresPool";
 
 type IGetSingleStockInformation = IStocksService["getSingleStockInformation"];
-
-const DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
-const WEEK_IN_MILLISECONDS = DAY_IN_MILLISECONDS * 7;
 
 function getDateBucket(bucket: ITimeBucket): string {
     switch (bucket) {
@@ -25,13 +24,13 @@ function getDateBucket(bucket: ITimeBucket): string {
 function getStartTimestampFromBucket(bucket: ITimeBucket): Date {
     switch (bucket) {
         case "day":
-            return new Date(Date.now() - DAY_IN_MILLISECONDS);
+            return goToStartOfMarketOpenHours(new Date());
         case "5 days":
-            return new Date(Date.now() - DAY_IN_MILLISECONDS * 5);
+            return goToStartOfMarketOpenHours(changeDateByDays(new Date(), -5));
         case "month":
-            return new Date(Date.now() - WEEK_IN_MILLISECONDS * 4);
+            return goToStartOfMarketOpenHours(changeDateByDays(new Date(), -30));
         case "all":
-            return new Date(Date.now() - WEEK_IN_MILLISECONDS * 14);
+            return goToStartOfMarketOpenHours(changeDateByDays(new Date(), -90));
         default:
             return new Date();
     }
