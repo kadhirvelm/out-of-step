@@ -2,7 +2,7 @@ import { assert } from "../../utils/testUtils";
 import { getPriceForAgriColaInc } from "../agriColaInc";
 
 describe("it can price Agri Cola Inc as expected", () => {
-    it("increases the price when the rainfall goes up", async done => {
+    it("increases the price when the rainfall goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageRainfall: 3.2,
@@ -24,11 +24,9 @@ describe("it can price Agri Cola Inc as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
-
-        done();
     });
 
-    it("decreases the price when the rainfall goes down", async done => {
+    it("decreases the price when the rainfall goes down", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageRainfall: 3.2,
@@ -50,11 +48,9 @@ describe("it can price Agri Cola Inc as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("increases the price when the temperature goes up", async done => {
+    it("increases the price when the temperature goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageRainfall: 3.2,
@@ -76,11 +72,9 @@ describe("it can price Agri Cola Inc as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
-
-        done();
     });
 
-    it("decreases the price when the temperature goes down", async done => {
+    it("decreases the price when the temperature goes down", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageRainfall: 3.2,
@@ -102,11 +96,9 @@ describe("it can price Agri Cola Inc as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("increases the price when the wind speed goes up", async done => {
+    it("increases the price when the wind speed goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageRainfall: 3.2,
@@ -128,11 +120,9 @@ describe("it can price Agri Cola Inc as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
-
-        done();
     });
 
-    it("decreases the price when the wind speed goes down", async done => {
+    it("decreases the price when the wind speed goes down", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageRainfall: 3.2,
@@ -154,11 +144,9 @@ describe("it can price Agri Cola Inc as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("increases the price when the change in average price goes up", async done => {
+    it("increases the price when the change in average price goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageRainfall: 3.2,
@@ -180,11 +168,9 @@ describe("it can price Agri Cola Inc as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
-
-        done();
     });
 
-    it("decreases the price when the change in average price goes down", async done => {
+    it("decreases the price when the change in average price goes down", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageRainfall: 3.2,
@@ -206,11 +192,9 @@ describe("it can price Agri Cola Inc as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("lessens the change when the percent ownership goes up", async done => {
+    it("lessens the change when the percent ownership goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageRainfall: 3.2,
@@ -232,11 +216,9 @@ describe("it can price Agri Cola Inc as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
-
-        done();
     });
 
-    it("increases the price more with a higher previous price", async done => {
+    it("increases the price more with a higher previous price", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForAgriColaInc({
                 averageRainfall: 3.2,
@@ -258,7 +240,5 @@ describe("it can price Agri Cola Inc as expected", () => {
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice - 25).toBeLessThan(changedPrice - 50);
-
-        done();
     });
 });

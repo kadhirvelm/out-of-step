@@ -31,6 +31,8 @@ const getUser = async (setUserAccountAndOwnedStocks: (userAccount: IGetAccountRe
     setUserAccountAndOwnedStocks(response);
 };
 
+// Ensure when transitioning between pages the redux store doesn't get reset or change
+
 const UnconnectedMainPage: React.FC<IDispatchProps> = ({ setUserAccountAndOwnedStocks }) => {
     const history = useHistory();
     const location = useLocation();
