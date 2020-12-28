@@ -33,6 +33,7 @@
     display: flex;
     align-items: center;
     padding: 10px;
+    min-height: 60px;
 }
 
 .information-spacer {
@@ -53,7 +54,7 @@
 }
 
 .net-worth {
-    margin-top: 10px;
+    margin-top: 5px;
     color: $pt-text-color-muted;
 }
 

@@ -45,7 +45,7 @@ const UnconnectedCurrentStandings: React.FC<IStoreProps> = ({ userAccountId }) =
                             <div className={styles.informationContainer}>
                                 <span className={styles.portfolioName}>{standing.portfolioName}</span>
                                 <span className={styles.netWorth}>
-                                    {standing.accountName} – ${standing.netWorth.toLocaleString()}
+                                    {standing.accountName} (${standing.netWorth.toLocaleString()})
                                 </span>
                             </div>
                         </div>

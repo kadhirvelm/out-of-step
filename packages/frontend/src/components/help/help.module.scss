@@ -1,0 +1,65 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.overall-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 15px 10px;
+}
+
+.back-button {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    padding: 7.5px 10px;
+    font-size: 20px;
+    font-weight: 550;
+}
+
+.section-title {
+    color: $pt-text-color-muted;
+}
+
+.divider {
+    min-height: 1px;
+    width: 250px;
+    box-shadow: 0 1px $pt-divider-black;
+    margin-bottom: 10px;
+}
+
+.spacer {
+    margin-bottom: 20px;
+}
+
+.paragraph-spacer {
+    margin-bottom: 10px;
+}
+
+.question {
+    font-weight: 600;
+}
+
+.answer {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+:global(.bp3-dark) {
+    .section-title {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .divider {
+        box-shadow: 0 1px $pt-dark-divider-white;
+    }
+}

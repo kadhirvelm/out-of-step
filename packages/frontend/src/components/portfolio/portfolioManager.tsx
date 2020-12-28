@@ -1,4 +1,4 @@
-import { Icon, NonIdealState, Spinner } from "@blueprintjs/core";
+import { Button, Icon, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IAccount, IOwnedStock, IStockWithDollarValue, StocksFrontendService } from "@stochastic-exchange/api";
 import classNames from "classnames";
 import { keyBy } from "lodash-es";
@@ -82,6 +82,10 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
         );
     }
 
+    const goToHelpPage = () => {
+        history.push(Routes.HELP);
+    };
+
     const curriedSetViewSingleStockInformation = (stockInformation: IStockWithDollarValue) => () => {
         setViewStockWithLatestPrice(stockInformation);
         history.push(Routes.STOCK);
@@ -140,7 +144,10 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
     return (
         <div className={styles.overallContainer}>
             <div className={styles.userInformationContainer}>
-                <span className={styles.greeting}>Hi {userAccount.name},</span>
+                <span className={styles.greeting}>
+                    <span>Hi {userAccount.name},</span>
+                    <Button icon="help" minimal onClick={goToHelpPage} />
+                </span>
                 <div className={styles.assetInformation}>
                     <span className={styles.totalWorth}>
                         ${((sortedStocks.totalAssetWorth ?? 0) + userAccount.cashOnHand).toLocaleString()}
