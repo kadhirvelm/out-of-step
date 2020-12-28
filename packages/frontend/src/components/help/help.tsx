@@ -52,10 +52,10 @@ export const Help: React.FC<{}> = () => {
                 </div>
                 <div className={styles.paragraphSpacer} />
                 <div>
-                    Seeing this, we can guess that the input data to the model is perhaps total number of Christmas
-                    trees sold in a given day. Next the question is how does the stock price move in relation to this
-                    data point? Maybe it just goes up when any trees are sold? Or maybe it goes up when the number of
-                    trees sold is greater than the average number of trees sold in a given day? Or maybe it&apos;s price
+                    Seeing this, we can guess that the input data to the model is the total number of Christmas trees
+                    sold in a given day. Next the question is how does the stock price move in relation to this data
+                    point? Maybe it just goes up when any trees are sold? Or maybe it goes up when the number of trees
+                    sold is greater than the average number of trees sold in a given day? Or maybe it&apos;s price
                     increases when the total number of Christmas trees sold in a given price point time period is
                     greater than the previous time period?
                 </div>
@@ -64,7 +64,7 @@ export const Help: React.FC<{}> = () => {
                     All excellent guesses, who knows what the actual model is based on. Perhaps it&apos;s not even using
                     total Christmas trees sold but instead it&apos;s using the total number of Evergreen trees cut down
                     along with the inverse of total artificial Christmas trees sold. And that&apos;s not even getting
-                    into how this input data is causing the stock&apos;s price to change!
+                    into how this input data is causing the stock&apos;s price to change! How fun.
                 </div>
                 <div className={styles.spacer} />
                 <div className={styles.sectionTitle}>Mechanics</div>

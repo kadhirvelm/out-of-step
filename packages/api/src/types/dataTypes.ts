@@ -26,15 +26,27 @@ export interface IDividendHistory {
     calculationNotes?: string;
 }
 
-export interface ILimitOrder {
+interface IBaseLimitOrder {
     id: ILimitOrderId;
     account: IAccountId;
     quantity: number;
-    stock: IStockId;
-    sellAtPrice: number;
-    timestamp: string;
     status: "PENDING" | "EXECUTED" | "CANCELLED";
+    stock: IStockId;
+    timestamp: string;
+    type: string;
 }
+
+export interface IBuyLimitOrder extends IBaseLimitOrder {
+    buyAtPrice: number;
+    type: "buy-limit";
+}
+
+export interface ISellLimitOrder extends IBaseLimitOrder {
+    sellAtPrice: number;
+    type: "sell-limit";
+}
+
+export type ILimitOrder = IBuyLimitOrder | ISellLimitOrder;
 
 export interface IOwnedStock {
     id: IOwnedStockId;

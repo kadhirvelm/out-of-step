@@ -43,7 +43,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
     const previousDay = changeDateByDays(date, -10);
     const previousDayHyphenated = `${previousDay.getFullYear()}-${previousDay.getMonth() + 1}-${previousDay.getDate()}`;
 
-    const [usDairyPrices, usMilkSupply, palladiumPrices, platinumPrices] = await Promise.all([
+    const [usDairyPrices, usMilkSupply] = await Promise.all([
         callOnExternalEndpoint(
             `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=DAIRY_US_34&report_month=${date.getFullYear()}-${date.getMonth()}&api_key=${process
                 .env.QUANDL_KEY ?? ""}`,
@@ -52,6 +52,9 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
             `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=MILK_US_33&report_month=${date.getFullYear()}-${date.getMonth()}&api_key=${process
                 .env.QUANDL_KEY ?? ""}`,
         ),
+    ]);
+
+    const [palladiumPrices, platinumPrices] = await Promise.all([
         callOnExternalEndpoint(
             `https://www.quandl.com/api/v3/datasets/LPPM/PALL?start_date=${previousDayHyphenated}&end_date=${previousDayHyphenated}&api_key=${process
                 .env.QUANDL_KEY ?? ""}`,
