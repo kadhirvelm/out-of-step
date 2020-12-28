@@ -6,6 +6,7 @@ import { AccountServiceFrontend, IAccountId } from "../../../../api/dist";
 import { IStoreState } from "../../store/state";
 import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import styles from "./currentStandings.module.scss";
+import { formatDollar } from "../../utils/formatNumber";
 
 interface IStoreProps {
     userAccountId: IAccountId | undefined;
@@ -45,7 +46,7 @@ const UnconnectedCurrentStandings: React.FC<IStoreProps> = ({ userAccountId }) =
                             <div className={styles.informationContainer}>
                                 <span className={styles.portfolioName}>{standing.portfolioName}</span>
                                 <span className={styles.netWorth}>
-                                    {standing.accountName} – ${standing.netWorth.toLocaleString()}
+                                    {standing.accountName} ({formatDollar(standing.netWorth)})
                                 </span>
                             </div>
                         </div>
