@@ -123,8 +123,8 @@ const UnconnectedLimitOrders: React.FC<IStoreProps & IDispatchProps> = ({
     return (
         <div className={styles.overallContainer}>
             <div className={styles.header}>
+                <span className={styles.limitOrders}>Limit orders for</span>
                 <span className={styles.stockName}>{viewLimitOrdersForStock.name}</span>
-                <span className={styles.limitOrders}>Limit orders</span>
                 <div className={styles.descriptionContainer}>
                     <div className={styles.description}>
                         Current price: {formatDollar(viewLimitOrdersForStock.dollarValue)}
