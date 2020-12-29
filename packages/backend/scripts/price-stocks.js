@@ -5,7 +5,7 @@ import { execSync } from "child_process";
 import { existsSync } from "fs";
 import { join } from "path";
 
-execSync("yarn build");
+// execSync("yarn build");
 
 console.log(chalk.green("\nSuccessfully built the package again.\n"));
 

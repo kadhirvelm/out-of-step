@@ -108,6 +108,11 @@
     margin-left: 3px;
 }
 
+.limit-order-container {
+    color: $pt-text-color-muted;
+    margin-top: 5px;
+}
+
 .right-container {
     display: flex;
     flex-direction: column;
@@ -158,6 +163,10 @@
     }
 
     .timestamp {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .limit-order-container {
         color: $pt-dark-text-color-muted;
     }
 

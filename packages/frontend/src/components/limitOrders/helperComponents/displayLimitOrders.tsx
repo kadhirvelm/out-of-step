@@ -1,22 +1,14 @@
 import { Button, Icon, NonIdealState } from "@blueprintjs/core";
 import { ILimitOrder, ILimitOrderId } from "@stochastic-exchange/api";
-import * as React from "react";
 import classNames from "classnames";
+import * as React from "react";
+import { getLimitOrderPrice } from "../../../utils/getLimitOrderPrice";
 import styles from "./displayLimitOrder.module.scss";
-import { formatDollar } from "../../../utils/formatNumber";
 
 interface IProps {
     limitOrders: ILimitOrder[];
     onLimitOrderDelete: (id: ILimitOrderId) => void;
 }
-
-const getLimitOrderPrice = (limitOrder: ILimitOrder) => {
-    if (limitOrder.type === "buy-limit") {
-        return formatDollar(limitOrder.buyAtPrice);
-    }
-
-    return formatDollar(limitOrder.sellAtPrice);
-};
 
 export const DisplayLimitOrders: React.FC<IProps> = ({ limitOrders, onLimitOrderDelete }) => {
     if (limitOrders.length === 0) {

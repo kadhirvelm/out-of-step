@@ -18,6 +18,7 @@ import { IStoreState } from "../../store/state";
 import { useCallOnPrivateEndpoint } from "../../utils/useCallOnPrivateEndpoint";
 import { formatDollar } from "../../utils/formatNumber";
 import styles from "./viewTransaction.module.scss";
+import { getLimitOrderPrice } from "../../utils/getLimitOrderPrice";
 
 interface IStoreProps {
     userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
@@ -119,6 +120,12 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
                                 at {formatDollar(transaction.priceHistory.dollarValue)}
                             </span>
                         </div>
+                        {transaction.limitOrder !== undefined && (
+                            <span className={styles.limitOrderContainer}>
+                                Limit order – {transaction.limitOrder.direction} than{" "}
+                                {getLimitOrderPrice(transaction.limitOrder)}
+                            </span>
+                        )}
                     </div>
                 </div>
                 <div className={styles.rightContainer}>
