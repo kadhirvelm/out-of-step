@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/quotes */
-import { IAccount, IExchangeTransaction, ILimitOrder, IOwnedStock, IPriceHistory } from "@stochastic-exchange/api";
+import {
+    IAccount,
+    IExchangeTransaction,
+    ILimitOrder,
+    IOwnedStock,
+    IPriceHistory,
+    IStock,
+} from "@stochastic-exchange/api";
 import _ from "lodash";
 import {
     executePurchaseQuantity,
@@ -35,38 +42,55 @@ export async function executeLimitOrders(
         const allAccountIds = _.uniq(_.compact(exchangeTransactions.map(transactions => transactions.account)));
         const allStockIds = _.uniq(_.compact(exchangeTransactions.map(transactions => transactions.stock)));
 
-        const [allAccounts, allOwnedStock] = await Promise.all([
+        const [allAccounts, allOwnedStock, allStocks] = await Promise.all([
             postgresPool.query<IAccount>(
                 `SELECT "cashOnHand", id FROM account WHERE id IN ${convertArrayToPostgresIn(allAccountIds)}`,
             ),
             postgresPool.query<IOwnedStock>(
-                `SELECT * FROM "ownedStock" WHERE account IN ${convertArrayToPostgresIn(
-                    allAccountIds,
-                )} AND stock IN ${convertArrayToPostgresIn(allStockIds)}`,
+                `SELECT * FROM "ownedStock" WHERE stock IN ${convertArrayToPostgresIn(allStockIds)}`,
             ),
+            postgresPool.query<IStock>(`SELECT * FROM stock WHERE id IN ${convertArrayToPostgresIn(allStockIds)}`),
         ]);
 
-        const createKey = (key: IOwnedStock | Omit<IExchangeTransaction, "id" | "timestamp">) =>
-            `${key.account}_${key.stock}`;
-
         const keyedAccounts = _.keyBy(allAccounts.rows, "id");
-        const keyedOwnedStock = _.keyBy(allOwnedStock.rows, createKey);
+        const keyedOwnedStock = _.groupBy(allOwnedStock.rows, "stock");
+        const keyedStocks = _.keyBy(allStocks.rows, "id");
+
+        const cancelledLimitOrders: { [limitOrderId: string]: boolean } = {};
 
         const exchangeTransactionPromises = _.flatten(
             exchangeTransactions.map(transaction => {
-                const ownedStock = keyedOwnedStock[createKey(transaction)];
+                const ownedStock = keyedOwnedStock[transaction.stock];
                 const account = keyedAccounts[transaction.account];
                 const stockPrice = latestStockPrice[transaction.stock];
 
+                let finalChangeQuantity: Promise<any>[];
+
                 if (transaction.purchasedQuantity > 0) {
-                    return executePurchaseQuantity(transaction, [ownedStock], account.cashOnHand, stockPrice);
+                    finalChangeQuantity = executePurchaseQuantity(
+                        transaction,
+                        ownedStock,
+                        account.cashOnHand,
+                        stockPrice,
+                        keyedStocks[transaction.stock],
+                    );
+                } else {
+                    finalChangeQuantity = executeSellQuantity(transaction, ownedStock, account.cashOnHand, stockPrice);
                 }
 
-                return executeSellQuantity(transaction, [ownedStock], account.cashOnHand, stockPrice);
+                if (finalChangeQuantity.length === 0) {
+                    cancelledLimitOrders[transaction.limitOrder ?? ""] = true;
+                }
+
+                return finalChangeQuantity;
             }),
         );
 
         const updateLimitOrderPromises = limitOrders.map(order => {
+            if (cancelledLimitOrders[order.id]) {
+                return postgresPool.query("UPDATE \"limitOrder\" SET status = 'CANCELLED' WHERE id = $1", [order.id]);
+            }
+
             return postgresPool.query("UPDATE \"limitOrder\" SET status = 'EXECUTED' WHERE id = $1", [order.id]);
         });
 

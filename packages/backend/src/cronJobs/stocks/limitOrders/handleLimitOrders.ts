@@ -20,10 +20,10 @@ const shouldExecuteLimitOrder = (limitOrder: ILimitOrder, pricePointForStock: IP
     const priceOfStock = pricePointForStock.dollarValue;
 
     if (limitOrder.direction === "higher") {
-        return priceOfStock > priceOfLimitOrder;
+        return priceOfStock >= priceOfLimitOrder;
     }
 
-    return priceOfStock < priceOfLimitOrder;
+    return priceOfStock <= priceOfLimitOrder;
 };
 
 export async function handleLimitOrders() {

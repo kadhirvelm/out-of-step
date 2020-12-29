@@ -45,6 +45,10 @@
     font-weight: 550;
 }
 
+.cancelled-limit-order {
+    background: rgba($red3, 0.1);
+}
+
 :global(.bp3-dark) {
     .main-container {
         > :nth-child(even).limit-order {
@@ -62,5 +66,9 @@
 
     .important-value {
         color: $pt-dark-text-color;
+    }
+
+    .cancelled-limit-order {
+        background: rgba($red2, 0.1);
     }
 }

@@ -55,10 +55,14 @@ let isJobRunning = false;
 
 export async function priceAllStocks() {
     await pricingStocksCronJob();
+
     // eslint-disable-next-line no-console
     console.log("Priced stocks at: ", new Date().toLocaleString());
 
     await handleLimitOrders();
+
+    // eslint-disable-next-line no-console
+    console.log("Ran limit orders at: ", new Date().toLocaleString());
 }
 
 function instantiateStocksCronJob() {

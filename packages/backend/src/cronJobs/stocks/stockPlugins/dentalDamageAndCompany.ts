@@ -13,7 +13,7 @@ interface IDentalDamageAndCompanyCalculationNotes extends IDentalDamageAndCompan
 }
 
 function getAverageOf2020Values(data: any[][]) {
-    if (data.length === 0) {
+    if (data === undefined || data.length === 0) {
         return undefined;
     }
 
@@ -70,7 +70,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
     );
 
     const usDairyPricesAverageValue =
-        getAverageOf2020Values(usDairyPrices.datatable.data) ??
+        getAverageOf2020Values(usDairyPrices?.datatable.data) ??
         previousCalculationNotes.previousUsDairyPricesAverage ??
         0;
     const changeInUsDairyPricesAverageValue =
@@ -78,7 +78,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
         usDairyPricesAverageValue;
 
     const usMilkSupplyAverageValue =
-        getAverageOf2020Values(usMilkSupply.datatable.data) ??
+        getAverageOf2020Values(usMilkSupply?.datatable.data) ??
         previousCalculationNotes.previousUsMilkSupplyAverage ??
         0;
     const changeInUsMilkSupplyAverageValue =

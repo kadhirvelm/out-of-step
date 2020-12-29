@@ -20,7 +20,12 @@ export const DisplayLimitOrders: React.FC<IProps> = ({ limitOrders, onLimitOrder
     return (
         <div className={styles.mainContainer}>
             {limitOrders.map(order => (
-                <div className={classNames(styles.limitOrder)} key={order.id}>
+                <div
+                    className={classNames(styles.limitOrder, {
+                        [styles.cancelledLimitOrder]: order.status === "CANCELLED",
+                    })}
+                    key={order.id}
+                >
                     <div className={styles.directionContainer}>
                         {order.direction === "higher" ? <Icon icon="arrow-up" /> : <Icon icon="arrow-down" />}
                     </div>

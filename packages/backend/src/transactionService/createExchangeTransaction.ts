@@ -149,6 +149,7 @@ export async function createExchangeTransaction(
             ownedStock.rows,
             account.rows[0].cashOnHand,
             associatedLatestPricePoint,
+            associatedStock,
         ),
         ...executeSellQuantity(
             exchangeTransaction,

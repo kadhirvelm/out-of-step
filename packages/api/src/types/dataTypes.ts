@@ -31,7 +31,7 @@ interface IBaseLimitOrder {
     direction: "higher" | "lower";
     account: IAccountId;
     quantity: number;
-    status: "PENDING" | "EXECUTED";
+    status: "PENDING" | "EXECUTED" | "CANCELLED";
     stock: IStockId;
     timestamp: string;
     type: string;

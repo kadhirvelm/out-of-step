@@ -1,22 +1,43 @@
 /* eslint-disable @typescript-eslint/quotes */
-import { IExchangeTransaction, IOwnedStock, IPriceHistory } from "@stochastic-exchange/api";
+import { IExchangeTransaction, IOwnedStock, IPriceHistory, IStock } from "@stochastic-exchange/api";
 import { postgresPool } from "../../utils/getPostgresPool";
 import { roundToNearestHundreth } from "../../utils/roundToNearestHundreth";
 
+const ensurePurchaseableQuantity = (
+    purchaseQuantity: number,
+    availableQuantity: number,
+    cashOnHand: number,
+    pricePerShare: number,
+) => {
+    const boundedQuantity = Math.min(purchaseQuantity, availableQuantity);
+    return Math.min(boundedQuantity, Math.round(cashOnHand / pricePerShare));
+};
+
 export function executePurchaseQuantity(
     exchangeTransaction: Partial<IExchangeTransaction>,
-    ownedStock: IOwnedStock[],
+    ownedStock: IOwnedStock[] | undefined,
     cashOnHand: number,
     price: IPriceHistory,
+    stock: IStock,
 ) {
     if (exchangeTransaction.purchasedQuantity === 0) {
         return [];
     }
 
-    const newCashOnHand = roundToNearestHundreth(
-        cashOnHand - (exchangeTransaction.purchasedQuantity ?? 0) * price.dollarValue,
+    const totalOwnedQuantity = (ownedStock ?? []).reduce((previous, next) => previous + next.quantity, 0);
+    const purchaseQuantity = ensurePurchaseableQuantity(
+        exchangeTransaction.purchasedQuantity ?? 0,
+        stock.totalQuantity - totalOwnedQuantity,
+        cashOnHand,
+        price.dollarValue,
     );
-    const alreadyOwnedStock = ownedStock.find(s => s.account === exchangeTransaction.account);
+
+    if (purchaseQuantity === 0) {
+        return [];
+    }
+
+    const newCashOnHand = roundToNearestHundreth(cashOnHand - purchaseQuantity * price.dollarValue);
+    const alreadyOwnedStock = (ownedStock ?? []).find(s => s.account === exchangeTransaction.account);
 
     return [
         postgresPool.query('UPDATE account SET "cashOnHand" = $2 WHERE id = $1', [
@@ -29,27 +50,30 @@ export function executePurchaseQuantity(
                 exchangeTransaction.account,
                 exchangeTransaction.stock,
                 exchangeTransaction.priceHistory,
-                exchangeTransaction.purchasedQuantity,
+                purchaseQuantity,
                 exchangeTransaction.limitOrder,
             ],
         ),
         alreadyOwnedStock !== undefined
             ? postgresPool.query('UPDATE "ownedStock" SET quantity = $1 WHERE account = $2 AND stock = $3', [
-                  alreadyOwnedStock.quantity + (exchangeTransaction.purchasedQuantity ?? 0),
+                  alreadyOwnedStock.quantity + purchaseQuantity,
                   exchangeTransaction.account,
                   exchangeTransaction.stock,
               ])
             : postgresPool.query('INSERT INTO "ownedStock" (account, quantity, stock) VALUES($1, $2, $3)', [
                   exchangeTransaction.account,
-                  exchangeTransaction.purchasedQuantity,
+                  purchaseQuantity,
                   exchangeTransaction.stock,
               ]),
     ];
 }
 
+const ensureSellQuantityIsLessThanStart = (startQuantity: number, attemptToSellQuantity: number) =>
+    Math.min(startQuantity, attemptToSellQuantity);
+
 export function executeSellQuantity(
     exchangeTransaction: Partial<IExchangeTransaction>,
-    ownedStock: IOwnedStock[],
+    ownedStock: IOwnedStock[] | undefined,
     cashOnHand: number,
     price: IPriceHistory,
 ) {
@@ -57,12 +81,18 @@ export function executeSellQuantity(
         return [];
     }
 
-    const newCashOnHand = roundToNearestHundreth(
-        cashOnHand + (exchangeTransaction.soldQuantity ?? 0) * price.dollarValue,
+    const alreadyOwnedStock = (ownedStock ?? []).find(s => s.account === exchangeTransaction.account);
+    const sellQuantity = ensureSellQuantityIsLessThanStart(
+        alreadyOwnedStock?.quantity ?? 0,
+        exchangeTransaction.soldQuantity ?? 0,
     );
 
-    const alreadyOwnedStock = ownedStock.find(s => s.account === exchangeTransaction.account);
-    const newAlreadyOwnedStockQuantity = (alreadyOwnedStock?.quantity ?? 0) - (exchangeTransaction.soldQuantity ?? 0);
+    if (sellQuantity === 0) {
+        return [];
+    }
+
+    const newCashOnHand = roundToNearestHundreth(cashOnHand + sellQuantity * price.dollarValue);
+    const newAlreadyOwnedStockQuantity = (alreadyOwnedStock?.quantity ?? 0) - sellQuantity;
 
     return [
         postgresPool.query('UPDATE account SET "cashOnHand" = $2 WHERE id = $1', [
@@ -75,7 +105,7 @@ export function executeSellQuantity(
                 exchangeTransaction.account,
                 exchangeTransaction.stock,
                 exchangeTransaction.priceHistory,
-                exchangeTransaction.soldQuantity,
+                sellQuantity,
                 exchangeTransaction.limitOrder,
             ],
         ),
