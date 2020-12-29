@@ -1,5 +1,5 @@
 import { Button, Spinner } from "@blueprintjs/core";
-import { IOwnedStock, IStockWithDollarValue, ITimeBucket, StocksFrontendService } from "@stochastic-exchange/api";
+import { IStockWithDollarValue, ITimeBucket, StocksFrontendService } from "@stochastic-exchange/api";
 import { isMarketOpenOnDateDay } from "@stochastic-exchange/utils";
 import classNames from "classnames";
 import * as React from "react";
@@ -7,54 +7,47 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
 import { Routes } from "../../common/routes";
-import { selectOwnedStockQuantityOfViewStock, selectUserOwnedStock } from "../../selectors/selector";
-import {
-    SetViewStockDetails,
-    SetViewStockWithLatestPrice,
-    SetViewTransactionsForStock,
-} from "../../store/interface/actions";
+import { selectOwnedStockQuantityOfViewStock } from "../../selectors/selector";
+import { SetViewStockDetails, SetViewStockWithLatestPrice } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
 import { SetOwnedStockQuantity } from "../../store/stocks/actions";
-import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
 import { formatAsPercent, formatDollar, formatDollarForGraph, formatNumber } from "../../utils/formatNumber";
+import { useCallOnPrivateEndpoint } from "../../utils/useCallOnPrivateEndpoint";
 import { StockChart } from "./helperComponents/stockChart";
-import { TransactStock } from "./helperComponents/transactStocks";
+import { TransactStocks } from "./helperComponents/transactStocks";
 import styles from "./stockInformation.module.scss";
 
 interface IStoreProps {
-    cashOnHand: number | undefined;
     ownedStockQuantity: number | undefined;
-    userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
     viewStockWithLatestPrice: IStockWithDollarValue | undefined;
 }
 
 interface IDispatchProps {
     removeViewStockWithLatestPrice: () => void;
     setOwnedStockQuantity: (newOwnedStockWithQuantity: { [stock: string]: number }) => void;
-    setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
     setViewStockDetails: (stockWithDollarValue: IStockWithDollarValue) => void;
 }
 
 const VALID_TIME_BUCKETS: ITimeBucket[] = ["day", "5 days", "month", "all"];
 
 const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
-    cashOnHand,
     ownedStockQuantity,
     removeViewStockWithLatestPrice,
     viewStockWithLatestPrice,
     setOwnedStockQuantity,
     setViewStockDetails,
-    setViewTransactionsForStock,
-    userOwnedStockOfStockWithLatestPrice,
 }) => {
     const history = useHistory();
+
+    const [bucket, setBucket] = React.useState<ITimeBucket>(isMarketOpenOnDateDay(new Date()) ? "day" : "5 days");
+
     if (viewStockWithLatestPrice === undefined) {
         history.push(Routes.PORTFOLIO);
         return null;
     }
 
-    const [bucket, setBucket] = React.useState<ITimeBucket>(isMarketOpenOnDateDay(new Date()) ? "day" : "5 days");
-    const stockInformation = callOnPrivateEndpoint(
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const stockInformation = useCallOnPrivateEndpoint(
         StocksFrontendService.getSingleStockInformation,
         {
             stock: viewStockWithLatestPrice.id,
@@ -64,13 +57,20 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
         `stock-information-${viewStockWithLatestPrice.id}-${bucket}`,
     );
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     React.useEffect(() => {
         if (viewStockWithLatestPrice === undefined || stockInformation === undefined) {
             return;
         }
 
         setOwnedStockQuantity({ [viewStockWithLatestPrice.id]: stockInformation?.ownedStockQuantity });
-    }, [stockInformation?.ownedStockQuantity, viewStockWithLatestPrice.id]);
+    }, [
+        stockInformation?.ownedStockQuantity,
+        viewStockWithLatestPrice?.id,
+        setOwnedStockQuantity,
+        stockInformation,
+        viewStockWithLatestPrice,
+    ]);
 
     const goBackToPortfolioManager = () => {
         removeViewStockWithLatestPrice();
@@ -188,11 +188,8 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                 onClick={viewStockDetails}
                 text="See more stock details"
             />
-            <TransactStock
-                cashOnHand={cashOnHand}
-                setViewTransactionsForStock={setViewTransactionsForStock}
+            <TransactStocks
                 totalOwnedStock={ownedStockQuantity ?? stockInformation.ownedStockQuantity}
-                userOwnedStockOfStockWithLatestPrice={userOwnedStockOfStockWithLatestPrice}
                 viewStockWithLatestPrice={viewStockWithLatestPrice}
             />
         </div>
@@ -201,9 +198,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
 
 function mapStateToProps(store: IStoreState): IStoreProps {
     return {
-        cashOnHand: store.account.userAccount?.cashOnHand,
         ownedStockQuantity: selectOwnedStockQuantityOfViewStock(store),
-        userOwnedStockOfStockWithLatestPrice: selectUserOwnedStock(store.interface.viewStockWithLatestPrice)(store),
         viewStockWithLatestPrice: store.interface.viewStockWithLatestPrice,
     };
 }
@@ -213,7 +208,6 @@ function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
         {
             setOwnedStockQuantity: SetOwnedStockQuantity,
             setViewStockDetails: SetViewStockDetails,
-            setViewTransactionsForStock: SetViewTransactionsForStock,
         },
         dispatch,
     );

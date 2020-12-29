@@ -15,7 +15,7 @@ export async function viewLimitOrdersForStock(
         return undefined;
     }
 
-    const { rows } = await postgresPool.query<ILimitOrder>("SELECT * FROM \"limitOrder\" WHERE account = $1 AND stock = $2", [
+    const { rows } = await postgresPool.query<ILimitOrder>("SELECT * FROM \"limitOrder\" WHERE account = $1 AND stock = $2 AND status = 'PENDING' ORDER BY timestamp ASC", [
         accountId, payload.stockId,
     ]);
 

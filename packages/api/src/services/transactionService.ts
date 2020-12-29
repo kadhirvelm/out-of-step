@@ -39,7 +39,13 @@ export interface ITransactionService extends IService {
         response: { message: string };
     };
     createLimitOrder: {
-        payload: { quantity: number; stock: IStockId; buyAtPrice: number | undefined; sellAtPrice: number | undefined };
+        payload: {
+            direction: "higher" | "lower";
+            quantity: number;
+            stock: IStockId;
+            buyAtPrice: number | undefined;
+            sellAtPrice: number | undefined;
+        };
         response: { message: string; newLimitOrder: ILimitOrder };
     };
     deleteLimitOrder: {

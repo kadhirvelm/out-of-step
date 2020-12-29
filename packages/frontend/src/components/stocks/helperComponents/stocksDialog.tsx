@@ -45,16 +45,16 @@ const UnconnectedStocksDialog: React.FC<IStoreProps & IDispatchProps & IOwnProps
     updateStateOnTrasaction,
     userOwnedStockOfTransactingStock,
 }) => {
-    if (account === undefined) {
-        return null;
-    }
-
     const [isLoading, setIsLoading] = React.useState(false);
 
     const [rawQuantity, setRawQuantity] = React.useState("");
     const [parsedQuantity, setParsedQuantity] = React.useState(0);
 
     const [acknowledgeTransaction, setAcknowledgeTransaction] = React.useState(false);
+
+    if (account === undefined) {
+        return null;
+    }
 
     const resetDialog = () => {
         setRawQuantity("");

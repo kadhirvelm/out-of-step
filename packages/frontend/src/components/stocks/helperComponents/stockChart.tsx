@@ -5,6 +5,8 @@ import Chartist from "chartist";
 import classNames from "classnames";
 import { times } from "lodash-es";
 import * as React from "react";
+import { useMemo, useCallback } from "react";
+
 import { formatDollarForGraph } from "../../../utils/formatNumber";
 import { customTapValueIndicator } from "./customTapValueIndicator";
 import styles from "./stockChart.module.scss";
@@ -15,26 +17,19 @@ export const StockChart: React.FC<{
     timeBucket: ITimeBucket;
 }> = React.memo(({ previousClosePrice, pricePoints, timeBucket }) => {
     const isMarketClosedAndDayDisplay = timeBucket === "day" && !isMarketOpenOnDateDay(new Date());
-
-    if (isMarketClosedAndDayDisplay) {
-        return <NonIdealState description="The market is closed today." />;
-    }
-
-    if (pricePoints.length === 0) {
-        return <NonIdealState description="No price points to display." />;
-    }
-
     const chartRef = React.useRef<HTMLDivElement>(null);
 
-    const maybeIncludeBaselineFromYesterday =
-        timeBucket === "day" ? times(pricePoints.length, () => ({ value: previousClosePrice ?? 0 })) : [];
+    const maybeIncludeBaselineFromYesterday = useMemo(
+        () => (timeBucket === "day" ? times(pricePoints.length, () => ({ value: previousClosePrice ?? 0 })) : []),
+        [timeBucket, pricePoints, previousClosePrice],
+    );
 
     const minimumOfGraph = Math.min(
         ...maybeIncludeBaselineFromYesterday.map(p => p.value),
         ...pricePoints.map(p => p.dollarValue),
     );
 
-    const plotLineGraph = () => {
+    const plotLineGraph = useCallback(() => {
         if (chartRef.current == null) {
             return;
         }
@@ -68,11 +63,19 @@ export const StockChart: React.FC<{
                 plugins: [customTapValueIndicator()],
             },
         );
-    };
+    }, [maybeIncludeBaselineFromYesterday, minimumOfGraph, pricePoints]);
 
     React.useEffect(() => {
         plotLineGraph();
-    }, [pricePoints]);
+    }, [pricePoints, plotLineGraph]);
+
+    if (isMarketClosedAndDayDisplay) {
+        return <NonIdealState description="The market is closed today." />;
+    }
+
+    if (pricePoints.length === 0) {
+        return <NonIdealState description="No price points to display." />;
+    }
 
     const stockConditionalFormattingClassName = () => {
         const baselineValue =

@@ -1,0 +1,88 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.dialog-container {
+    &:global(.bp3-dialog) {
+        margin: 30px;
+        padding: 0;
+    }
+}
+
+.overall-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.row-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.label {
+    margin-right: 10px;
+}
+
+.quantity-input-group {
+    &:global(.bp3-input-group) {
+        display: flex;
+        flex: 1;
+    }
+}
+
+.radio-group {
+    :global(.bp3-control) {
+        margin-bottom: 0;
+    }
+
+    > :first-child {
+        margin-bottom: 5px;
+    }
+}
+
+.summary-text {
+    color: $pt-text-color-muted;
+}
+
+.important-value {
+    color: $pt-text-color;
+    font-size: 14px;
+    font-weight: 550;
+}
+
+.note {
+    display: flex;
+    color: $pt-text-color-muted;
+    padding: 10px 0 15px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 10px 10px;
+}
+
+.cancel-button {
+    margin-right: 10px;
+}
+
+:global(.bp3-dark) {
+    .summary-text {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .important-value {
+        color: $pt-dark-text-color;
+    }
+
+    .note {
+        color: $pt-dark-text-color-muted;
+    }
+}

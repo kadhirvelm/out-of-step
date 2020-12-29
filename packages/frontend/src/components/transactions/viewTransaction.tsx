@@ -15,7 +15,7 @@ import { Routes } from "../../common/routes";
 import { selectUserOwnedStock } from "../../selectors/selector";
 import { SetViewStockWithLatestPrice } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
-import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
+import { useCallOnPrivateEndpoint } from "../../utils/useCallOnPrivateEndpoint";
 import { formatDollar } from "../../utils/formatNumber";
 import styles from "./viewTransaction.module.scss";
 
@@ -45,7 +45,8 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
         history.push(Routes.STOCK);
     };
 
-    const transactionHistory = callOnPrivateEndpoint(TransactionFrontendService.viewTransactionsForStock, {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const transactionHistory = useCallOnPrivateEndpoint(TransactionFrontendService.viewTransactionsForStock, {
         stockId: viewTransactionsForStock.id,
     });
 

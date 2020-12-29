@@ -1,20 +1,35 @@
 import { Button } from "@blueprintjs/core";
 import { IStockWithDollarValue, IOwnedStock } from "@stochastic-exchange/api";
 import * as React from "react";
+import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { bindActionCreators, Dispatch } from "redux";
 import { Routes } from "../../../common/routes";
+import { selectUserOwnedStock } from "../../../selectors/selector";
+import { SetViewLimitOrdersForStock, SetViewTransactionsForStock } from "../../../store/interface/actions";
+import { IStoreState } from "../../../store/state";
 import { formatDollar } from "../../../utils/formatNumber";
 import { BuyStocksDialog, SellStocksDialog } from "./stocksDialog";
 import styles from "./transactStocks.module.scss";
 
-export const TransactStock: React.FC<{
+interface IStoreProps {
     cashOnHand: number | undefined;
-    setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
-    totalOwnedStock: number;
     userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
+}
+
+interface IDispatchProps {
+    setViewLimitOrdersForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
+    setViewTransactionsForStock: (stockWithDollarValue: IStockWithDollarValue) => void;
+}
+
+interface IOwnProps {
+    totalOwnedStock: number;
     viewStockWithLatestPrice: IStockWithDollarValue;
-}> = ({
+}
+
+const UnconnectedTransactStock: React.FC<IStoreProps & IDispatchProps & IOwnProps> = ({
     cashOnHand,
+    setViewLimitOrdersForStock,
     setViewTransactionsForStock,
     totalOwnedStock,
     userOwnedStockOfStockWithLatestPrice,
@@ -34,6 +49,11 @@ export const TransactStock: React.FC<{
     const viewTransactionHistory = () => {
         setViewTransactionsForStock(viewStockWithLatestPrice);
         history.push(Routes.TRANSACTIONS);
+    };
+
+    const goToLimitOrders = () => {
+        setViewLimitOrdersForStock(viewStockWithLatestPrice);
+        history.push(Routes.LIMIT_ORDER);
     };
 
     if (viewStockWithLatestPrice.status === "ACQUIRED") {
@@ -101,7 +121,12 @@ export const TransactStock: React.FC<{
                                     text="Sell"
                                     onClick={openSellStocksDialog}
                                 />
-                                <Button className={styles.transactButton} disabled text="Limit order" />
+                                <Button
+                                    className={styles.limitOrderTransactButton}
+                                    onClick={goToLimitOrders}
+                                    rightIcon="caret-right"
+                                    text="Limit orders"
+                                />
                                 <SellStocksDialog
                                     isOpen={isSellDialogOpen}
                                     onClose={closeSellStocksDialog}
@@ -123,3 +148,22 @@ export const TransactStock: React.FC<{
         </div>
     );
 };
+
+function mapStateToProps(store: IStoreState): IStoreProps {
+    return {
+        cashOnHand: store.account.userAccount?.cashOnHand,
+        userOwnedStockOfStockWithLatestPrice: selectUserOwnedStock(store.interface.viewStockWithLatestPrice)(store),
+    };
+}
+
+function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
+    return bindActionCreators(
+        {
+            setViewLimitOrdersForStock: SetViewLimitOrdersForStock,
+            setViewTransactionsForStock: SetViewTransactionsForStock,
+        },
+        dispatch,
+    );
+}
+
+export const TransactStocks = connect(mapStateToProps, mapDispatchToProps)(UnconnectedTransactStock);

@@ -1,7 +1,11 @@
 import { IStockWithDollarValue } from "@stochastic-exchange/api";
 import { defineAction } from "redoodle";
 
-export const SetViewStockWithLatestPrice = defineAction("set-view-stock-with-latest-price")<
+export const SetViewLimitOrdersForStock = defineAction("SetViewLimitOrdersForStock")<
+    IStockWithDollarValue | undefined
+>();
+
+export const SetViewStockWithLatestPrice = defineAction("SetViewStockWithLatestPrice")<
     IStockWithDollarValue | undefined
 >();
 

@@ -28,7 +28,7 @@ const UnconnectedStochasticExchange: React.FC<IStoreProps & IDispatchProps> = ({
             showToast({ intent: "warning", message: "Your session has expired, please login again." });
             invalidateToken();
         };
-    }, []);
+    }, [invalidateToken]);
 
     const renderContent = () => {
         if (token === undefined || token === "") {

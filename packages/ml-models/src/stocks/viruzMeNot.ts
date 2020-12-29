@@ -26,6 +26,9 @@ export interface IViruzMeNotInputData {
 
 export const getPriceForViruzMeNot = ViruzMeNotModel.getPrice;
 
+const CHANGE_IN_THREATS = 10;
+const CHANGE_IN_HOSPITALIZATIONS = 1000;
+
 export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
@@ -40,7 +43,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     /** At base price */
     {
         input: {
-            changeInCriticalCommunityThreats: 10,
+            changeInCriticalCommunityThreats: CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 0,
             previousPrice: 0.78,
@@ -49,7 +52,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     },
     {
         input: {
-            changeInCriticalCommunityThreats: -10,
+            changeInCriticalCommunityThreats: -CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 0,
             previousPrice: 0.78,
@@ -59,7 +62,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: 5000,
+            changeInCurrentlyHospitalized: CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 0,
             previousPrice: 0.78,
         },
@@ -68,7 +71,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: -5000,
+            changeInCurrentlyHospitalized: -CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 0,
             previousPrice: 0.78,
         },
@@ -88,7 +91,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
 
     {
         input: {
-            changeInCriticalCommunityThreats: 10,
+            changeInCriticalCommunityThreats: CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 0,
             previousPrice: 1.56,
@@ -97,7 +100,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     },
     {
         input: {
-            changeInCriticalCommunityThreats: -10,
+            changeInCriticalCommunityThreats: -CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 0,
             previousPrice: 1.56,
@@ -107,7 +110,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: 5000,
+            changeInCurrentlyHospitalized: CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 0,
             previousPrice: 1.56,
         },
@@ -116,7 +119,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: -5000,
+            changeInCurrentlyHospitalized: -CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 0,
             previousPrice: 1.56,
         },
@@ -136,7 +139,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
 
     {
         input: {
-            changeInCriticalCommunityThreats: 10,
+            changeInCriticalCommunityThreats: CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 0,
             previousPrice: 2.34,
@@ -145,7 +148,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     },
     {
         input: {
-            changeInCriticalCommunityThreats: -10,
+            changeInCriticalCommunityThreats: -CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 0,
             previousPrice: 2.34,
@@ -155,7 +158,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: 5000,
+            changeInCurrentlyHospitalized: CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 0,
             previousPrice: 2.34,
         },
@@ -164,7 +167,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: -5000,
+            changeInCurrentlyHospitalized: -CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 0,
             previousPrice: 2.34,
         },
@@ -184,7 +187,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
 
     {
         input: {
-            changeInCriticalCommunityThreats: 10,
+            changeInCriticalCommunityThreats: CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 0,
             previousPrice: 0.39,
@@ -193,7 +196,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     },
     {
         input: {
-            changeInCriticalCommunityThreats: -10,
+            changeInCriticalCommunityThreats: -CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 0,
             previousPrice: 0.39,
@@ -203,7 +206,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: 5000,
+            changeInCurrentlyHospitalized: CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 0,
             previousPrice: 0.39,
         },
@@ -212,7 +215,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: -5000,
+            changeInCurrentlyHospitalized: -CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 0,
             previousPrice: 0.39,
         },
@@ -226,7 +229,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     /** At base price */
     {
         input: {
-            changeInCriticalCommunityThreats: 10,
+            changeInCriticalCommunityThreats: CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 100,
             previousPrice: 0.78,
@@ -235,7 +238,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     },
     {
         input: {
-            changeInCriticalCommunityThreats: -10,
+            changeInCriticalCommunityThreats: -CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 100,
             previousPrice: 0.78,
@@ -245,7 +248,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: 5000,
+            changeInCurrentlyHospitalized: CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 100,
             previousPrice: 0.78,
         },
@@ -254,7 +257,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: -5000,
+            changeInCurrentlyHospitalized: -CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 100,
             previousPrice: 0.78,
         },
@@ -274,7 +277,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
 
     {
         input: {
-            changeInCriticalCommunityThreats: 10,
+            changeInCriticalCommunityThreats: CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 100,
             previousPrice: 1.56,
@@ -283,7 +286,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     },
     {
         input: {
-            changeInCriticalCommunityThreats: -10,
+            changeInCriticalCommunityThreats: -CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 100,
             previousPrice: 1.56,
@@ -293,7 +296,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: 5000,
+            changeInCurrentlyHospitalized: CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 100,
             previousPrice: 1.56,
         },
@@ -302,7 +305,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: -5000,
+            changeInCurrentlyHospitalized: -CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 100,
             previousPrice: 1.56,
         },
@@ -322,7 +325,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
 
     {
         input: {
-            changeInCriticalCommunityThreats: 10,
+            changeInCriticalCommunityThreats: CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 100,
             previousPrice: 0.39,
@@ -331,7 +334,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     },
     {
         input: {
-            changeInCriticalCommunityThreats: -10,
+            changeInCriticalCommunityThreats: -CHANGE_IN_THREATS,
             changeInCurrentlyHospitalized: 0,
             percentOwnership: 100,
             previousPrice: 0.39,
@@ -341,7 +344,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: 5000,
+            changeInCurrentlyHospitalized: CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 100,
             previousPrice: 0.39,
         },
@@ -350,7 +353,7 @@ export const trainModelForViruzMeNot = ViruzMeNotModel.trainModel([
     {
         input: {
             changeInCriticalCommunityThreats: 0,
-            changeInCurrentlyHospitalized: -5000,
+            changeInCurrentlyHospitalized: -CHANGE_IN_HOSPITALIZATIONS,
             percentOwnership: 100,
             previousPrice: 0.39,
         },

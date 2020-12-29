@@ -3,13 +3,13 @@ import LRU from "lru-cache";
 import { checkIfIsError } from "./checkIfIsError";
 import { getTokenInCookie } from "./tokenInCookies";
 
-const localInMemoryCache = new LRU<string, string>({ max: 20, maxAge: 1000 * 60 * 5 });
+const localInMemoryCache = new LRU<string, string>({ max: 20, maxAge: 1000 * 60 * 8 });
 
 /**
  * This is really only useful when we're trying to display information from the backend. When you're trying to make a call to update or transact, best to call on the
  * service directly instead of through this abstraction.
  */
-export function callOnPrivateEndpoint<Payload, Response>(
+export function useCallOnPrivateEndpoint<Payload, Response>(
     service: (
         payload: Payload,
         cookie?: string | undefined,
@@ -61,6 +61,7 @@ export function callOnPrivateEndpoint<Payload, Response>(
 
     React.useEffect(() => {
         callOnEndpoint();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, recalculateEffectOnChange ?? []);
 
     return response;

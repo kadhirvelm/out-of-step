@@ -112,6 +112,14 @@
         .line {
             stroke: $light-gray2;
         }
+
+        .area {
+            fill: none;
+        }
+    
+        .point {
+            display: none;
+        }
     }
 
     :global(.ct-label) {

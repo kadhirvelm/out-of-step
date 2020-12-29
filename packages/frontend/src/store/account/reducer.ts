@@ -1,18 +1,26 @@
-import { IAccount, IOwnedStock, IOwnedStockId } from "@stochastic-exchange/api";
+import { IAccount, ILimitOrder, IOwnedStock, IOwnedStockId } from "@stochastic-exchange/api";
 import { setWith, TypedReducer } from "redoodle";
 import { getTokenInCookie, setTokenInCookie } from "../../utils/tokenInCookies";
-import { SetToken, SetUserAccountAndOwnedStocks, UpdatedUserAccount, UpdateUserAccountOnTransaction } from "./actions";
+import {
+    SetToken,
+    SetUserAccountAndOwnedStocks,
+    UpdateLimitOrdersOnStock,
+    UpdatedUserAccount,
+    UpdateUserAccountOnTransaction,
+} from "./actions";
 
 export interface IAccountState {
+    limitOrdersOnStocks: { [stockId: string]: ILimitOrder[] };
+    ownedStocks: IOwnedStock[] | undefined;
     token: string | undefined;
     userAccount: Omit<IAccount, "hashedPassword"> | undefined;
-    ownedStocks: IOwnedStock[] | undefined;
 }
 
 export const EMPTY_ACCOUNT_STATE: IAccountState = {
+    limitOrdersOnStocks: {},
+    ownedStocks: undefined,
     token: getTokenInCookie(),
     userAccount: undefined,
-    ownedStocks: undefined,
 };
 
 export const accountReducer = TypedReducer.builder<IAccountState>()
@@ -61,6 +69,14 @@ export const accountReducer = TypedReducer.builder<IAccountState>()
         return setWith(state, {
             userAccount: { ...state.userAccount, cashOnHand },
             ownedStocks: newOwnedStock,
+        });
+    })
+    .withHandler(UpdateLimitOrdersOnStock.TYPE, (state, { stockId, limitOrders }) => {
+        return setWith(state, {
+            limitOrdersOnStocks: {
+                ...state.limitOrdersOnStocks,
+                [stockId]: limitOrders,
+            },
         });
     })
     .build();

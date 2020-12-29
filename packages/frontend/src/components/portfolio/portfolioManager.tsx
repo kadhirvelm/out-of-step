@@ -9,7 +9,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import { Routes } from "../../common/routes";
 import { SetViewStockWithLatestPrice } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
-import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
+import { useCallOnPrivateEndpoint } from "../../utils/useCallOnPrivateEndpoint";
 import { formatDollar, formatNumber } from "../../utils/formatNumber";
 import { MarketStatus } from "./helperComponents/marketStatus";
 import styles from "./portfolioManager.module.scss";
@@ -41,7 +41,7 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
         | undefined
     >(undefined);
 
-    const allStocksWithPrice = callOnPrivateEndpoint(
+    const allStocksWithPrice = useCallOnPrivateEndpoint(
         StocksFrontendService.getAllStocks,
         undefined,
         undefined,
@@ -92,6 +92,8 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
     };
 
     const renderSingleStock = (stock: IStockWithDollarValue, ownedStock?: IOwnedStock) => {
+        const maybeTotalStocksOwned = ownedStock !== undefined && `and shares: ${formatNumber(ownedStock.quantity)}`;
+
         const maybeTotalAssertWorth =
             ownedStock !== undefined && `$${formatNumber(ownedStock.quantity * stock.dollarValue)}`;
 
@@ -103,7 +105,9 @@ const UnconnectedPortfolioManager: React.FC<IStoreProps & IDispatchProps> = ({
             >
                 <div className={styles.leftContainer}>
                     <span className={styles.stockTitle}>{stock.name}</span>
-                    <span className={styles.stockMarketCap}>Price: {formatDollar(stock.dollarValue)}</span>
+                    <span className={styles.stockMarketCap}>
+                        Price: {formatDollar(stock.dollarValue)} {maybeTotalStocksOwned}
+                    </span>
                 </div>
                 <div className={styles.rightContainer}>
                     <span

@@ -1,0 +1,66 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.non-ideal-height {
+    max-height: 75px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+
+    > :nth-child(even).limit-order {
+        background: $light-gray3;
+    }
+}
+
+.limit-order {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 75px;
+    padding: 10px;
+}
+
+.direction-container {
+    margin-right: 10px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.timestamp {
+    color: $pt-text-color-muted;
+    margin-bottom: 5px;
+}
+
+.summary-text {
+    color: $pt-text-color-muted;
+}
+
+.important-value {
+    color: $pt-text-color;
+    font-size: 14px;
+    font-weight: 550;
+}
+
+:global(.bp3-dark) {
+    .main-container {
+        > :nth-child(even).limit-order {
+            background: $dark-gray3;
+        }
+    }
+
+    .timestamp {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .summary-text {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .important-value {
+        color: $pt-dark-text-color;
+    }
+}

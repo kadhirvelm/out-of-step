@@ -85,7 +85,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
         (previousCalculationNotes.previousUsMilkSupplyAverage ?? usMilkSupplyAverageValue) - usMilkSupplyAverageValue;
 
     const averagePalladiumPriceToday =
-        getAverageUsPriceOfMetal(palladiumPrices.dataset.data[0]) ??
+        getAverageUsPriceOfMetal(palladiumPrices?.dataset.data[0]) ??
         previousCalculationNotes.previousAveragePalladiumPrice ??
         0;
     const changeInPalladiumPrice =
@@ -93,7 +93,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
         averagePalladiumPriceToday;
 
     const averagePlatinumPriceToday =
-        getAverageUsPriceOfMetal(platinumPrices.dataset.data[0]) ??
+        getAverageUsPriceOfMetal(platinumPrices?.dataset.data[0]) ??
         previousCalculationNotes.previousAveragePlatinumPrice ??
         0;
     const changeInPlatinumPrice =

@@ -28,9 +28,10 @@ export interface IDividendHistory {
 
 interface IBaseLimitOrder {
     id: ILimitOrderId;
+    direction: "higher" | "lower";
     account: IAccountId;
     quantity: number;
-    status: "PENDING" | "EXECUTED" | "CANCELLED";
+    status: "PENDING" | "EXECUTED";
     stock: IStockId;
     timestamp: string;
     type: string;

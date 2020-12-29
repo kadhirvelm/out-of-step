@@ -9,8 +9,8 @@ const createBuyAtLimitOrder = async (accountId: IAccountId, payload: ICreateLimi
     const {
         rows: [newBuyOrder],
     } = await postgresPool.query<ILimitOrder>(
-        "INSERT INTO \"limitOrder\" (account, quantity, stock, status, type, \"buyAtPrice\") VALUES ($1, $2, $3, 'PENDING', 'buy-limit', $4) RETURNING *",
-        [accountId, payload.quantity, payload.stock, payload.buyAtPrice],
+        "INSERT INTO \"limitOrder\" (account, quantity, direction, stock, status, type, \"buyAtPrice\") VALUES ($1, $2, $3, $4, 'PENDING', 'buy-limit', $5) RETURNING *",
+        [accountId, payload.quantity, payload.direction, payload.stock, payload.buyAtPrice],
     );
 
     return newBuyOrder;
@@ -20,8 +20,8 @@ const createSellAtLimitOrder = async (accountId: IAccountId, payload: ICreateLim
     const {
         rows: [newSellOrder],
     } = await postgresPool.query<ILimitOrder>(
-        "INSERT INTO \"limitOrder\" (account, quantity, stock, status, type, \"sellAtPrice\") VALUES ($1, $2, $3, 'PENDING', 'sell-limit', $4) RETURNING *",
-        [accountId, payload.quantity, payload.stock, payload.sellAtPrice],
+        "INSERT INTO \"limitOrder\" (account, quantity, direction, stock, status, type, \"sellAtPrice\") VALUES ($1, $2, $3, $4, 'PENDING', 'sell-limit', $5) RETURNING *",
+        [accountId, payload.quantity, payload.direction, payload.stock, payload.sellAtPrice],
     );
 
     return newSellOrder;
@@ -46,6 +46,11 @@ export async function createLimitOrder(
         (payload.sellAtPrice !== undefined && payload.buyAtPrice !== undefined)
     ) {
         response.status(400).send({ error: "Either sell at price or buy at price must be defined." });
+        return undefined;
+    }
+
+    if (payload.direction !== "higher" && payload.direction !== "lower") {
+        response.status(400).send({ error: "Direction can only either be higher or lower." });
         return undefined;
     }
 
