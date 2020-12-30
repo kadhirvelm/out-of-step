@@ -1,12 +1,5 @@
 /* eslint-disable @typescript-eslint/quotes */
-import {
-    IAccount,
-    IExchangeTransaction,
-    ILimitOrder,
-    IOwnedStock,
-    IPriceHistory,
-    IStock,
-} from "@stochastic-exchange/api";
+import { IAccount, ILimitOrder, IOwnedStock, IPriceHistory, IStock } from "@stochastic-exchange/api";
 import _ from "lodash";
 import {
     executePurchaseQuantity,
@@ -14,21 +7,7 @@ import {
 } from "../../../transactionService/utils/executeExchangeTransaction";
 import { convertArrayToPostgresIn } from "../../../utils/convertArrayToPostgresIn";
 import { postgresPool } from "../../../utils/getPostgresPool";
-
-const convertLimitOrderToExchangeTransaction = (
-    limitOrder: ILimitOrder,
-    latestStockPrice: { [stockId: string]: IPriceHistory },
-): Omit<IExchangeTransaction, "id" | "timestamp"> => {
-    return {
-        account: limitOrder.account,
-        limitOrder: limitOrder.id,
-        priceHistory: latestStockPrice[limitOrder.stock].id,
-        purchasedQuantity: limitOrder.type === "buy-limit" ? limitOrder.quantity : 0,
-        soldQuantity: limitOrder.type === "sell-limit" ? limitOrder.quantity : 0,
-        stock: limitOrder.stock,
-        type: "exchange-transaction",
-    };
-};
+import { convertLimitOrderToExchangeTransaction } from "./utils/convertLimitOrderToExchangeTransaction";
 
 export async function executeLimitOrders(
     limitOrders: ILimitOrder[],

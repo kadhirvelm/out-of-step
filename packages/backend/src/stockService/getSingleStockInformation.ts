@@ -1,5 +1,6 @@
-import { IPriceHistoryInBuckets, IStocksService, ITimeBucket } from "@stochastic-exchange/api";
+import { IAccountId, IPriceHistoryInBuckets, IStocksService, ITimeBucket } from "@stochastic-exchange/api";
 import { goToStartOfMarketOpenHours } from "@stochastic-exchange/utils";
+import { Response } from "express";
 import { convertDateToPostgresTimestamp } from "../utils/convertDateToPostgresTimestamp";
 import { changeDateByDays } from "../utils/dateUtil";
 import { postgresPool } from "../utils/getPostgresPool";
@@ -38,10 +39,17 @@ function getStartTimestampFromBucket(bucket: ITimeBucket): Date {
 
 export async function getSingleStockInformation(
     payload: IGetSingleStockInformation["payload"],
+    response: Response<any>,
+    accountId: IAccountId | null,
 ): Promise<IGetSingleStockInformation["response"] | undefined> {
+    if (accountId == null) {
+        response.status(400).send({ error: "Invalid account authorization, please login again." });
+        return undefined;
+    }
+
     const dateBucketPostgresString = `DATE_TRUNC('${getDateBucket(payload.bucket)}', timestamp)`;
 
-    const [priceHistory, ownedStockQuantity] = await Promise.all([
+    const [priceHistory, ownedStockQuantity, rawTotalLimitOrders] = await Promise.all([
         postgresPool.query<IPriceHistoryInBuckets>(
             // eslint-disable-next-line @typescript-eslint/quotes
             `SELECT AVG("dollarValue") as "dollarValue", ${dateBucketPostgresString} as timestamp FROM "priceHistory" WHERE stock = $1 AND timestamp BETWEEN ${convertDateToPostgresTimestamp(
@@ -57,8 +65,14 @@ export async function getSingleStockInformation(
             'SELECT CAST (SUM(quantity) AS INTEGER) as "ownedStockQuantity" FROM "ownedStock" WHERE stock = $1',
             [payload.stock],
         ),
+        // eslint-disable-next-line @typescript-eslint/quotes
+        postgresPool.query<{ count: number }>('SELECT COUNT(id) FROM "limitOrder" WHERE stock = $1 AND account = $2', [
+            payload.stock,
+            accountId,
+        ]),
     ]);
 
+    const totalLimitOrders = rawTotalLimitOrders.rows[0]?.count ?? 0;
     const allPrices = priceHistory.rows.map(p => p.dollarValue);
 
     return {
@@ -66,5 +80,6 @@ export async function getSingleStockInformation(
         low: Math.min(...allPrices),
         ownedStockQuantity: ownedStockQuantity.rows[0]?.ownedStockQuantity ?? 0,
         priceHistory: priceHistory.rows,
+        totalLimitOrders,
     };
 }

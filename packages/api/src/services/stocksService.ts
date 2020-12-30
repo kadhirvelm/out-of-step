@@ -31,6 +31,7 @@ export interface IStocksService extends IService {
             low: number;
             ownedStockQuantity: number;
             priceHistory: IPriceHistoryInBuckets[];
+            totalLimitOrders: number;
         };
     };
 }

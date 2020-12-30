@@ -189,6 +189,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                 text="See more stock details"
             />
             <TransactStocks
+                totalLimitOrders={stockInformation.totalLimitOrders}
                 totalOwnedStock={ownedStockQuantity ?? stockInformation.ownedStockQuantity}
                 viewStockWithLatestPrice={viewStockWithLatestPrice}
             />

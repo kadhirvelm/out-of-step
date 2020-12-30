@@ -2,29 +2,7 @@ import { ILimitOrder, IPriceHistory } from "@stochastic-exchange/api";
 import _ from "lodash";
 import { postgresPool } from "../../../utils/getPostgresPool";
 import { executeLimitOrders } from "./executeLimitOrders";
-
-const getPriceFromLimitOrder = (limitOrder: ILimitOrder) => {
-    if (limitOrder.type === "buy-limit") {
-        return limitOrder.buyAtPrice;
-    }
-
-    return limitOrder.sellAtPrice;
-};
-
-const shouldExecuteLimitOrder = (limitOrder: ILimitOrder, pricePointForStock: IPriceHistory): boolean => {
-    if (pricePointForStock.stock !== limitOrder.stock) {
-        return false;
-    }
-
-    const priceOfLimitOrder = getPriceFromLimitOrder(limitOrder);
-    const priceOfStock = pricePointForStock.dollarValue;
-
-    if (limitOrder.direction === "higher") {
-        return priceOfStock >= priceOfLimitOrder;
-    }
-
-    return priceOfStock <= priceOfLimitOrder;
-};
+import { shouldExecuteLimitOrder } from "./utils/shouldExecuteLimitOrder";
 
 export async function handleLimitOrders() {
     const [latestPricePoint, allPendingLimitOrders] = await Promise.all([

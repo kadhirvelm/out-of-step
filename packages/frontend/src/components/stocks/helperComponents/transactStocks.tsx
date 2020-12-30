@@ -23,6 +23,7 @@ interface IDispatchProps {
 }
 
 interface IOwnProps {
+    totalLimitOrders: number;
     totalOwnedStock: number;
     viewStockWithLatestPrice: IStockWithDollarValue;
 }
@@ -31,6 +32,7 @@ const UnconnectedTransactStock: React.FC<IStoreProps & IDispatchProps & IOwnProp
     cashOnHand,
     setViewLimitOrdersForStock,
     setViewTransactionsForStock,
+    totalLimitOrders,
     totalOwnedStock,
     userOwnedStockOfStockWithLatestPrice,
     viewStockWithLatestPrice,
@@ -125,7 +127,7 @@ const UnconnectedTransactStock: React.FC<IStoreProps & IDispatchProps & IOwnProp
                                     className={styles.limitOrderTransactButton}
                                     onClick={goToLimitOrders}
                                     rightIcon="caret-right"
-                                    text="Limit orders"
+                                    text={`${totalLimitOrders} Limit order${totalLimitOrders === 1 ? "" : "s"}`}
                                 />
                                 <SellStocksDialog
                                     isOpen={isSellDialogOpen}
