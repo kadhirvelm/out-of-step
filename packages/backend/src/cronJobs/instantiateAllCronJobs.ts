@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { getNextTimeWithinMarketHours } from "@stochastic-exchange/utils";
 import { postgresPool } from "../utils/getPostgresPool";
 import { pricingStocksCronJob } from "./stocks/pricingStocksCronJob";
+import { handleLimitOrders } from "./stocks/limitOrders/handleLimitOrders";
 
 const MINIMUM_MINUTES_FROM_NOW = 10;
 const MAXIMUM_MINUTES_FROM_NOW = 45;
@@ -57,6 +58,11 @@ export async function priceAllStocks() {
 
     // eslint-disable-next-line no-console
     console.log("Priced stocks at: ", new Date().toLocaleString());
+
+    await handleLimitOrders();
+
+    // eslint-disable-next-line no-console
+    console.log("Ran limit orders at: ", new Date().toLocaleString());
 }
 
 function instantiateStocksCronJob() {

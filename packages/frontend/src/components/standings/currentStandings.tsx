@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import { AccountServiceFrontend, IAccountId } from "../../../../api/dist";
 import { IStoreState } from "../../store/state";
-import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
+import { useCallOnPrivateEndpoint } from "../../utils/useCallOnPrivateEndpoint";
 import styles from "./currentStandings.module.scss";
 import { formatDollar } from "../../utils/formatNumber";
 
@@ -13,7 +13,7 @@ interface IStoreProps {
 }
 
 const UnconnectedCurrentStandings: React.FC<IStoreProps> = ({ userAccountId }) => {
-    const currentStandings = callOnPrivateEndpoint(
+    const currentStandings = useCallOnPrivateEndpoint(
         AccountServiceFrontend.getCurrentStandings,
         undefined,
         undefined,

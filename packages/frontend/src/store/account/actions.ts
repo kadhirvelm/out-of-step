@@ -1,4 +1,4 @@
-import { IAccount, IGetAccountResponse, IStockId } from "@stochastic-exchange/api";
+import { IAccount, IGetAccountResponse, ILimitOrder, IStockId } from "@stochastic-exchange/api";
 import { defineAction } from "redoodle";
 
 export const SetToken = defineAction("SetToken")<{
@@ -21,3 +21,8 @@ export const UpdateUserAccountOnTransaction = defineAction("UpdatedUserAccountOn
 >();
 
 export const UpdatedUserAccount = defineAction("UpdateUserAccount")<Partial<Omit<IAccount, "hashedPassword">>>();
+
+export const UpdateLimitOrdersOnStock = defineAction("UpdateLimitOrdersOnStock")<{
+    stockId: IStockId;
+    limitOrders: ILimitOrder[];
+}>();

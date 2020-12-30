@@ -11,7 +11,7 @@ interface IBitAndGambleCalculationNotes extends IBitAndGambleInputData {
 }
 
 function getAverageFromFREDData(data: any) {
-    if (data.length === 0) {
+    if (data === undefined || data.length === 0) {
         return undefined;
     }
 
@@ -42,12 +42,12 @@ export const priceBitAndGamble: IStockPricerPlugin = async (date, stock, totalOw
     );
 
     const averageEffectiveFederalFundsRate =
-        getAverageFromFREDData(effectiveFederalFundsRate.dataset.data) ??
+        getAverageFromFREDData(effectiveFederalFundsRate?.dataset.data) ??
         previousCalculationNotes.averageEffectiveFederalFundsRate ??
         0;
 
     const averageInitialClaimsForUnemployment =
-        getAverageFromFREDData(initialClaimsForUnemployment.dataset.data) ??
+        getAverageFromFREDData(initialClaimsForUnemployment?.dataset.data) ??
         previousCalculationNotes.previousAverageInitialClaimsForUnemployment ??
         0;
     const changeInAverageInitialClaimsForUnemployment =

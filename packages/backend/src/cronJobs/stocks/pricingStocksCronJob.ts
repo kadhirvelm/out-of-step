@@ -41,8 +41,8 @@ async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: ISt
                     const stabilizedDollarValue = Math.max(
                         getNumberWithinRange(
                             nextDollarValue.dollarValue,
-                            nextDollarValue.dollarValue * 0.85,
-                            nextDollarValue.dollarValue * 1.15,
+                            nextDollarValue.dollarValue * 0.8,
+                            nextDollarValue.dollarValue * 1.2,
                         ),
                         0.1,
                     );

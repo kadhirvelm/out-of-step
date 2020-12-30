@@ -13,7 +13,7 @@ interface IDentalDamageAndCompanyCalculationNotes extends IDentalDamageAndCompan
 }
 
 function getAverageOf2020Values(data: any[][]) {
-    if (data.length === 0) {
+    if (data === undefined || data.length === 0) {
         return undefined;
     }
 
@@ -43,7 +43,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
     const previousDay = changeDateByDays(date, -10);
     const previousDayHyphenated = `${previousDay.getFullYear()}-${previousDay.getMonth() + 1}-${previousDay.getDate()}`;
 
-    const [usDairyPrices, usMilkSupply, palladiumPrices, platinumPrices] = await Promise.all([
+    const [usDairyPrices, usMilkSupply] = await Promise.all([
         callOnExternalEndpoint(
             `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=DAIRY_US_34&report_month=${date.getFullYear()}-${date.getMonth()}&api_key=${process
                 .env.QUANDL_KEY ?? ""}`,
@@ -52,6 +52,9 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
             `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=MILK_US_33&report_month=${date.getFullYear()}-${date.getMonth()}&api_key=${process
                 .env.QUANDL_KEY ?? ""}`,
         ),
+    ]);
+
+    const [palladiumPrices, platinumPrices] = await Promise.all([
         callOnExternalEndpoint(
             `https://www.quandl.com/api/v3/datasets/LPPM/PALL?start_date=${previousDayHyphenated}&end_date=${previousDayHyphenated}&api_key=${process
                 .env.QUANDL_KEY ?? ""}`,
@@ -67,7 +70,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
     );
 
     const usDairyPricesAverageValue =
-        getAverageOf2020Values(usDairyPrices.datatable.data) ??
+        getAverageOf2020Values(usDairyPrices?.datatable.data) ??
         previousCalculationNotes.previousUsDairyPricesAverage ??
         0;
     const changeInUsDairyPricesAverageValue =
@@ -75,14 +78,14 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
         usDairyPricesAverageValue;
 
     const usMilkSupplyAverageValue =
-        getAverageOf2020Values(usMilkSupply.datatable.data) ??
+        getAverageOf2020Values(usMilkSupply?.datatable.data) ??
         previousCalculationNotes.previousUsMilkSupplyAverage ??
         0;
     const changeInUsMilkSupplyAverageValue =
         (previousCalculationNotes.previousUsMilkSupplyAverage ?? usMilkSupplyAverageValue) - usMilkSupplyAverageValue;
 
     const averagePalladiumPriceToday =
-        getAverageUsPriceOfMetal(palladiumPrices.dataset.data[0]) ??
+        getAverageUsPriceOfMetal(palladiumPrices?.dataset.data[0]) ??
         previousCalculationNotes.previousAveragePalladiumPrice ??
         0;
     const changeInPalladiumPrice =
@@ -90,7 +93,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
         averagePalladiumPriceToday;
 
     const averagePlatinumPriceToday =
-        getAverageUsPriceOfMetal(platinumPrices.dataset.data[0]) ??
+        getAverageUsPriceOfMetal(platinumPrices?.dataset.data[0]) ??
         previousCalculationNotes.previousAveragePlatinumPrice ??
         0;
     const changeInPlatinumPrice =

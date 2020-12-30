@@ -33,6 +33,9 @@ jobs:
                 name: Install dependencies
                 command: NODE_ENV=development yarn
             - run:
+                name: Build
+                command: NODE_ENV=production yarn build
+            - run:
                 name: Test
                 command: NODE_ENV=production yarn test
     build:
@@ -82,12 +85,13 @@ workflows:
         jobs:
             - setup
             - clean-lock
-            - test:
-                requires:
-                    - setup
             - build:
                 requires:
                     - setup
+            - test:
+                requires:
+                    - setup
+                    - build
             # This is disabled because it takes up too much memory on the CI container to run and we have husky precommit
             # - lint:
             #     requires:

@@ -13,6 +13,9 @@ import { getCurrentStandings } from "../accountService/getCurrentStandings";
 import { createExchangeTransaction } from "../transactionService/createExchangeTransaction";
 import { viewTransactionsForStock } from "../transactionService/viewTransactionsForStock";
 import { configureFrontendRoutes } from "./configureFrontendRoutes";
+import { createLimitOrder } from "../transactionService/createLimitOrder";
+import { deleteLimitOrder } from "../transactionService/deleteLimitOrder";
+import { viewLimitOrdersForStock } from "../transactionService/viewLimitOrdersForStock";
 
 export function configureAllRoutes(app: Express.Express) {
     configureFrontendRoutes(app);
@@ -33,6 +36,9 @@ export function configureAllRoutes(app: Express.Express) {
 
     TransactionBackendService(app, checkIfValidWebToken, {
         createExchangeTransaction,
+        createLimitOrder,
+        deleteLimitOrder,
+        viewLimitOrdersForStock,
         viewTransactionsForStock,
     });
 

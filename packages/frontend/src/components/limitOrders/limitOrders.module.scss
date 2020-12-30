@@ -1,0 +1,79 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.overall-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.stock-name {
+    font-size: 20px;
+    font-weight: 550;
+    padding-bottom: 15px;
+}
+
+.limit-orders {
+    font-size: 16px;
+    padding-bottom: 3px;
+}
+
+.description-container {
+    display: flex;
+    flex: 1;
+    align-items: center;
+
+    > :not(:first-child) {
+        margin-left: 15px;
+    }
+}
+
+.new-limit-order-button {
+    display: flex;
+    margin: 20px 10px 10px;
+}
+
+.description {
+    color: $pt-text-color-muted;
+}
+
+.existing-limit-order-containers {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.section-label {
+    color: $pt-text-color-muted;
+    box-shadow: 0 1px $pt-divider-black;
+}
+
+.bottom-section-label {
+    margin-top: 15px;
+}
+
+:global(.bp3-dark) {
+    .description {
+        color: $pt-dark-text-color-muted;
+    }
+
+    .section-label {
+        color: $pt-dark-text-color-muted;
+        box-shadow: 0 1px $pt-dark-divider-white;
+    }
+}

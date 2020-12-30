@@ -18,6 +18,7 @@ import { ViewTransactions } from "./transactions/viewTransaction";
 import { Routes } from "../common/routes";
 import { StockDetails } from "./stock-details/stockDetails";
 import { Help } from "./help/help";
+import { LimitOrders } from "./limitOrders/limitOrders";
 
 interface IDispatchProps {
     setUserAccountAndOwnedStocks: (userAccountAndOwnedStocks: IGetAccountResponse) => void;
@@ -38,7 +39,7 @@ const UnconnectedMainPage: React.FC<IDispatchProps> = ({ setUserAccountAndOwnedS
 
     React.useEffect(() => {
         getUser(setUserAccountAndOwnedStocks);
-    }, []);
+    }, [setUserAccountAndOwnedStocks]);
 
     const onUserClick = () => history.push(Routes.USER);
     const onPortfolioClick = () => history.push(Routes.PORTFOLIO);
@@ -78,6 +79,7 @@ const UnconnectedMainPage: React.FC<IDispatchProps> = ({ setUserAccountAndOwnedS
             <div className={styles.mainContentContainer}>
                 <Switch>
                     <Route path={Routes.HELP} component={Help} />
+                    <Route path={Routes.LIMIT_ORDER} component={LimitOrders} />
                     <Route path={Routes.PORTFOLIO} component={PortfolioManager} />
                     <Route path={Routes.SCORE} component={CurrentStandings} />
                     <Route path={Routes.STOCK} component={StockInformation} />

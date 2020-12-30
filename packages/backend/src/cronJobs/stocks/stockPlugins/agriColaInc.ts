@@ -27,7 +27,7 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
             )}&to=${Math.round(date.valueOf() / 1000)}&token=${process.env.FINNHUB_TOKEN ?? ""}`,
         ),
         callOnExternalEndpoint(
-            `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.739071&lon=-75.539787&dt=${Math.round(
+            `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.74&lon=-75.58&dt=${Math.round(
                 date.valueOf() / 1000,
             )}&appid=${process.env.OPEN_WEATHER_MAP ?? ""}`,
         ),

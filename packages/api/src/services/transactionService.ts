@@ -5,6 +5,7 @@ import {
     IDividendTransaction,
     IExchangeTransaction,
     ILimitOrder,
+    ILimitOrderId,
     IPriceHistory,
     IPriceHistoryId,
     IStockId,
@@ -37,6 +38,24 @@ export interface ITransactionService extends IService {
         payload: { price: IPriceHistoryId; purchasedQuantity: number; soldQuantity: number; stock: IStockId };
         response: { message: string };
     };
+    createLimitOrder: {
+        payload: {
+            direction: "higher" | "lower";
+            quantity: number;
+            stock: IStockId;
+            buyAtPrice: number | undefined;
+            sellAtPrice: number | undefined;
+        };
+        response: { message: string; newLimitOrder: ILimitOrder };
+    };
+    deleteLimitOrder: {
+        payload: { id: ILimitOrderId };
+        response: { message: string };
+    };
+    viewLimitOrdersForStock: {
+        payload: { stockId: IStockId };
+        response: { limitOrders: ILimitOrder[] };
+    };
     viewTransactionsForStock: {
         payload: { stockId: IStockId };
         response: Array<ITransactionHistoryComplete & IStockValueAtTransactionTime>;
@@ -47,6 +66,18 @@ const { backend, frontend } = implementEndpoints<ITransactionService>({
     createExchangeTransaction: {
         method: "post",
         slug: "/transaction/create",
+    },
+    createLimitOrder: {
+        method: "post",
+        slug: "/transaction/limit-order/create",
+    },
+    deleteLimitOrder: {
+        method: "delete",
+        slug: "/transaction/limit-order/delete",
+    },
+    viewLimitOrdersForStock: {
+        method: "post",
+        slug: "/transactions/limit-order/get",
     },
     viewTransactionsForStock: {
         method: "post",

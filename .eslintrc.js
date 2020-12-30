@@ -10,7 +10,8 @@ module.exports = {
       "@typescript-eslint",
       "jest",
       "prettier",
-      "import"
+      "import",
+      "react-hooks"
     ],
 
     extends: [
@@ -56,6 +57,8 @@ module.exports = {
       "@typescript-eslint/no-unsafe-member-access": 0,
       "@typescript-eslint/no-unsafe-return": 0,
       "@typescript-eslint/no-unsafe-call": 0,
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
     },
 
     settings: {

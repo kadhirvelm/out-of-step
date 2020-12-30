@@ -15,9 +15,10 @@ import { Routes } from "../../common/routes";
 import { selectUserOwnedStock } from "../../selectors/selector";
 import { SetViewStockWithLatestPrice } from "../../store/interface/actions";
 import { IStoreState } from "../../store/state";
-import { callOnPrivateEndpoint } from "../../utils/callOnPrivateEndpoint";
+import { useCallOnPrivateEndpoint } from "../../utils/useCallOnPrivateEndpoint";
 import { formatDollar } from "../../utils/formatNumber";
 import styles from "./viewTransaction.module.scss";
+import { getLimitOrderPrice } from "../../utils/getLimitOrderPrice";
 
 interface IStoreProps {
     userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
@@ -45,7 +46,8 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
         history.push(Routes.STOCK);
     };
 
-    const transactionHistory = callOnPrivateEndpoint(TransactionFrontendService.viewTransactionsForStock, {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const transactionHistory = useCallOnPrivateEndpoint(TransactionFrontendService.viewTransactionsForStock, {
         stockId: viewTransactionsForStock.id,
     });
 
@@ -118,6 +120,12 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
                                 at {formatDollar(transaction.priceHistory.dollarValue)}
                             </span>
                         </div>
+                        {transaction.limitOrder !== undefined && (
+                            <span className={styles.limitOrderContainer}>
+                                Limit order – {transaction.limitOrder.direction} than{" "}
+                                {getLimitOrderPrice(transaction.limitOrder)}
+                            </span>
+                        )}
                     </div>
                 </div>
                 <div className={styles.rightContainer}>
