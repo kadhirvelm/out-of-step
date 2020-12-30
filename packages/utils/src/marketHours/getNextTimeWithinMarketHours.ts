@@ -9,7 +9,7 @@ dayjs.extend(timezone);
 const MARKET_HOURS = {
     startTime: 6,
     endTime: 21,
-    openDays: [1, 2, 3, 4, 5],
+    openDays: [0, 1, 2, 3, 4, 5, 6],
 };
 
 const goToMarketStartTime = (startDate: dayjs.Dayjs) => {
