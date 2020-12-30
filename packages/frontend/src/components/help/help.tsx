@@ -100,6 +100,12 @@ export const Help: React.FC<{}> = () => {
                     excellent opportunity to get a feel for how each stock works. We&apos;ll start the game for real
                     sometime in mid January.
                 </div>
+                <div className={styles.question}>When do limit orders get executed?</div>
+                <div className={styles.answer}>
+                    All active limit orders will be checked whenever the price points adjust and will execute in
+                    timestamp order. In other words, the earlier the limit order, the higher up the priority queue it
+                    will be.
+                </div>
                 <div className={styles.question}>What do I get for winning the exchange?</div>
                 <div className={styles.answer}>
                     Internet glory – and a $250 donation made to a charity of your choosing.
