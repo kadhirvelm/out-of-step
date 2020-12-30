@@ -20,23 +20,31 @@ export const DisplayLimitOrders: React.FC<IProps> = ({ limitOrders, onLimitOrder
     return (
         <div className={styles.mainContainer}>
             {limitOrders.map(order => (
-                <div
-                    className={classNames(styles.limitOrder, {
-                        [styles.cancelledLimitOrder]: order.status === "CANCELLED",
-                    })}
-                    key={order.id}
-                >
+                <div className={styles.limitOrder} key={order.id}>
                     <div className={styles.directionContainer}>
-                        {order.direction === "higher" ? <Icon icon="arrow-up" /> : <Icon icon="arrow-down" />}
+                        {order.direction === "higher" ? (
+                            <Icon icon="arrow-up" intent={order.status === "CANCELLED" ? "danger" : "none"} />
+                        ) : (
+                            <Icon icon="arrow-down" intent={order.status === "CANCELLED" ? "danger" : "none"} />
+                        )}
                     </div>
                     <div className={styles.content}>
                         <span className={styles.timestamp}>{new Date(order.timestamp).toLocaleString()}</span>
-                        <span className={styles.summaryText}>
+                        <span
+                            className={classNames(styles.summaryText, {
+                                [styles.cancelledSummaryText]: order.status === "CANCELLED",
+                            })}
+                        >
                             {order.type === "buy-limit" ? "Buy" : "Sell"}{" "}
                             <span className={styles.importantValue}>{order.quantity.toLocaleString()}</span> shares when
                             the price {order.direction === "higher" ? "raises above" : "drops below"}{" "}
                             <span className={styles.importantValue}>{getLimitOrderPrice(order)}</span>.
                         </span>
+                        {order.status === "CANCELLED" && (
+                            <span className={styles.cancelledLimitOrderText}>
+                                This limit order could not be executed.
+                            </span>
+                        )}
                     </div>
                     <Button icon="cross" minimal onClick={deleteThisLimitOrder(order.id)} />
                 </div>

@@ -62,5 +62,10 @@ export async function handleLimitOrders() {
         return undefined;
     }
 
-    return executeLimitOrders(limitOrdersToExecute, keyedByStockPricePoint);
+    return executeLimitOrders(
+        limitOrdersToExecute.sort((a, b) =>
+            new Date(a.timestamp).valueOf() > new Date(b.timestamp).valueOf() ? 1 : -1,
+        ),
+        keyedByStockPricePoint,
+    );
 }
