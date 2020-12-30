@@ -29,14 +29,14 @@ describe("can correctly increment the time", () => {
     it("can increment to the start of the next market day", () => {
         const currentDate = dayjs("2020-12-18 21:00:00 PST", "America/Los_Angeles");
         expect(getNextTimeWithinMarketHours(currentDate).valueOf()).toEqual(
-            dayjs("2020-12-21 06:00:00 PST", "America/Los_Angeles").valueOf(),
+            dayjs("2020-12-19 06:00:00 PST", "America/Los_Angeles").valueOf(),
         );
     });
 
     it("can increment to the start of the next market day take 2", () => {
-        const currentDate = dayjs("2020-12-19 15:00:00 PST", "America/Los_Angeles");
+        const currentDate = dayjs("2020-12-19 21:00:00 PST", "America/Los_Angeles");
         expect(getNextTimeWithinMarketHours(currentDate).valueOf()).toEqual(
-            dayjs("2020-12-21 06:00:00 PST", "America/Los_Angeles").valueOf(),
+            dayjs("2020-12-20 06:00:00 PST", "America/Los_Angeles").valueOf(),
         );
     });
 
@@ -45,17 +45,17 @@ describe("can correctly increment the time", () => {
         expect(getNextTimeWithinMarketHours(currentDate).valueOf()).toEqual(currentDate.valueOf());
     });
 
-    it("can increment to the start of the next market day in Europe/London", () => {
+    it("can stay at the current day in Europe/London", () => {
         const currentDate = dayjs("2020-12-19 05:00:00 GMT", "Europe/London");
         expect(getNextTimeWithinMarketHours(currentDate).valueOf()).toEqual(
-            dayjs("2020-12-21 06:00:00 PST", "America/Los_Angeles").valueOf(),
+            dayjs("2020-12-19 06:00:00 PST", "America/Los_Angeles").valueOf(),
         );
     });
 
-    it("can increment to the start of the next market day take 2 in Europe/London", () => {
+    it("can stay at the current day take 2 in Europe/London", () => {
         const currentDate = dayjs("2020-12-19 23:00:00 GMT", "Europe/London");
         expect(getNextTimeWithinMarketHours(currentDate).valueOf()).toEqual(
-            dayjs("2020-12-21 06:00:00 PST", "America/Los_Angeles").valueOf(),
+            dayjs("2020-12-19 15:00:00 PST", "America/Los_Angeles").valueOf(),
         );
     });
 });
