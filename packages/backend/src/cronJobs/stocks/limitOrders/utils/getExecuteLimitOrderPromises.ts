@@ -9,7 +9,7 @@ import {
     IStock,
     IStockId,
 } from "@stochastic-exchange/api";
-import _, { cloneDeep } from "lodash";
+import _ from "lodash";
 import {
     executePurchaseQuantity,
     executeSellQuantity,
@@ -28,7 +28,7 @@ export function getExecuteLimitOrderPromises(
     const onGoingAccountChanges: {
         [accountId: string]: { cashOnHand: number };
     } = {};
-    const onGoingOwnedStockChanges = cloneDeep(keyedOwnedStock);
+    const onGoingOwnedStockChanges = _.cloneDeep(keyedOwnedStock);
 
     const updateOnGoingOwnedStockChanges = (
         stockId: IStockId,

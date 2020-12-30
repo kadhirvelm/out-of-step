@@ -150,13 +150,13 @@ export async function createExchangeTransaction(
             account.rows[0].cashOnHand,
             associatedLatestPricePoint,
             associatedStock,
-        ),
+        ).promises,
         ...executeSellQuantity(
             exchangeTransaction,
             ownedStock.rows,
             account.rows[0].cashOnHand,
             associatedLatestPricePoint,
-        ),
+        ).promises,
     ]);
 
     return { message: "Successfully updated your account." };
