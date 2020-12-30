@@ -5,12 +5,12 @@ const convertStabilityEnterprisesInputToArray = (input: IStabilityEnterprisesInp
     input.maximumMagnitude,
     input.percentOwnership,
     input.previousPrice,
-    input.totalUpcomingElectionEvents,
+    input.changeInElectionEvents,
 ];
 
 const StabilityEnterprisesModel = new StockModel<IStabilityEnterprisesInputData>(
     {
-        epochs: 200,
+        epochs: 400,
         name: "stability-enterprises-v1",
     },
     convertStabilityEnterprisesInputToArray,
@@ -21,274 +21,280 @@ export interface IStabilityEnterprisesInputData {
     maximumMagnitude: number;
     percentOwnership: number;
     previousPrice: number;
-    totalUpcomingElectionEvents: number;
+    changeInElectionEvents: number;
 }
 
 export const getPriceForStabilityEnterprises = StabilityEnterprisesModel.getPrice;
+
+const MAXIMUM_MAGNITUDE = 6;
+const CHANGE_IN_MAGNITUDE = 0.5;
+
+const CHANGE_IN_EARTHQUAKES = 10;
+const CHANGE_IN_ELECTION_EVENTS = 1;
 
 export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.trainModel([
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 6,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 12,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: 10,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 11.75,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: 20,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES * 2,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 11.5,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: -10,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 12.5,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: -20,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES * 2,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 13,
     },
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 7,
+            maximumMagnitude: MAXIMUM_MAGNITUDE + CHANGE_IN_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 11.5,
     },
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 5,
+            maximumMagnitude: MAXIMUM_MAGNITUDE - CHANGE_IN_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 12.5,
     },
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 6,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 12,
+            changeInElectionEvents: CHANGE_IN_ELECTION_EVENTS,
         },
-        output: 12.5,
+        output: 14,
     },
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 6,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 8,
+            changeInElectionEvents: -CHANGE_IN_ELECTION_EVENTS,
         },
-        output: 11.5,
+        output: 10,
     },
 
     /** Increase in percent ownership */
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: 10,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 100,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 11.88,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: 20,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES * 2,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 100,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 11.75,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: -10,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 100,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 12.25,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: -20,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES * 2,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 100,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 12.5,
     },
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 7,
+            maximumMagnitude: MAXIMUM_MAGNITUDE + CHANGE_IN_MAGNITUDE,
             percentOwnership: 100,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 11.75,
     },
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 5,
+            maximumMagnitude: MAXIMUM_MAGNITUDE - CHANGE_IN_MAGNITUDE,
             percentOwnership: 100,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 12.25,
     },
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 6,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 100,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 12,
+            changeInElectionEvents: CHANGE_IN_ELECTION_EVENTS,
         },
-        output: 12.25,
+        output: 13,
     },
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 6,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 100,
             previousPrice: 12,
-            totalUpcomingElectionEvents: 8,
+            changeInElectionEvents: -CHANGE_IN_ELECTION_EVENTS,
         },
-        output: 11.75,
+        output: 11,
     },
 
     /** Different previous price */
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 6,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 24,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 24,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: 10,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 24,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 23.5,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: 20,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES * 2,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 24,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 23,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: -10,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 24,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
-        output: 25,
+        output: 24.5,
     },
     {
         input: {
-            changeInEarthquakesSinceLastMeasure: -20,
-            maximumMagnitude: 6,
+            changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES * 2,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 24,
-            totalUpcomingElectionEvents: 10,
-        },
-        output: 26,
-    },
-    {
-        input: {
-            changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 7,
-            percentOwnership: 0,
-            previousPrice: 24,
-            totalUpcomingElectionEvents: 10,
-        },
-        output: 23,
-    },
-    {
-        input: {
-            changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 5,
-            percentOwnership: 0,
-            previousPrice: 24,
-            totalUpcomingElectionEvents: 10,
+            changeInElectionEvents: 0,
         },
         output: 25,
     },
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 6,
+            maximumMagnitude: MAXIMUM_MAGNITUDE + CHANGE_IN_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 24,
-            totalUpcomingElectionEvents: 12,
+            changeInElectionEvents: 0,
+        },
+        output: 23,
+    },
+    {
+        input: {
+            changeInEarthquakesSinceLastMeasure: 0,
+            maximumMagnitude: MAXIMUM_MAGNITUDE - CHANGE_IN_MAGNITUDE,
+            percentOwnership: 0,
+            previousPrice: 24,
+            changeInElectionEvents: 0,
         },
         output: 25,
     },
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: 6,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
             percentOwnership: 0,
             previousPrice: 24,
-            totalUpcomingElectionEvents: 8,
+            changeInElectionEvents: CHANGE_IN_ELECTION_EVENTS,
         },
-        output: 23,
+        output: 28,
+    },
+    {
+        input: {
+            changeInEarthquakesSinceLastMeasure: 0,
+            maximumMagnitude: MAXIMUM_MAGNITUDE,
+            percentOwnership: 0,
+            previousPrice: 24,
+            changeInElectionEvents: -CHANGE_IN_ELECTION_EVENTS,
+        },
+        output: 20,
     },
 ]);
