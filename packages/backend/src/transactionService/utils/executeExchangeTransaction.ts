@@ -21,7 +21,7 @@ export function executePurchaseQuantity(
     stock: IStock,
 ) {
     if (exchangeTransaction.purchasedQuantity === 0) {
-        return [];
+        return { promises: [] };
     }
 
     const totalOwnedQuantity = (ownedStock ?? []).reduce((previous, next) => previous + next.quantity, 0);
@@ -33,39 +33,44 @@ export function executePurchaseQuantity(
     );
 
     if (purchaseQuantity === 0) {
-        return [];
+        return { promises: [] };
     }
 
     const newCashOnHand = roundToNearestHundreth(cashOnHand - purchaseQuantity * price.dollarValue);
     const alreadyOwnedStock = (ownedStock ?? []).find(s => s.account === exchangeTransaction.account);
+    const newQuantityOfOwnedStock = (alreadyOwnedStock?.quantity ?? 0) + purchaseQuantity;
 
-    return [
-        postgresPool.query('UPDATE account SET "cashOnHand" = $2 WHERE id = $1', [
-            exchangeTransaction.account,
-            newCashOnHand,
-        ]),
-        postgresPool.query(
-            'INSERT INTO "transactionHistory" (type, account, stock, "priceHistory", "purchasedQuantity", "soldQuantity", "limitOrder") VALUES (\'exchange-transaction\', $1, $2, $3, $4, 0, $5)',
-            [
+    return {
+        promises: [
+            postgresPool.query('UPDATE account SET "cashOnHand" = $2 WHERE id = $1', [
                 exchangeTransaction.account,
-                exchangeTransaction.stock,
-                exchangeTransaction.priceHistory,
-                purchaseQuantity,
-                exchangeTransaction.limitOrder,
-            ],
-        ),
-        alreadyOwnedStock !== undefined
-            ? postgresPool.query('UPDATE "ownedStock" SET quantity = $1 WHERE account = $2 AND stock = $3', [
-                  alreadyOwnedStock.quantity + purchaseQuantity,
-                  exchangeTransaction.account,
-                  exchangeTransaction.stock,
-              ])
-            : postgresPool.query('INSERT INTO "ownedStock" (account, quantity, stock) VALUES($1, $2, $3)', [
-                  exchangeTransaction.account,
-                  purchaseQuantity,
-                  exchangeTransaction.stock,
-              ]),
-    ];
+                newCashOnHand,
+            ]),
+            postgresPool.query(
+                'INSERT INTO "transactionHistory" (type, account, stock, "priceHistory", "purchasedQuantity", "soldQuantity", "limitOrder") VALUES (\'exchange-transaction\', $1, $2, $3, $4, 0, $5)',
+                [
+                    exchangeTransaction.account,
+                    exchangeTransaction.stock,
+                    exchangeTransaction.priceHistory,
+                    purchaseQuantity,
+                    exchangeTransaction.limitOrder,
+                ],
+            ),
+            alreadyOwnedStock !== undefined
+                ? postgresPool.query('UPDATE "ownedStock" SET quantity = $1 WHERE account = $2 AND stock = $3', [
+                      alreadyOwnedStock.quantity + purchaseQuantity,
+                      exchangeTransaction.account,
+                      exchangeTransaction.stock,
+                  ])
+                : postgresPool.query('INSERT INTO "ownedStock" (account, quantity, stock) VALUES($1, $2, $3)', [
+                      exchangeTransaction.account,
+                      purchaseQuantity,
+                      exchangeTransaction.stock,
+                  ]),
+        ],
+        newCashOnHand,
+        newQuantityOfOwnedStock,
+    };
 }
 
 const ensureSellQuantityIsLessThanStart = (startQuantity: number, attemptToSellQuantity: number) =>
@@ -78,7 +83,7 @@ export function executeSellQuantity(
     price: IPriceHistory,
 ) {
     if (exchangeTransaction.soldQuantity === 0) {
-        return [];
+        return { promises: [] };
     }
 
     const alreadyOwnedStock = (ownedStock ?? []).find(s => s.account === exchangeTransaction.account);
@@ -88,36 +93,40 @@ export function executeSellQuantity(
     );
 
     if (sellQuantity === 0) {
-        return [];
+        return { promises: [] };
     }
 
     const newCashOnHand = roundToNearestHundreth(cashOnHand + sellQuantity * price.dollarValue);
-    const newAlreadyOwnedStockQuantity = (alreadyOwnedStock?.quantity ?? 0) - sellQuantity;
+    const newQuantityOfOwnedStock = (alreadyOwnedStock?.quantity ?? 0) - sellQuantity;
 
-    return [
-        postgresPool.query('UPDATE account SET "cashOnHand" = $2 WHERE id = $1', [
-            exchangeTransaction.account,
-            newCashOnHand,
-        ]),
-        postgresPool.query(
-            'INSERT INTO "transactionHistory" (type, account, stock, "priceHistory", "purchasedQuantity", "soldQuantity", "limitOrder") VALUES (\'exchange-transaction\', $1, $2, $3, 0, $4, $5)',
-            [
+    return {
+        promises: [
+            postgresPool.query('UPDATE account SET "cashOnHand" = $2 WHERE id = $1', [
                 exchangeTransaction.account,
-                exchangeTransaction.stock,
-                exchangeTransaction.priceHistory,
-                sellQuantity,
-                exchangeTransaction.limitOrder,
-            ],
-        ),
-        newAlreadyOwnedStockQuantity === 0
-            ? postgresPool.query('DELETE FROM "ownedStock" WHERE account = $1 AND stock = $2', [
-                  exchangeTransaction.account,
-                  exchangeTransaction.stock,
-              ])
-            : postgresPool.query('UPDATE "ownedStock" SET quantity = $1 WHERE account = $2 AND stock = $3', [
-                  newAlreadyOwnedStockQuantity,
-                  exchangeTransaction.account,
-                  exchangeTransaction.stock,
-              ]),
-    ];
+                newCashOnHand,
+            ]),
+            postgresPool.query(
+                'INSERT INTO "transactionHistory" (type, account, stock, "priceHistory", "purchasedQuantity", "soldQuantity", "limitOrder") VALUES (\'exchange-transaction\', $1, $2, $3, 0, $4, $5)',
+                [
+                    exchangeTransaction.account,
+                    exchangeTransaction.stock,
+                    exchangeTransaction.priceHistory,
+                    sellQuantity,
+                    exchangeTransaction.limitOrder,
+                ],
+            ),
+            newQuantityOfOwnedStock === 0
+                ? postgresPool.query('DELETE FROM "ownedStock" WHERE account = $1 AND stock = $2', [
+                      exchangeTransaction.account,
+                      exchangeTransaction.stock,
+                  ])
+                : postgresPool.query('UPDATE "ownedStock" SET quantity = $1 WHERE account = $2 AND stock = $3', [
+                      newQuantityOfOwnedStock,
+                      exchangeTransaction.account,
+                      exchangeTransaction.stock,
+                  ]),
+        ],
+        newCashOnHand,
+        newQuantityOfOwnedStock,
+    };
 }

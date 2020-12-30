@@ -3,6 +3,7 @@ import _ from "lodash";
 import { postgresPool } from "../../../utils/getPostgresPool";
 import { executeLimitOrders } from "./executeLimitOrders";
 import { shouldExecuteLimitOrder } from "./utils/shouldExecuteLimitOrder";
+import { sortIntoSellFirstThenByTimestamp } from "./utils/sortIntoSellFirstThenByTimestamp";
 
 export async function handleLimitOrders() {
     const [latestPricePoint, allPendingLimitOrders] = await Promise.all([
@@ -40,10 +41,5 @@ export async function handleLimitOrders() {
         return undefined;
     }
 
-    return executeLimitOrders(
-        limitOrdersToExecute.sort((a, b) =>
-            new Date(a.timestamp).valueOf() < new Date(b.timestamp).valueOf() ? 1 : -1,
-        ),
-        keyedByStockPricePoint,
-    );
+    return executeLimitOrders(limitOrdersToExecute.sort(sortIntoSellFirstThenByTimestamp), keyedByStockPricePoint);
 }

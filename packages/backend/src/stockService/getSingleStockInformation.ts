@@ -65,11 +65,10 @@ export async function getSingleStockInformation(
             'SELECT CAST (SUM(quantity) AS INTEGER) as "ownedStockQuantity" FROM "ownedStock" WHERE stock = $1',
             [payload.stock],
         ),
-        // eslint-disable-next-line @typescript-eslint/quotes
-        postgresPool.query<{ count: number }>('SELECT COUNT(id) FROM "limitOrder" WHERE stock = $1 AND account = $2', [
-            payload.stock,
-            accountId,
-        ]),
+        postgresPool.query<{ count: number }>(
+            "SELECT COUNT(id) FROM \"limitOrder\" WHERE stock = $1 AND account = $2 AND status = 'PENDING'",
+            [payload.stock, accountId],
+        ),
     ]);
 
     const totalLimitOrders = rawTotalLimitOrders.rows[0]?.count ?? 0;

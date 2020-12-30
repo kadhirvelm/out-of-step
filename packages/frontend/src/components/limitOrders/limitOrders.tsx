@@ -24,10 +24,11 @@ import { getTokenInCookie } from "../../utils/tokenInCookies";
 import { DisplayLimitOrders } from "./helperComponents/displayLimitOrders";
 import { NewBuyLimitOrder, NewSellLimitOrder } from "./helperComponents/newLimitOrder";
 import styles from "./limitOrders.module.scss";
+import { useCallOnPrivateEndpoint } from "../../utils/useCallOnPrivateEndpoint";
 
 interface IStoreProps {
     cashOnHand: number;
-    limitOrdersOnStock: ILimitOrder[];
+    limitOrdersOnStock: ILimitOrder[] | undefined;
     userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
     viewLimitOrdersForStock: IStockWithDollarValue | undefined;
 }
@@ -36,24 +37,6 @@ interface IDispatchProps {
     setViewStockWithLatestPrice: (stockWithDollarValue: IStockWithDollarValue) => void;
     updateLimitOrdersOnStock: (payload: { stockId: IStockId; limitOrders: ILimitOrder[] }) => void;
 }
-
-const getLimitOrdersForStock = async (
-    stockWithDollarValue: IStockWithDollarValue,
-    updateLimitOrdersOnStock: (payload: { stockId: IStockId; limitOrders: ILimitOrder[] }) => void,
-) => {
-    const maybeLimitOrdersWithErrors = await TransactionFrontendService.viewLimitOrdersForStock(
-        {
-            stockId: stockWithDollarValue.id,
-        },
-        getTokenInCookie(),
-    );
-
-    const maybeLimitOrders = checkIfIsError(maybeLimitOrdersWithErrors);
-    updateLimitOrdersOnStock({
-        stockId: stockWithDollarValue.id,
-        limitOrders: maybeLimitOrders?.limitOrders ?? [],
-    });
-};
 
 const UnconnectedLimitOrders: React.FC<IStoreProps & IDispatchProps> = ({
     cashOnHand,
@@ -68,24 +51,38 @@ const UnconnectedLimitOrders: React.FC<IStoreProps & IDispatchProps> = ({
     const [isBuyLimitOpen, setIsBuyLimitOpen] = React.useState(false);
     const [isSellLimitOpen, setIsSellLimitOpen] = React.useState(false);
 
-    React.useEffect(() => {
-        if (viewLimitOrdersForStock === undefined) {
-            return;
-        }
-
-        getLimitOrdersForStock(viewLimitOrdersForStock, updateLimitOrdersOnStock);
-    }, [viewLimitOrdersForStock, updateLimitOrdersOnStock]);
-
     if (viewLimitOrdersForStock === undefined) {
         history.push(Routes.PORTFOLIO);
         return null;
     }
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const limitOrders = useCallOnPrivateEndpoint(
+        TransactionFrontendService.viewLimitOrdersForStock,
+        { stockId: viewLimitOrdersForStock.id },
+        [viewLimitOrdersForStock.id],
+        `limit-order-${viewLimitOrdersForStock.id}`,
+    );
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useEffect(() => {
+        if (limitOrders === undefined || limitOrdersOnStock !== undefined) {
+            return;
+        }
+
+        updateLimitOrdersOnStock({
+            stockId: viewLimitOrdersForStock.id,
+            limitOrders: limitOrders.limitOrders,
+        });
+    }, [viewLimitOrdersForStock, limitOrders, updateLimitOrdersOnStock, limitOrdersOnStock]);
 
     const openBuyLimit = () => setIsBuyLimitOpen(true);
     const closeBuyLimit = () => setIsBuyLimitOpen(false);
 
     const openSellLimit = () => setIsSellLimitOpen(true);
     const closeSellLimit = () => setIsSellLimitOpen(false);
+
+    const defaultLimitOrdersOnStock = limitOrdersOnStock ?? [];
 
     const onGoBack = () => {
         setViewStockWithLatestPrice(viewLimitOrdersForStock);
@@ -95,7 +92,7 @@ const UnconnectedLimitOrders: React.FC<IStoreProps & IDispatchProps> = ({
     const onNewLimitOrder = (newLimitOrder: ILimitOrder) => {
         updateLimitOrdersOnStock({
             stockId: viewLimitOrdersForStock.id,
-            limitOrders: limitOrdersOnStock.concat(newLimitOrder),
+            limitOrders: defaultLimitOrdersOnStock.concat(newLimitOrder),
         });
 
         closeBuyLimit();
@@ -112,13 +109,13 @@ const UnconnectedLimitOrders: React.FC<IStoreProps & IDispatchProps> = ({
 
         updateLimitOrdersOnStock({
             stockId: viewLimitOrdersForStock.id,
-            limitOrders: limitOrdersOnStock.filter(order => order.id !== id),
+            limitOrders: defaultLimitOrdersOnStock.filter(order => order.id !== id),
         });
         showToast({ intent: "none", message: response.message });
     };
 
-    const buyLimitOrders = limitOrdersOnStock.filter(order => order.type === "buy-limit");
-    const sellLimitOrders = limitOrdersOnStock.filter(order => order.type === "sell-limit");
+    const buyLimitOrders = defaultLimitOrdersOnStock.filter(order => order.type === "buy-limit");
+    const sellLimitOrders = defaultLimitOrdersOnStock.filter(order => order.type === "sell-limit");
 
     return (
         <div className={styles.overallContainer}>
@@ -137,7 +134,11 @@ const UnconnectedLimitOrders: React.FC<IStoreProps & IDispatchProps> = ({
             <div className={styles.existingLimitOrderContainers}>
                 <Button className={styles.backButton} icon="arrow-left" minimal onClick={onGoBack} />
                 <span className={styles.sectionLabel}>Buy limit orders</span>
-                <DisplayLimitOrders limitOrders={buyLimitOrders} onLimitOrderDelete={handleLimitOrderDelete} />
+                <DisplayLimitOrders
+                    isLoading={limitOrders === undefined}
+                    limitOrders={buyLimitOrders}
+                    onLimitOrderDelete={handleLimitOrderDelete}
+                />
                 <Button
                     className={styles.newLimitOrderButton}
                     icon="plus"
@@ -154,7 +155,11 @@ const UnconnectedLimitOrders: React.FC<IStoreProps & IDispatchProps> = ({
                     stock={viewLimitOrdersForStock}
                 />
                 <span className={classNames(styles.sectionLabel, styles.bottomSectionLabel)}>Sell limit orders</span>
-                <DisplayLimitOrders limitOrders={sellLimitOrders} onLimitOrderDelete={handleLimitOrderDelete} />
+                <DisplayLimitOrders
+                    isLoading={limitOrders === undefined}
+                    limitOrders={sellLimitOrders}
+                    onLimitOrderDelete={handleLimitOrderDelete}
+                />
                 <Button
                     className={styles.newLimitOrderButton}
                     icon="plus"
@@ -180,8 +185,8 @@ function mapStateToProps(state: IStoreState): IStoreProps {
         cashOnHand: state.account.userAccount?.cashOnHand ?? 0,
         limitOrdersOnStock:
             state.interface.viewLimitOrdersForStock === undefined
-                ? []
-                : state.account.limitOrdersOnStocks[state.interface.viewLimitOrdersForStock.id] ?? [],
+                ? undefined
+                : state.account.limitOrdersOnStocks[state.interface.viewLimitOrdersForStock.id] ?? undefined,
         userOwnedStockOfStockWithLatestPrice: selectUserOwnedStock(state.interface.viewLimitOrdersForStock)(state),
         viewLimitOrdersForStock: state.interface.viewLimitOrdersForStock,
     };

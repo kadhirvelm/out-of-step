@@ -18,6 +18,7 @@ import { TransactStocks } from "./helperComponents/transactStocks";
 import styles from "./stockInformation.module.scss";
 
 interface IStoreProps {
+    limitOrdersOnStock: number | undefined;
     ownedStockQuantity: number | undefined;
     viewStockWithLatestPrice: IStockWithDollarValue | undefined;
 }
@@ -31,6 +32,7 @@ interface IDispatchProps {
 const VALID_TIME_BUCKETS: ITimeBucket[] = ["day", "5 days", "month", "all"];
 
 const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
+    limitOrdersOnStock,
     ownedStockQuantity,
     removeViewStockWithLatestPrice,
     viewStockWithLatestPrice,
@@ -63,7 +65,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
             return;
         }
 
-        setOwnedStockQuantity({ [viewStockWithLatestPrice.id]: stockInformation?.ownedStockQuantity });
+        setOwnedStockQuantity({ [viewStockWithLatestPrice.id]: stockInformation.ownedStockQuantity });
     }, [
         stockInformation?.ownedStockQuantity,
         viewStockWithLatestPrice?.id,
@@ -189,7 +191,7 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
                 text="See more stock details"
             />
             <TransactStocks
-                totalLimitOrders={stockInformation.totalLimitOrders}
+                totalLimitOrders={limitOrdersOnStock ?? stockInformation.totalLimitOrders}
                 totalOwnedStock={ownedStockQuantity ?? stockInformation.ownedStockQuantity}
                 viewStockWithLatestPrice={viewStockWithLatestPrice}
             />
@@ -199,6 +201,10 @@ const UnconnectedStockInformation: React.FC<IStoreProps & IDispatchProps> = ({
 
 function mapStateToProps(store: IStoreState): IStoreProps {
     return {
+        limitOrdersOnStock:
+            store.interface.viewStockWithLatestPrice === undefined
+                ? undefined
+                : store.account.limitOrdersOnStocks[store.interface.viewStockWithLatestPrice.id]?.length ?? undefined,
         ownedStockQuantity: selectOwnedStockQuantityOfViewStock(store),
         viewStockWithLatestPrice: store.interface.viewStockWithLatestPrice,
     };
