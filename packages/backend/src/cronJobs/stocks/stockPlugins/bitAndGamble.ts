@@ -19,7 +19,10 @@ function getAverageFromFREDData(data: any) {
     return data.reduce((previous: number, next: [string, number]) => previous + next[1], 0) / data.length;
 }
 
-export const priceBitAndGamble: IStockPricerPlugin = async (date, stock, totalOwnedStock, previousPriceHistory) => {
+export const priceBitAndGamble: IStockPricerPlugin<IBitAndGambleCalculationNotes> = async (
+    date,
+    previousPriceHistory,
+) => {
     const [effectiveFederalFundsRate, initialClaimsForUnemployment, currentBitCoinValue] = await Promise.all([
         callOnExternalEndpoint(
             `https://www.quandl.com/api/v3/datasets/FRED/DFF?start_date=${changeDateByDays(
@@ -58,15 +61,12 @@ export const priceBitAndGamble: IStockPricerPlugin = async (date, stock, totalOw
     const changeInBitCoinValue =
         (previousCalculationNotes.previousBitCoinValue ?? currentBitCoinPrice) - currentBitCoinPrice;
 
-    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
-
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: IBitAndGambleInputData = {
         averageEffectiveFederalFundsRate,
         changeInBitCoinValue,
         changeInAverageInitialClaimsForUnemployment,
-        percentOwnership,
         previousPrice,
     };
 
@@ -79,7 +79,7 @@ export const priceBitAndGamble: IStockPricerPlugin = async (date, stock, totalOw
     };
 
     return {
-        calculationNotes: JSON.stringify(calculationNotes),
+        calculationNotes,
         dollarValue: dollarValue ?? previousPrice,
     };
 };

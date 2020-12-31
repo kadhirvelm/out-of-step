@@ -8,14 +8,12 @@ describe("it can price Bit & Gamble as expected", () => {
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: 0,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: 1000,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
         ]);
@@ -30,14 +28,12 @@ describe("it can price Bit & Gamble as expected", () => {
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: 0,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: -1000,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
         ]);
@@ -52,14 +48,12 @@ describe("it can price Bit & Gamble as expected", () => {
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: 1000,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.3,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: 1000,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
         ]);
@@ -72,14 +66,12 @@ describe("it can price Bit & Gamble as expected", () => {
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: -1000,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.3,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: -1000,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
         ]);
@@ -94,14 +86,12 @@ describe("it can price Bit & Gamble as expected", () => {
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: 0,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: -1000,
                 changeInBitCoinValue: 0,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
         ]);
@@ -116,14 +106,12 @@ describe("it can price Bit & Gamble as expected", () => {
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: 0,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 1000,
                 changeInBitCoinValue: 0,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
         ]);
@@ -138,14 +126,12 @@ describe("it can price Bit & Gamble as expected", () => {
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 1000,
                 changeInBitCoinValue: 0,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.3,
                 changeInAverageInitialClaimsForUnemployment: 1000,
                 changeInBitCoinValue: 0,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
         ]);
@@ -158,14 +144,12 @@ describe("it can price Bit & Gamble as expected", () => {
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: -1000,
                 changeInBitCoinValue: 0,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.3,
                 changeInAverageInitialClaimsForUnemployment: -1000,
                 changeInBitCoinValue: 0,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
         ]);
@@ -174,42 +158,18 @@ describe("it can price Bit & Gamble as expected", () => {
         expect(originalPriceTwo).toBeLessThan(changedPriceTwo);
     });
 
-    it("lessens the change when the percent ownership goes up", async () => {
-        const [originalPrice, changedPrice] = await Promise.all([
-            getPriceForBitAndGamble({
-                averageEffectiveFederalFundsRate: 0.1,
-                changeInAverageInitialClaimsForUnemployment: 0,
-                changeInBitCoinValue: 1000,
-                percentOwnership: 0,
-                previousPrice: 22000,
-            }),
-            getPriceForBitAndGamble({
-                averageEffectiveFederalFundsRate: 0.1,
-                changeInAverageInitialClaimsForUnemployment: 1000,
-                changeInBitCoinValue: 1000,
-                percentOwnership: 100,
-                previousPrice: 22000,
-            }),
-        ]);
-
-        assert(originalPrice !== undefined && changedPrice !== undefined);
-        expect(originalPrice).toBeGreaterThan(changedPrice);
-    });
-
     it("adds to the existing price linearly", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: 1000,
-                percentOwnership: 0,
                 previousPrice: 22000,
             }),
             getPriceForBitAndGamble({
                 averageEffectiveFederalFundsRate: 0.1,
                 changeInAverageInitialClaimsForUnemployment: 0,
                 changeInBitCoinValue: 1000,
-                percentOwnership: 0,
                 previousPrice: 44000,
             }),
         ]);

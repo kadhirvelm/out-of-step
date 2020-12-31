@@ -34,10 +34,8 @@ function getAverageUsPriceOfMetal(data: any[]) {
     return ((data[1] as number) + (data[4] as number)) / 2;
 }
 
-export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
+export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCompanyCalculationNotes> = async (
     date,
-    stock,
-    totalOwnedStock,
     previousPriceHistory,
 ) => {
     const previousDay = changeDateByDays(date, -10);
@@ -100,8 +98,6 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
         (previousCalculationNotes.previousAveragePlatinumPrice ?? averagePlatinumPriceToday) -
         averagePlatinumPriceToday;
 
-    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
-
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: IDentalDamageAndCompanyInputData = {
@@ -109,7 +105,6 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
         changeInPlatinumPrice,
         changeInUsDairyPricesAverageValue,
         changeInUsMilkSupplyAverageValue,
-        percentOwnership,
         previousPrice,
     };
 
@@ -124,7 +119,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin = async (
     };
 
     return {
-        calculationNotes: JSON.stringify(calculationNotes),
+        calculationNotes,
         dollarValue: dollarValue ?? previousPrice,
     };
 };

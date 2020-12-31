@@ -9,7 +9,7 @@ interface IViruzMeNotCalculationNotes extends IViruzMeNotInputData {
     previouslyHospitalized: number;
 }
 
-export const priceViruzMeNot: IStockPricerPlugin = async (_date, stock, totalOwnedStock, previousPriceHistory) => {
+export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = async (_date, previousPriceHistory) => {
     const [[currentCovidNumbers], criticalCommunityThreatsFromIpAddresses] = await Promise.all([
         callOnExternalEndpoint("https://api.covidtracking.com/v1/us/current.json"),
         callOnExternalEndpoint(
@@ -30,14 +30,11 @@ export const priceViruzMeNot: IStockPricerPlugin = async (_date, stock, totalOwn
         (previousCalculationNotes.previousCriticalCommunityThreatsFromIpAddresses ??
             totalCriticalCommunityThreatsFromIpAddresses) - totalCriticalCommunityThreatsFromIpAddresses;
 
-    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
-
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: IViruzMeNotInputData = {
         changeInCurrentlyHospitalized,
         changeInCriticalCommunityThreats,
-        percentOwnership,
         previousPrice,
     };
 
@@ -50,7 +47,7 @@ export const priceViruzMeNot: IStockPricerPlugin = async (_date, stock, totalOwn
     };
 
     return {
-        calculationNotes: JSON.stringify(calculationNotes),
+        calculationNotes,
         dollarValue: dollarValue ?? previousPrice,
     };
 };

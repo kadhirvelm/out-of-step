@@ -9,7 +9,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
             getPriceForDentalDamageAndCompany({
@@ -17,7 +16,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
         ]);
@@ -33,7 +31,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
             getPriceForDentalDamageAndCompany({
@@ -41,7 +38,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
         ]);
@@ -57,7 +53,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
             getPriceForDentalDamageAndCompany({
@@ -65,7 +60,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 50,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
         ]);
@@ -81,7 +75,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
             getPriceForDentalDamageAndCompany({
@@ -89,7 +82,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: -50,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
         ]);
@@ -105,7 +97,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
             getPriceForDentalDamageAndCompany({
@@ -113,7 +104,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 1,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
         ]);
@@ -129,7 +119,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
             getPriceForDentalDamageAndCompany({
@@ -137,7 +126,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: -1,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
         ]);
@@ -153,7 +141,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
             getPriceForDentalDamageAndCompany({
@@ -161,7 +148,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 3,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
         ]);
@@ -177,7 +163,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
             getPriceForDentalDamageAndCompany({
@@ -185,37 +170,12 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: -3,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
         ]);
 
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeLessThan(changedPrice);
-    });
-
-    it("lessens the change when the percent ownership goes up", async () => {
-        const [originalPrice, changedPrice] = await Promise.all([
-            getPriceForDentalDamageAndCompany({
-                changeInPalladiumPrice: 100,
-                changeInPlatinumPrice: 0,
-                changeInUsDairyPricesAverageValue: 0,
-                changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
-                previousPrice: 450,
-            }),
-            getPriceForDentalDamageAndCompany({
-                changeInPalladiumPrice: 100,
-                changeInPlatinumPrice: 0,
-                changeInUsDairyPricesAverageValue: 0,
-                changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 100,
-                previousPrice: 450,
-            }),
-        ]);
-
-        assert(originalPrice !== undefined && changedPrice !== undefined);
-        expect(originalPrice).toBeGreaterThan(changedPrice);
     });
 
     it("does not increase the price more with a higher previous price", async () => {
@@ -225,7 +185,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 450,
             }),
             getPriceForDentalDamageAndCompany({
@@ -233,7 +192,6 @@ describe("it can price Dental Damage and Company as expected", () => {
                 changeInPlatinumPrice: 0,
                 changeInUsDairyPricesAverageValue: 0,
                 changeInUsMilkSupplyAverageValue: 0,
-                percentOwnership: 0,
                 previousPrice: 900,
             }),
         ]);

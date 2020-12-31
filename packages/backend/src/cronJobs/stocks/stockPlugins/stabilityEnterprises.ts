@@ -7,12 +7,11 @@ const DEFAULT_VALUE = 12;
 
 interface IStabilityEnterprisesCalculationNotes extends IStabilityEnterprisesInputData {
     earthquakesInThisMeasure: number;
+    previousElectionEvents: number;
 }
 
-export const priceStabilityEnterprises: IStockPricerPlugin = async (
+export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprisesCalculationNotes> = async (
     date,
-    stock,
-    totalOwnedStock,
     previousPriceHistory,
 ) => {
     const [earthquakeData, fecCalendarEvents] = await Promise.all([
@@ -41,8 +40,8 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
         previousCalculationNotes.earthquakesInThisMeasure ?? earthquakesInThisMeasure ?? 0;
 
     const totalUpcomingElectionEvents = fecCalendarEvents.pagination.count;
-
-    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
+    const previousElectionEvents = previousCalculationNotes.previousElectionEvents ?? totalUpcomingElectionEvents ?? 0;
+    const changeInElectionEvents = totalUpcomingElectionEvents - previousElectionEvents;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
@@ -50,9 +49,8 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
         changeInEarthquakesSinceLastMeasure:
             (earthquakesInThisMeasure ?? earthquakesInPreviousMeasure) - earthquakesInPreviousMeasure,
         maximumMagnitude,
-        percentOwnership,
         previousPrice,
-        totalUpcomingElectionEvents,
+        changeInElectionEvents,
     };
 
     const dollarValue = await getPriceForStabilityEnterprises(inputToModel);
@@ -60,10 +58,11 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
     const calculationNotes: IStabilityEnterprisesCalculationNotes = {
         ...inputToModel,
         earthquakesInThisMeasure,
+        previousElectionEvents,
     };
 
     return {
-        calculationNotes: JSON.stringify(calculationNotes),
+        calculationNotes,
         dollarValue: dollarValue ?? previousPrice,
     };
 };

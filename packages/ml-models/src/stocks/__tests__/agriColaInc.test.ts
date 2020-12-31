@@ -9,7 +9,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
             getPriceForAgriColaInc({
@@ -17,7 +16,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
         ]);
@@ -33,7 +31,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
             getPriceForAgriColaInc({
@@ -41,7 +38,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
         ]);
@@ -57,7 +53,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
             getPriceForAgriColaInc({
@@ -65,7 +60,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 9,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
         ]);
@@ -81,7 +75,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
             getPriceForAgriColaInc({
@@ -89,7 +82,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 3,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
         ]);
@@ -105,7 +97,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
             getPriceForAgriColaInc({
@@ -113,7 +104,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 15,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
         ]);
@@ -129,7 +119,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
             getPriceForAgriColaInc({
@@ -137,7 +126,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 5,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
         ]);
@@ -153,7 +141,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
             getPriceForAgriColaInc({
@@ -161,7 +148,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 3,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
         ]);
@@ -177,7 +163,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
             getPriceForAgriColaInc({
@@ -185,31 +170,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10.6,
                 changeInAveragePrice: -3,
-                percentOwnership: 0,
-                previousPrice: 25,
-            }),
-        ]);
-
-        assert(originalPrice !== undefined && changedPrice !== undefined);
-        expect(originalPrice).toBeGreaterThan(changedPrice);
-    });
-
-    it("lessens the change when the percent ownership goes up", async () => {
-        const [originalPrice, changedPrice] = await Promise.all([
-            getPriceForAgriColaInc({
-                averageRainfall: 3.2,
-                averageTemperateInCelsius: 6,
-                averageWindSpeed: 10,
-                changeInAveragePrice: 0,
-                percentOwnership: 0,
-                previousPrice: 25,
-            }),
-            getPriceForAgriColaInc({
-                averageRainfall: 3.2,
-                averageTemperateInCelsius: 6,
-                averageWindSpeed: 10,
-                changeInAveragePrice: 0,
-                percentOwnership: 100,
                 previousPrice: 25,
             }),
         ]);
@@ -225,7 +185,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 25,
             }),
             getPriceForAgriColaInc({
@@ -233,7 +192,6 @@ describe("it can price Agri Cola Inc as expected", () => {
                 averageTemperateInCelsius: 6,
                 averageWindSpeed: 10,
                 changeInAveragePrice: 0,
-                percentOwnership: 0,
                 previousPrice: 75,
             }),
         ]);
