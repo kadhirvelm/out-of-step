@@ -7,14 +7,12 @@ describe("it can price Stability Enterprise as expected", () => {
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
                 maximumMagnitude: 6,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 0,
             }),
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 10,
                 maximumMagnitude: 6,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 0,
             }),
@@ -29,14 +27,12 @@ describe("it can price Stability Enterprise as expected", () => {
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
                 maximumMagnitude: 6,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 0,
             }),
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: -10,
                 maximumMagnitude: 6,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 0,
             }),
@@ -51,14 +47,12 @@ describe("it can price Stability Enterprise as expected", () => {
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
                 maximumMagnitude: 6,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 0,
             }),
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
                 maximumMagnitude: 4,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 0,
             }),
@@ -73,14 +67,12 @@ describe("it can price Stability Enterprise as expected", () => {
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
                 maximumMagnitude: 6,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 0,
             }),
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
                 maximumMagnitude: 8,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 0,
             }),
@@ -95,14 +87,12 @@ describe("it can price Stability Enterprise as expected", () => {
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
                 maximumMagnitude: 6,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 0,
             }),
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
                 maximumMagnitude: 6,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 1,
             }),
@@ -117,14 +107,12 @@ describe("it can price Stability Enterprise as expected", () => {
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
                 maximumMagnitude: 6,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: 0,
             }),
             getPriceForStabilityEnterprises({
                 changeInEarthquakesSinceLastMeasure: 0,
                 maximumMagnitude: 6,
-                percentOwnership: 0,
                 previousPrice: 12,
                 changeInElectionEvents: -1,
             }),
@@ -133,26 +121,4 @@ describe("it can price Stability Enterprise as expected", () => {
         assert(originalPrice !== undefined && changedPrice !== undefined);
         expect(originalPrice).toBeGreaterThan(changedPrice);
     });
-
-    // it("smaller change when the ownership goes up", async () => {
-    //     const [originalPrice, changedPrice] = await Promise.all([
-    //         getPriceForStabilityEnterprises({
-    //             changeInEarthquakesSinceLastMeasure: -20,
-    //             maximumMagnitude: 6,
-    //             percentOwnership: 0,
-    //             previousPrice: 24,
-    //             changeInElectionEvents: 10,
-    //         }),
-    //         getPriceForStabilityEnterprises({
-    //             changeInEarthquakesSinceLastMeasure: -20,
-    //             maximumMagnitude: 6,
-    //             percentOwnership: 100,
-    //             previousPrice: 24,
-    //             changeInElectionEvents: 10,
-    //         }),
-    //     ]);
-
-    //     assert(originalPrice !== undefined && changedPrice !== undefined);
-    //     expect(originalPrice).toBeGreaterThan(changedPrice);
-    // });
 });

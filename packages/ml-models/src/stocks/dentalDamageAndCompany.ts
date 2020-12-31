@@ -5,7 +5,6 @@ const convertDentalDamageAndCompanyInputToArray = (input: IDentalDamageAndCompan
     input.changeInPlatinumPrice,
     input.changeInUsDairyPricesAverageValue,
     input.changeInUsMilkSupplyAverageValue,
-    input.percentOwnership,
     input.previousPrice,
 ];
 
@@ -22,18 +21,16 @@ export interface IDentalDamageAndCompanyInputData {
     changeInPlatinumPrice: number;
     changeInUsDairyPricesAverageValue: number;
     changeInUsMilkSupplyAverageValue: number;
-    percentOwnership: number;
     previousPrice: number;
 }
 
-export const getPriceForDentalDamageAndCompany = async (input: IDentalDamageAndCompanyInputData) => {
-    const price = await DentalDamageAndCompanyModel.getPrice(input);
-    if (price === undefined) {
-        return price;
-    }
+export const getPriceForDentalDamageAndCompany = DentalDamageAndCompanyModel.getPrice;
 
-    return input.previousPrice + (price - input.previousPrice) * (1 - input.percentOwnership / 100);
-};
+const CHANGE_IN_PALLADIUM_PRICE = 20;
+const CHANGE_IN_PLATINUM_PRICE = 5;
+
+const CHANGE_IN_US_DAIRY = 1;
+const CHANGE_IN_US_MILK_SUPPLY = 1.5;
 
 export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.trainModel([
     {
@@ -42,7 +39,6 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
             changeInPlatinumPrice: 0,
             changeInUsDairyPricesAverageValue: 0,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 450,
         },
         output: 450,
@@ -51,22 +47,20 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
     /** Change in metals */
     {
         input: {
-            changeInPalladiumPrice: 100,
+            changeInPalladiumPrice: CHANGE_IN_PALLADIUM_PRICE,
             changeInPlatinumPrice: 0,
             changeInUsDairyPricesAverageValue: 0,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 450,
         },
         output: 470,
     },
     {
         input: {
-            changeInPalladiumPrice: -100,
+            changeInPalladiumPrice: -CHANGE_IN_PALLADIUM_PRICE,
             changeInPlatinumPrice: 0,
             changeInUsDairyPricesAverageValue: 0,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 450,
         },
         output: 430,
@@ -74,10 +68,9 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
     {
         input: {
             changeInPalladiumPrice: 0,
-            changeInPlatinumPrice: 50,
+            changeInPlatinumPrice: CHANGE_IN_PLATINUM_PRICE,
             changeInUsDairyPricesAverageValue: 0,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 450,
         },
         output: 470,
@@ -85,10 +78,9 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
     {
         input: {
             changeInPalladiumPrice: 0,
-            changeInPlatinumPrice: -50,
+            changeInPlatinumPrice: -CHANGE_IN_PLATINUM_PRICE,
             changeInUsDairyPricesAverageValue: 0,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 450,
         },
         output: 430,
@@ -98,9 +90,8 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
         input: {
             changeInPalladiumPrice: 0,
             changeInPlatinumPrice: 0,
-            changeInUsDairyPricesAverageValue: 1,
+            changeInUsDairyPricesAverageValue: CHANGE_IN_US_DAIRY,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 450,
         },
         output: 440,
@@ -109,9 +100,8 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
         input: {
             changeInPalladiumPrice: 0,
             changeInPlatinumPrice: 0,
-            changeInUsDairyPricesAverageValue: -1,
+            changeInUsDairyPricesAverageValue: -CHANGE_IN_US_DAIRY,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 450,
         },
         output: 460,
@@ -121,8 +111,7 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
             changeInPalladiumPrice: 0,
             changeInPlatinumPrice: 0,
             changeInUsDairyPricesAverageValue: 0,
-            changeInUsMilkSupplyAverageValue: 3,
-            percentOwnership: 0,
+            changeInUsMilkSupplyAverageValue: CHANGE_IN_US_MILK_SUPPLY,
             previousPrice: 450,
         },
         output: 435,
@@ -132,8 +121,7 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
             changeInPalladiumPrice: 0,
             changeInPlatinumPrice: 0,
             changeInUsDairyPricesAverageValue: 0,
-            changeInUsMilkSupplyAverageValue: -3,
-            percentOwnership: 0,
+            changeInUsMilkSupplyAverageValue: -CHANGE_IN_US_MILK_SUPPLY,
             previousPrice: 450,
         },
         output: 465,
@@ -148,7 +136,6 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
             changeInPlatinumPrice: 0,
             changeInUsDairyPricesAverageValue: 0,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 900,
         },
         output: 900,
@@ -157,22 +144,20 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
     /** Change in metals */
     {
         input: {
-            changeInPalladiumPrice: 100,
+            changeInPalladiumPrice: CHANGE_IN_PALLADIUM_PRICE,
             changeInPlatinumPrice: 0,
             changeInUsDairyPricesAverageValue: 0,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 900,
         },
         output: 920,
     },
     {
         input: {
-            changeInPalladiumPrice: -100,
+            changeInPalladiumPrice: -CHANGE_IN_PALLADIUM_PRICE,
             changeInPlatinumPrice: 0,
             changeInUsDairyPricesAverageValue: 0,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 900,
         },
         output: 880,
@@ -180,10 +165,9 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
     {
         input: {
             changeInPalladiumPrice: 0,
-            changeInPlatinumPrice: 50,
+            changeInPlatinumPrice: CHANGE_IN_PLATINUM_PRICE,
             changeInUsDairyPricesAverageValue: 0,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 900,
         },
         output: 920,
@@ -191,10 +175,9 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
     {
         input: {
             changeInPalladiumPrice: 0,
-            changeInPlatinumPrice: -50,
+            changeInPlatinumPrice: -CHANGE_IN_PLATINUM_PRICE,
             changeInUsDairyPricesAverageValue: 0,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 900,
         },
         output: 880,
@@ -204,9 +187,8 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
         input: {
             changeInPalladiumPrice: 0,
             changeInPlatinumPrice: 0,
-            changeInUsDairyPricesAverageValue: 1,
+            changeInUsDairyPricesAverageValue: CHANGE_IN_US_DAIRY,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 900,
         },
         output: 890,
@@ -215,9 +197,8 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
         input: {
             changeInPalladiumPrice: 0,
             changeInPlatinumPrice: 0,
-            changeInUsDairyPricesAverageValue: -1,
+            changeInUsDairyPricesAverageValue: -CHANGE_IN_US_DAIRY,
             changeInUsMilkSupplyAverageValue: 0,
-            percentOwnership: 0,
             previousPrice: 900,
         },
         output: 910,
@@ -227,8 +208,7 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
             changeInPalladiumPrice: 0,
             changeInPlatinumPrice: 0,
             changeInUsDairyPricesAverageValue: 0,
-            changeInUsMilkSupplyAverageValue: 3,
-            percentOwnership: 0,
+            changeInUsMilkSupplyAverageValue: CHANGE_IN_US_MILK_SUPPLY,
             previousPrice: 900,
         },
         output: 885,
@@ -238,8 +218,7 @@ export const trainModelForDentalDamageAndCompany = DentalDamageAndCompanyModel.t
             changeInPalladiumPrice: 0,
             changeInPlatinumPrice: 0,
             changeInUsDairyPricesAverageValue: 0,
-            changeInUsMilkSupplyAverageValue: -3,
-            percentOwnership: 0,
+            changeInUsMilkSupplyAverageValue: -CHANGE_IN_US_MILK_SUPPLY,
             previousPrice: 900,
         },
         output: 915,

@@ -7,13 +7,11 @@ describe("it can price Viruz Me Not as expected", () => {
             getPriceForViruzMeNot({
                 changeInCurrentlyHospitalized: 0,
                 changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
                 previousPrice: 0.78,
             }),
             getPriceForViruzMeNot({
                 changeInCurrentlyHospitalized: 1000,
                 changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
                 previousPrice: 0.78,
             }),
         ]);
@@ -27,13 +25,11 @@ describe("it can price Viruz Me Not as expected", () => {
             getPriceForViruzMeNot({
                 changeInCurrentlyHospitalized: 0,
                 changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
                 previousPrice: 0.78,
             }),
             getPriceForViruzMeNot({
                 changeInCurrentlyHospitalized: -1000,
                 changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
                 previousPrice: 0.78,
             }),
         ]);
@@ -47,13 +43,11 @@ describe("it can price Viruz Me Not as expected", () => {
             getPriceForViruzMeNot({
                 changeInCurrentlyHospitalized: 0,
                 changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
                 previousPrice: 0.78,
             }),
             getPriceForViruzMeNot({
                 changeInCurrentlyHospitalized: 1000,
                 changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
                 previousPrice: 0.78,
             }),
         ]);
@@ -67,33 +61,11 @@ describe("it can price Viruz Me Not as expected", () => {
             getPriceForViruzMeNot({
                 changeInCurrentlyHospitalized: 0,
                 changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
                 previousPrice: 0.78,
             }),
             getPriceForViruzMeNot({
                 changeInCurrentlyHospitalized: -1000,
                 changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
-                previousPrice: 0.78,
-            }),
-        ]);
-
-        assert(originalPrice !== undefined && changedPrice !== undefined);
-        expect(originalPrice).toBeGreaterThan(changedPrice);
-    });
-
-    it("changes less when the percent ownership is higher", async () => {
-        const [originalPrice, changedPrice] = await Promise.all([
-            getPriceForViruzMeNot({
-                changeInCurrentlyHospitalized: -1000,
-                changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
-                previousPrice: 0.78,
-            }),
-            getPriceForViruzMeNot({
-                changeInCurrentlyHospitalized: -1000,
-                changeInCriticalCommunityThreats: 0,
-                percentOwnership: 100,
                 previousPrice: 0.78,
             }),
         ]);
@@ -107,13 +79,11 @@ describe("it can price Viruz Me Not as expected", () => {
             getPriceForViruzMeNot({
                 changeInCurrentlyHospitalized: 5000,
                 changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
                 previousPrice: 0.78,
             }),
             getPriceForViruzMeNot({
                 changeInCurrentlyHospitalized: 5000,
                 changeInCriticalCommunityThreats: 0,
-                percentOwnership: 0,
                 previousPrice: 1.56,
             }),
         ]);

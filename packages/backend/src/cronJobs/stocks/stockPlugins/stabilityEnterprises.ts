@@ -10,10 +10,8 @@ interface IStabilityEnterprisesCalculationNotes extends IStabilityEnterprisesInp
     previousElectionEvents: number;
 }
 
-export const priceStabilityEnterprises: IStockPricerPlugin = async (
+export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprisesCalculationNotes> = async (
     date,
-    stock,
-    totalOwnedStock,
     previousPriceHistory,
 ) => {
     const [earthquakeData, fecCalendarEvents] = await Promise.all([
@@ -45,15 +43,12 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
     const previousElectionEvents = previousCalculationNotes.previousElectionEvents ?? totalUpcomingElectionEvents ?? 0;
     const changeInElectionEvents = totalUpcomingElectionEvents - previousElectionEvents;
 
-    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
-
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: IStabilityEnterprisesInputData = {
         changeInEarthquakesSinceLastMeasure:
             (earthquakesInThisMeasure ?? earthquakesInPreviousMeasure) - earthquakesInPreviousMeasure,
         maximumMagnitude,
-        percentOwnership,
         previousPrice,
         changeInElectionEvents,
     };
@@ -67,7 +62,7 @@ export const priceStabilityEnterprises: IStockPricerPlugin = async (
     };
 
     return {
-        calculationNotes: JSON.stringify(calculationNotes),
+        calculationNotes,
         dollarValue: dollarValue ?? previousPrice,
     };
 };

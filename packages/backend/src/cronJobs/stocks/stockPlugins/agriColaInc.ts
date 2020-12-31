@@ -19,7 +19,7 @@ function normalizeCelsiusIfDefined(maybeKelvinValue: number | undefined) {
     return maybeKelvinValue - 273.15;
 }
 
-export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwnedStock, previousPriceHistory) => {
+export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = async (date, previousPriceHistory) => {
     const [historicalStockDataOfCTVA, weatherHistoricalCast] = await Promise.all([
         callOnExternalEndpoint(
             `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${Math.round(
@@ -53,8 +53,6 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
         "1h",
     );
 
-    const percentOwnership = (totalOwnedStock / stock.totalQuantity) * 100;
-
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: IAgriColaIncInputData = {
@@ -62,7 +60,6 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
         averageTemperateInCelsius: averageTemperateInCelsius ?? previousAverageTemperatureInCelsius,
         averageWindSpeed: averageWindSpeed ?? previousAverageWindSpeed,
         changeInAveragePrice: (currentAverageOfCTVA ?? previousAverageOfCTVA) - previousAverageOfCTVA,
-        percentOwnership,
         previousPrice,
     };
     const dollarValue = await getPriceForAgriColaInc(inputToModel);
@@ -73,7 +70,7 @@ export const priceAgriColaInc: IStockPricerPlugin = async (date, stock, totalOwn
     };
 
     return {
-        calculationNotes: JSON.stringify(calculationNotes),
+        calculationNotes,
         dollarValue: dollarValue ?? previousPrice,
     };
 };

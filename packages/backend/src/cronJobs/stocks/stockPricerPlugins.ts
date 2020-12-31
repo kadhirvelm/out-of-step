@@ -6,7 +6,7 @@ import { priceStabilityEnterprises } from "./stockPlugins/stabilityEnterprises";
 import { priceViruzMeNot } from "./stockPlugins/viruzMeNot";
 import { IStockPricerPlugin } from "./types";
 
-export const STOCK_PRICER_PLUGINS: IObjectForAllStocks<IStockPricerPlugin> = {
+export const STOCK_PRICER_PLUGINS: IObjectForAllStocks<IStockPricerPlugin<{}>> = {
     "Agri Cola Inc": priceAgriColaInc,
     "Stability Enterprises": priceStabilityEnterprises,
     "Viruz Me Not": priceViruzMeNot,

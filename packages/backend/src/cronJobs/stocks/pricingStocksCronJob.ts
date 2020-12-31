@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/quotes */
 import { IPriceHistory, IStock } from "@stochastic-exchange/api";
 import _ from "lodash";
-import { getNumberWithinRange } from "../../utils/getNumberWithinRange";
 import { postgresPool } from "../../utils/getPostgresPool";
 import { STOCK_PRICER_PLUGINS } from "./stockPricerPlugins";
 import { IStockPricerPlugin } from "./types";
+import { stabilizeNextDollarValue } from "./utils/stabilizeDollar";
 
-async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: IStockPricerPlugin }) {
+async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: IStockPricerPlugin<{}> }) {
     const [allStocks, latestPriceHistory, totalOwned] = await Promise.all([
         postgresPool.query<IStock>(`SELECT * FROM stock WHERE status = 'AVAILABLE'`),
         postgresPool.query<IPriceHistory>(
@@ -31,27 +31,16 @@ async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: ISt
                 }
 
                 try {
-                    const nextDollarValue = await pricingFunction(
-                        priceForDate,
+                    const previousPricePoint: IPriceHistory | undefined = latestPriceKeyedByStock[stock.id];
+                    const nextDollarValue = await pricingFunction(priceForDate, previousPricePoint);
+
+                    const { calculationNotes, stabilizedDollar } = stabilizeNextDollarValue(
+                        nextDollarValue,
                         stock,
-                        totalOwnedKeyedByStock[stock.id]?.totalOwned ?? 0,
-                        latestPriceKeyedByStock[stock.id],
+                        totalOwnedKeyedByStock[stock.id].totalOwned,
+                        previousPricePoint,
                     );
-
-                    const stabilizedDollarValue = Math.max(
-                        getNumberWithinRange(
-                            nextDollarValue.dollarValue,
-                            nextDollarValue.dollarValue * 0.8,
-                            nextDollarValue.dollarValue * 1.2,
-                        ),
-                        0.1,
-                    );
-
-                    return `(${Math.round(stabilizedDollarValue * 100) / 100},'${stock.id}',${
-                        nextDollarValue.calculationNotes !== undefined
-                            ? `'${nextDollarValue.calculationNotes}'`
-                            : "NULL"
-                    })`;
+                    return `(${stabilizedDollar},'${stock.id}',${calculationNotes})`;
                 } catch (e) {
                     // eslint-disable-next-line no-console
                     console.error(`Something went wrong when pricing: ${stock.name}, ${stock.id}.`, e);
@@ -66,7 +55,7 @@ async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: ISt
     )}`;
 }
 
-export async function testPriceChange(stockPricerPlugins: { [name: string]: IStockPricerPlugin }) {
+export async function testPriceChange(stockPricerPlugins: { [name: string]: IStockPricerPlugin<{}> }) {
     const insertStatement = await getAllPriceInserts(stockPricerPlugins);
     // eslint-disable-next-line no-console
     console.log(insertStatement);

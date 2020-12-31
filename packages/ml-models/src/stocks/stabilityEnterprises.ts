@@ -3,7 +3,6 @@ import { StockModel } from "./stockModel";
 const convertStabilityEnterprisesInputToArray = (input: IStabilityEnterprisesInputData) => [
     input.changeInEarthquakesSinceLastMeasure,
     input.maximumMagnitude,
-    input.percentOwnership,
     input.previousPrice,
     input.changeInElectionEvents,
 ];
@@ -19,14 +18,13 @@ const StabilityEnterprisesModel = new StockModel<IStabilityEnterprisesInputData>
 export interface IStabilityEnterprisesInputData {
     changeInEarthquakesSinceLastMeasure: number;
     maximumMagnitude: number;
-    percentOwnership: number;
     previousPrice: number;
     changeInElectionEvents: number;
 }
 
 export const getPriceForStabilityEnterprises = StabilityEnterprisesModel.getPrice;
 
-const MAXIMUM_MAGNITUDE = 6;
+const AVERAGE_MAGNITUDE = 6;
 const CHANGE_IN_MAGNITUDE = 0.5;
 
 const CHANGE_IN_EARTHQUAKES = 10;
@@ -36,8 +34,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 12,
             changeInElectionEvents: 0,
         },
@@ -46,8 +43,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 12,
             changeInElectionEvents: 0,
         },
@@ -56,8 +52,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES * 2,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 12,
             changeInElectionEvents: 0,
         },
@@ -66,8 +61,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 12,
             changeInElectionEvents: 0,
         },
@@ -76,8 +70,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES * 2,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 12,
             changeInElectionEvents: 0,
         },
@@ -86,8 +79,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE + CHANGE_IN_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE + CHANGE_IN_MAGNITUDE,
             previousPrice: 12,
             changeInElectionEvents: 0,
         },
@@ -96,8 +88,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE - CHANGE_IN_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE - CHANGE_IN_MAGNITUDE,
             previousPrice: 12,
             changeInElectionEvents: 0,
         },
@@ -106,8 +97,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 12,
             changeInElectionEvents: CHANGE_IN_ELECTION_EVENTS,
         },
@@ -116,102 +106,18 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 12,
             changeInElectionEvents: -CHANGE_IN_ELECTION_EVENTS,
         },
         output: 10,
     },
 
-    /** Increase in percent ownership */
-    {
-        input: {
-            changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 100,
-            previousPrice: 12,
-            changeInElectionEvents: 0,
-        },
-        output: 11.88,
-    },
-    {
-        input: {
-            changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES * 2,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 100,
-            previousPrice: 12,
-            changeInElectionEvents: 0,
-        },
-        output: 11.75,
-    },
-    {
-        input: {
-            changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 100,
-            previousPrice: 12,
-            changeInElectionEvents: 0,
-        },
-        output: 12.25,
-    },
-    {
-        input: {
-            changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES * 2,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 100,
-            previousPrice: 12,
-            changeInElectionEvents: 0,
-        },
-        output: 12.5,
-    },
-    {
-        input: {
-            changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE + CHANGE_IN_MAGNITUDE,
-            percentOwnership: 100,
-            previousPrice: 12,
-            changeInElectionEvents: 0,
-        },
-        output: 11.75,
-    },
-    {
-        input: {
-            changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE - CHANGE_IN_MAGNITUDE,
-            percentOwnership: 100,
-            previousPrice: 12,
-            changeInElectionEvents: 0,
-        },
-        output: 12.25,
-    },
-    {
-        input: {
-            changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 100,
-            previousPrice: 12,
-            changeInElectionEvents: CHANGE_IN_ELECTION_EVENTS,
-        },
-        output: 13,
-    },
-    {
-        input: {
-            changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 100,
-            previousPrice: 12,
-            changeInElectionEvents: -CHANGE_IN_ELECTION_EVENTS,
-        },
-        output: 11,
-    },
-
     /** Different previous price */
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 24,
             changeInElectionEvents: 0,
         },
@@ -220,8 +126,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 24,
             changeInElectionEvents: 0,
         },
@@ -230,8 +135,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: CHANGE_IN_EARTHQUAKES * 2,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 24,
             changeInElectionEvents: 0,
         },
@@ -240,8 +144,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 24,
             changeInElectionEvents: 0,
         },
@@ -250,8 +153,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: -CHANGE_IN_EARTHQUAKES * 2,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 24,
             changeInElectionEvents: 0,
         },
@@ -260,8 +162,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE + CHANGE_IN_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE + CHANGE_IN_MAGNITUDE,
             previousPrice: 24,
             changeInElectionEvents: 0,
         },
@@ -270,8 +171,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE - CHANGE_IN_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE - CHANGE_IN_MAGNITUDE,
             previousPrice: 24,
             changeInElectionEvents: 0,
         },
@@ -280,8 +180,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 24,
             changeInElectionEvents: CHANGE_IN_ELECTION_EVENTS,
         },
@@ -290,8 +189,7 @@ export const trainModelForStabilityEnterprises = StabilityEnterprisesModel.train
     {
         input: {
             changeInEarthquakesSinceLastMeasure: 0,
-            maximumMagnitude: MAXIMUM_MAGNITUDE,
-            percentOwnership: 0,
+            maximumMagnitude: AVERAGE_MAGNITUDE,
             previousPrice: 24,
             changeInElectionEvents: -CHANGE_IN_ELECTION_EVENTS,
         },
