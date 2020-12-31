@@ -37,10 +37,10 @@ async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: ISt
                     const { calculationNotes, stabilizedDollar } = stabilizeNextDollarValue(
                         nextDollarValue,
                         stock,
-                        totalOwnedKeyedByStock[stock.id].totalOwned,
+                        totalOwnedKeyedByStock[stock.id]?.totalOwned,
                         previousPricePoint,
                     );
-                    return `(${stabilizedDollar},'${stock.id}',${calculationNotes})`;
+                    return `(${stabilizedDollar},'${stock.id}','${calculationNotes}')`;
                 } catch (e) {
                     // eslint-disable-next-line no-console
                     console.error(`Something went wrong when pricing: ${stock.name}, ${stock.id}.`, e);
