@@ -58,7 +58,7 @@ export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprises
     const calculationNotes: IStabilityEnterprisesCalculationNotes = {
         ...inputToModel,
         earthquakesInThisMeasure,
-        previousElectionEvents,
+        previousElectionEvents: totalUpcomingElectionEvents,
     };
 
     return {
