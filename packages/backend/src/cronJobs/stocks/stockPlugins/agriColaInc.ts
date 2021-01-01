@@ -2,6 +2,7 @@ import { getPriceForAgriColaInc, IAgriColaIncInputData } from "@stochastic-excha
 import _ from "lodash";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { changeDateByDays } from "../../../utils/dateUtil";
+import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { averageOfNumberArray, averageOfObjectsArray } from "../../../utils/mathUtils";
 import { IStockPricerPlugin } from "../types";
 
@@ -59,7 +60,10 @@ export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = a
         averageRainfall: averageRainfall ?? previousAverageRainfall,
         averageTemperateInCelsius: averageTemperateInCelsius ?? previousAverageTemperatureInCelsius,
         averageWindSpeed: averageWindSpeed ?? previousAverageWindSpeed,
-        changeInAveragePrice: (currentAverageOfCTVA ?? previousAverageOfCTVA) - previousAverageOfCTVA,
+        changeInAveragePrice: getChangeInValueSinceLastMeasurement(
+            currentAverageOfCTVA ?? previousAverageOfCTVA,
+            previousAverageOfCTVA,
+        ),
         previousPrice,
     };
     const dollarValue = await getPriceForAgriColaInc(inputToModel);

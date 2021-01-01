@@ -14,3 +14,13 @@ export async function callOnExternalEndpoint(request: string): Promise<any | und
         return undefined;
     }
 }
+
+export async function callOnExternalEndpointForHTML(request: string): Promise<any | undefined> {
+    try {
+        const rawResponse = await fetch(request, { headers: { "Content-Type": "application/json" } });
+        const rawText = await rawResponse.text();
+        return rawText;
+    } catch (e) {
+        return undefined;
+    }
+}
