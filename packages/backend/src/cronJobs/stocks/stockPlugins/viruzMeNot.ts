@@ -1,5 +1,6 @@
 import { IViruzMeNotInputData, getPriceForViruzMeNot } from "@stochastic-exchange/ml-models";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
+import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 
 const DEFAULT_VALUE = 0.78;
@@ -22,19 +23,20 @@ export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = 
     );
 
     const currentlyHospitalized: number = currentCovidNumbers.hospitalizedCurrently;
-    const changeInCurrentlyHospitalized =
-        (previousCalculationNotes.previouslyHospitalized ?? currentlyHospitalized) - currentlyHospitalized;
 
     const totalCriticalCommunityThreatsFromIpAddresses = criticalCommunityThreatsFromIpAddresses.results.length;
-    const changeInCriticalCommunityThreats =
-        (previousCalculationNotes.previousCriticalCommunityThreatsFromIpAddresses ??
-            totalCriticalCommunityThreatsFromIpAddresses) - totalCriticalCommunityThreatsFromIpAddresses;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: IViruzMeNotInputData = {
-        changeInCurrentlyHospitalized,
-        changeInCriticalCommunityThreats,
+        changeInCurrentlyHospitalized: getChangeInValueSinceLastMeasurement(
+            currentlyHospitalized,
+            previousCalculationNotes.previouslyHospitalized,
+        ),
+        changeInCriticalCommunityThreats: getChangeInValueSinceLastMeasurement(
+            totalCriticalCommunityThreatsFromIpAddresses,
+            previousCalculationNotes.previousCriticalCommunityThreatsFromIpAddresses,
+        ),
         previousPrice,
     };
 

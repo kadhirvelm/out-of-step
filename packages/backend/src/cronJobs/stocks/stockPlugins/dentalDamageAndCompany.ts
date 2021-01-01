@@ -1,6 +1,7 @@
 import { getPriceForDentalDamageAndCompany, IDentalDamageAndCompanyInputData } from "@stochastic-exchange/ml-models";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { changeDateByDays } from "../../../utils/dateUtil";
+import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 
 const DEFAULT_VALUE = 450;
@@ -71,40 +72,41 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
         getAverageOf2020Values(usDairyPrices?.datatable.data) ??
         previousCalculationNotes.previousUsDairyPricesAverage ??
         0;
-    const changeInUsDairyPricesAverageValue =
-        (previousCalculationNotes.previousUsDairyPricesAverage ?? usDairyPricesAverageValue) -
-        usDairyPricesAverageValue;
 
     const usMilkSupplyAverageValue =
         getAverageOf2020Values(usMilkSupply?.datatable.data) ??
         previousCalculationNotes.previousUsMilkSupplyAverage ??
         0;
-    const changeInUsMilkSupplyAverageValue =
-        (previousCalculationNotes.previousUsMilkSupplyAverage ?? usMilkSupplyAverageValue) - usMilkSupplyAverageValue;
 
     const averagePalladiumPriceToday =
         getAverageUsPriceOfMetal(palladiumPrices?.dataset.data[0]) ??
         previousCalculationNotes.previousAveragePalladiumPrice ??
         0;
-    const changeInPalladiumPrice =
-        (previousCalculationNotes.previousAveragePalladiumPrice ?? averagePalladiumPriceToday) -
-        averagePalladiumPriceToday;
 
     const averagePlatinumPriceToday =
         getAverageUsPriceOfMetal(platinumPrices?.dataset.data[0]) ??
         previousCalculationNotes.previousAveragePlatinumPrice ??
         0;
-    const changeInPlatinumPrice =
-        (previousCalculationNotes.previousAveragePlatinumPrice ?? averagePlatinumPriceToday) -
-        averagePlatinumPriceToday;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: IDentalDamageAndCompanyInputData = {
-        changeInPalladiumPrice,
-        changeInPlatinumPrice,
-        changeInUsDairyPricesAverageValue,
-        changeInUsMilkSupplyAverageValue,
+        changeInPalladiumPrice: getChangeInValueSinceLastMeasurement(
+            averagePalladiumPriceToday,
+            previousCalculationNotes.previousAveragePalladiumPrice,
+        ),
+        changeInPlatinumPrice: getChangeInValueSinceLastMeasurement(
+            averagePlatinumPriceToday,
+            previousCalculationNotes.previousAveragePlatinumPrice,
+        ),
+        changeInUsDairyPricesAverageValue: getChangeInValueSinceLastMeasurement(
+            usDairyPricesAverageValue,
+            previousCalculationNotes.previousUsDairyPricesAverage,
+        ),
+        changeInUsMilkSupplyAverageValue: getChangeInValueSinceLastMeasurement(
+            usMilkSupplyAverageValue,
+            previousCalculationNotes.previousUsMilkSupplyAverage,
+        ),
         previousPrice,
     };
 

@@ -1,6 +1,7 @@
 import { getPriceForBitAndGamble, IBitAndGambleInputData } from "@stochastic-exchange/ml-models";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { changeDateByDays } from "../../../utils/dateUtil";
+import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 
 const DEFAULT_VALUE = 22000;
@@ -53,20 +54,21 @@ export const priceBitAndGamble: IStockPricerPlugin<IBitAndGambleCalculationNotes
         getAverageFromFREDData(initialClaimsForUnemployment?.dataset.data) ??
         previousCalculationNotes.previousAverageInitialClaimsForUnemployment ??
         0;
-    const changeInAverageInitialClaimsForUnemployment =
-        (previousCalculationNotes?.previousAverageInitialClaimsForUnemployment ?? averageInitialClaimsForUnemployment) -
-        averageInitialClaimsForUnemployment;
 
     const currentBitCoinPrice = currentBitCoinValue.bpi.USD.rate_float;
-    const changeInBitCoinValue =
-        (previousCalculationNotes.previousBitCoinValue ?? currentBitCoinPrice) - currentBitCoinPrice;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: IBitAndGambleInputData = {
         averageEffectiveFederalFundsRate,
-        changeInBitCoinValue,
-        changeInAverageInitialClaimsForUnemployment,
+        changeInBitCoinValue: getChangeInValueSinceLastMeasurement(
+            currentBitCoinPrice,
+            previousCalculationNotes.previousBitCoinValue,
+        ),
+        changeInAverageInitialClaimsForUnemployment: getChangeInValueSinceLastMeasurement(
+            averageInitialClaimsForUnemployment,
+            previousCalculationNotes.previousAverageInitialClaimsForUnemployment,
+        ),
         previousPrice,
     };
 

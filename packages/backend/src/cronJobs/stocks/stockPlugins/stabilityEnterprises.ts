@@ -1,12 +1,13 @@
 import { getPriceForStabilityEnterprises, IStabilityEnterprisesInputData } from "@stochastic-exchange/ml-models";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { changeDateByDays } from "../../../utils/dateUtil";
+import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 
 const DEFAULT_VALUE = 12;
 
 interface IStabilityEnterprisesCalculationNotes extends IStabilityEnterprisesInputData {
-    earthquakesInThisMeasure: number;
+    previousEarthquakesMeasure: number;
     previousElectionEvents: number;
 }
 
@@ -35,29 +36,30 @@ export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprises
     const allEarthquakeMagnitudes: number[] = earthquakeData.features.map((f: any) => f.properties.mag as number);
     const maximumMagnitude = Math.max(...allEarthquakeMagnitudes);
 
-    const earthquakesInThisMeasure = allEarthquakeMagnitudes.reduce((previous, next) => previous + next, 0);
-    const earthquakesInPreviousMeasure =
-        previousCalculationNotes.earthquakesInThisMeasure ?? earthquakesInThisMeasure ?? 0;
+    const earthquakesMeasure = allEarthquakeMagnitudes.reduce((previous, next) => previous + next, 0);
 
-    const totalUpcomingElectionEvents = fecCalendarEvents.pagination.count;
-    const previousElectionEvents = previousCalculationNotes.previousElectionEvents ?? totalUpcomingElectionEvents ?? 0;
-    const changeInElectionEvents = totalUpcomingElectionEvents - previousElectionEvents;
+    const totalUpcomingElectionEvents: number = fecCalendarEvents.pagination.count ?? 0;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: IStabilityEnterprisesInputData = {
-        changeInEarthquakesSinceLastMeasure:
-            (earthquakesInThisMeasure ?? earthquakesInPreviousMeasure) - earthquakesInPreviousMeasure,
+        changeInEarthquakesSinceLastMeasure: getChangeInValueSinceLastMeasurement(
+            earthquakesMeasure,
+            previousCalculationNotes.previousEarthquakesMeasure,
+        ),
         maximumMagnitude,
         previousPrice,
-        changeInElectionEvents,
+        changeInElectionEvents: getChangeInValueSinceLastMeasurement(
+            totalUpcomingElectionEvents,
+            previousCalculationNotes.previousElectionEvents,
+        ),
     };
 
     const dollarValue = await getPriceForStabilityEnterprises(inputToModel);
 
     const calculationNotes: IStabilityEnterprisesCalculationNotes = {
         ...inputToModel,
-        earthquakesInThisMeasure,
+        previousEarthquakesMeasure: earthquakesMeasure,
         previousElectionEvents: totalUpcomingElectionEvents,
     };
 
