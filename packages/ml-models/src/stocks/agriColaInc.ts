@@ -28,8 +28,8 @@ const AgriColaIncModel = new StockModel<IAgriColaIncInputData>(
 
 export const getPriceForAgriColaInc = AgriColaIncModel.getPrice;
 
-const AVERAGE_CELSIUS = 6;
-const AVERAGE_WIND_SPEED = 5.5;
+const AVERAGE_CELSIUS = 3.5;
+const AVERAGE_WIND_SPEED = 4;
 const AVERAGE_RAIN_FALL = 0;
 
 export const trainModelForAgriColaInc = AgriColaIncModel.trainModel([
