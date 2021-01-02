@@ -47,17 +47,17 @@ export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = a
     const previousAverageWindSpeed = previousCalculationNotes.averageWindSpeed ?? 0;
     const averageWindSpeed = weatherHistoricalCast.current?.wind_speed;
 
-    const previousAverageRainfall = previousCalculationNotes.averageRainfall ?? 0;
-    const averageRainfall = averageOfObjectsArray(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        _.compact((weatherHistoricalCast.hourly ?? []).map((h: any) => h.rain as { "1h": number } | undefined)),
-        "1h",
-    );
+    const averageRainfall =
+        averageOfObjectsArray(
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            _.compact((weatherHistoricalCast.hourly ?? []).map((h: any) => h.rain as { "1h": number } | undefined)),
+            "1h",
+        ) ?? 0;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: IAgriColaIncInputData = {
-        averageRainfall: averageRainfall ?? previousAverageRainfall,
+        averageRainfall,
         averageTemperateInCelsius: averageTemperateInCelsius ?? previousAverageTemperatureInCelsius,
         averageWindSpeed: averageWindSpeed ?? previousAverageWindSpeed,
         changeInAveragePrice: getChangeInValueSinceLastMeasurement(
