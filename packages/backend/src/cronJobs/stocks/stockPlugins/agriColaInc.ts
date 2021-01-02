@@ -42,15 +42,15 @@ export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = a
     const previousAverageOfCTVA = previousCalculationNotes.averagePrice ?? currentAverageOfCTVA ?? 0;
 
     const previousAverageTemperatureInCelsius = previousCalculationNotes.averageTemperateInCelsius ?? 1;
-    const averageTemperateInCelsius = normalizeCelsiusIfDefined(weatherHistoricalCast.current.temp);
+    const averageTemperateInCelsius = normalizeCelsiusIfDefined(weatherHistoricalCast.current?.temp);
 
     const previousAverageWindSpeed = previousCalculationNotes.averageWindSpeed ?? 0;
-    const averageWindSpeed = weatherHistoricalCast.current.wind_speed;
+    const averageWindSpeed = weatherHistoricalCast.current?.wind_speed;
 
     const previousAverageRainfall = previousCalculationNotes.averageRainfall ?? 0;
     const averageRainfall = averageOfObjectsArray(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        _.compact(weatherHistoricalCast.hourly.map((h: any) => h.rain as { "1h": number } | undefined)),
+        _.compact((weatherHistoricalCast.hourly ?? []).map((h: any) => h.rain as { "1h": number } | undefined)),
         "1h",
     );
 
