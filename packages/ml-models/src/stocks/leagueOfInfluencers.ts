@@ -1,67 +1,70 @@
 import { StockModel } from "./stockModel";
 
 const convertLeagueOfInfluencersToInputData = (input: ILeagueOfInfluencersInputData) => [
+    input.airQualityIndex,
     input.changeInGovernmentBills,
-    input.changeInPeopleAffectedByGunViolence,
     input.previousPrice,
 ];
 
 const LeagueOfInfluencersModel = new StockModel<ILeagueOfInfluencersInputData>(
     {
-        epochs: 250,
+        epochs: 400,
         name: "league-of-influencers-v1",
     },
     convertLeagueOfInfluencersToInputData,
 );
 
 export interface ILeagueOfInfluencersInputData {
+    airQualityIndex: number;
     changeInGovernmentBills: number;
-    changeInPeopleAffectedByGunViolence: number;
     previousPrice: number;
 }
 
-export const getPriceForLeagueOfInfluencers = LeagueOfInfluencersModel.getPrice;
+const BASE_AIR_QUALITY = 25;
+
+export const getPriceForLeagueOfInfluencers = (input: ILeagueOfInfluencersInputData) =>
+    LeagueOfInfluencersModel.getPrice({ ...input, airQualityIndex: input.airQualityIndex - BASE_AIR_QUALITY });
 
 const CHANGE_IN_GOVERNMENT_BILLS = 5;
-const CHANGE_IN_GUN_VIOLENCE = 8;
+const CHANGE_IN_AIR_QUALITY = 10;
 
 export const trainModelForLeagueOfInfluencers = LeagueOfInfluencersModel.trainModel([
     {
         input: {
+            airQualityIndex: 0,
             changeInGovernmentBills: 0,
-            changeInPeopleAffectedByGunViolence: 0,
             previousPrice: 200,
         },
         output: 200,
     },
     {
         input: {
+            airQualityIndex: 0,
             changeInGovernmentBills: CHANGE_IN_GOVERNMENT_BILLS,
-            changeInPeopleAffectedByGunViolence: 0,
             previousPrice: 200,
         },
         output: 210,
     },
     {
         input: {
+            airQualityIndex: 0,
             changeInGovernmentBills: -CHANGE_IN_GOVERNMENT_BILLS,
-            changeInPeopleAffectedByGunViolence: 0,
             previousPrice: 200,
         },
         output: 190,
     },
     {
         input: {
+            airQualityIndex: -CHANGE_IN_AIR_QUALITY,
             changeInGovernmentBills: 0,
-            changeInPeopleAffectedByGunViolence: -CHANGE_IN_GUN_VIOLENCE,
             previousPrice: 200,
         },
         output: 210,
     },
     {
         input: {
+            airQualityIndex: CHANGE_IN_AIR_QUALITY,
             changeInGovernmentBills: 0,
-            changeInPeopleAffectedByGunViolence: CHANGE_IN_GUN_VIOLENCE,
             previousPrice: 200,
         },
         output: 190,
@@ -71,32 +74,32 @@ export const trainModelForLeagueOfInfluencers = LeagueOfInfluencersModel.trainMo
      */
     {
         input: {
+            airQualityIndex: 0,
             changeInGovernmentBills: CHANGE_IN_GOVERNMENT_BILLS,
-            changeInPeopleAffectedByGunViolence: 0,
             previousPrice: 400,
         },
         output: 410,
     },
     {
         input: {
+            airQualityIndex: 0,
             changeInGovernmentBills: -CHANGE_IN_GOVERNMENT_BILLS,
-            changeInPeopleAffectedByGunViolence: 0,
             previousPrice: 400,
         },
         output: 390,
     },
     {
         input: {
+            airQualityIndex: -CHANGE_IN_AIR_QUALITY,
             changeInGovernmentBills: 0,
-            changeInPeopleAffectedByGunViolence: -CHANGE_IN_GUN_VIOLENCE,
             previousPrice: 400,
         },
         output: 410,
     },
     {
         input: {
+            airQualityIndex: CHANGE_IN_AIR_QUALITY,
             changeInGovernmentBills: 0,
-            changeInPeopleAffectedByGunViolence: CHANGE_IN_GUN_VIOLENCE,
             previousPrice: 400,
         },
         output: 390,
@@ -106,32 +109,32 @@ export const trainModelForLeagueOfInfluencers = LeagueOfInfluencersModel.trainMo
      */
     {
         input: {
+            airQualityIndex: 0,
             changeInGovernmentBills: CHANGE_IN_GOVERNMENT_BILLS,
-            changeInPeopleAffectedByGunViolence: 0,
             previousPrice: 100,
         },
         output: 110,
     },
     {
         input: {
+            airQualityIndex: 0,
             changeInGovernmentBills: -CHANGE_IN_GOVERNMENT_BILLS,
-            changeInPeopleAffectedByGunViolence: 0,
             previousPrice: 100,
         },
         output: 90,
     },
     {
         input: {
+            airQualityIndex: -CHANGE_IN_AIR_QUALITY,
             changeInGovernmentBills: 0,
-            changeInPeopleAffectedByGunViolence: -CHANGE_IN_GUN_VIOLENCE,
             previousPrice: 100,
         },
         output: 110,
     },
     {
         input: {
+            airQualityIndex: CHANGE_IN_AIR_QUALITY,
             changeInGovernmentBills: 0,
-            changeInPeopleAffectedByGunViolence: CHANGE_IN_GUN_VIOLENCE,
             previousPrice: 100,
         },
         output: 90,

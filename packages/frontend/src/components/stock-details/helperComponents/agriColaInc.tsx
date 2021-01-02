@@ -10,12 +10,15 @@ export const AgriColaInc: React.FC<{}> = () => {
             <div className={styles.paragraph}>
                 A player in the production of large scale biomass used as inputs to biologicals pipelines. Agri Cola has
                 been around for many years and has some aging infrastructure, consequently not all of its production has
-                been modernized to vertical and hydroponic based farming techniques yet.
+                been modernized to vertical and hydroponic based farming techniques yet. In other words a lot of its
+                harvesting process is deeply dependent on the weather, particularly since much of the crops it grows are
+                very temperature sensitive.
             </div>
             <div className={styles.paragraph}>
                 The company struggled for many years before it recently managed to acquire a large and long lasting
                 contract with a currently unidentified customer. The majority of its business comes from this single
-                large partnership.
+                large partnership, a supposedly new, but well known player in the agricultural space. Agri Cola Inc
+                secured this contract by promising rapid delivery of product straight to the customer.
             </div>
             <div className={styles.divider} />
             <div className={styles.sectionLabel}>Company information</div>

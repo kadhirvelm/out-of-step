@@ -19,7 +19,8 @@ export const DentalDamageAndCompany: React.FC<{}> = () => {
             <div className={styles.paragraph}>
                 Back in 1993, the Got Milk campaign really took off causing many people across the United States to
                 temporarily increase their dairy in-take. People, believing drinking more milk caused their teeth to get
-                stronger, stopped going to the dentist as frequently, hurting the company&apos;s business.
+                stronger, stopped going to the dentist as frequently, hurting the company&apos;s business. This forced
+                event forced the company to pivot from primarily manufacturing to primarily processing.
             </div>
             <div className={styles.divider} />
             <div className={styles.sectionLabel}>Company information</div>

@@ -85,9 +85,9 @@ describe("stabilize dollar", () => {
         );
 
         expect(calculationNotes).toEqual(
-            JSON.stringify({ someObjectHere: "test-field", adjustedChangeByPercentOwnership: 0.5 }),
+            JSON.stringify({ someObjectHere: "test-field", adjustedChangeByPercentOwnership: 0.1 }),
         );
-        expect(stabilizedDollar).toEqual(9.5);
+        expect(stabilizedDollar).toEqual(9.1);
     });
 
     it("decreases the change when the percent ownership is up and stock is down", () => {
@@ -107,8 +107,8 @@ describe("stabilize dollar", () => {
         );
 
         expect(calculationNotes).toEqual(
-            JSON.stringify({ someObjectHere: "test-field", adjustedChangeByPercentOwnership: 0.5 }),
+            JSON.stringify({ someObjectHere: "test-field", adjustedChangeByPercentOwnership: 0.1 }),
         );
-        expect(stabilizedDollar).toEqual(9.5);
+        expect(stabilizedDollar).toEqual(9.9);
     });
 });

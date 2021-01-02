@@ -12,17 +12,18 @@ export const LeagueOfInfluencers: React.FC<{}> = () => {
                 heart,&quot; though all things considered, with their lack of morals they seem to be in the right
                 company. The company&apos;s main line of business is pushing all kinds of legislative proposals into
                 Congress. They&apos;re not well known for getting their customer&apos;s legislative agendas passed, but
-                they&apos;re sure good at getting new bills introduced on the Congressional floor.
+                they&apos;re sure good at getting new bills introduced on the Congressional floor. The companies has
+                offices in San Francisco, New York, and is head quartered in Washington DC.
             </div>
             <div className={styles.divider} />
             <div className={styles.sectionLabel}>S1 snippet on &quot;Risks&quot;</div>
             <div className={styles.underline} />
             <div className={styles.paragraph}>
-                &quot;A few years ago it was leaked one that one of the company&apos; primary customers is the National
-                Rifle Association. While the NRA does not often call on the company for lobbying efforts, it seems
-                politicians across the board tend to fear association with gun violence and are less likely to work with
-                our lobbyist experts (internally referred to as influencers) when there are mass shooting reports in
-                their respective hometowns.&quot;
+                &quot;A few years ago it was leaked one that one of the company&apos; primary customers is Koch
+                Industries, a known climate change denial group. While Koch Industries does not often call on the
+                company for lobbying efforts, it seems politicians across the board tend to fear association with
+                climate change and are less likely to work with our lobbyist experts (internally referred to as
+                influencers) when the air quality dips, bringing climate change front and center.&quot;
             </div>
             <div className={styles.divider} />
             <div className={styles.sectionLabel}>Company information</div>
