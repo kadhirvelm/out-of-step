@@ -21,7 +21,7 @@ export function stabilizeNextDollarValue(
         0.1,
     );
 
-    const adjustedChangeInValueByPercentOwnership = 1 - 0.5 * totalOwnedStockPercent;
+    const adjustedChangeInValueByPercentOwnership = 1 - 0.9 * totalOwnedStockPercent;
     const changeInValue = stabilizedDollarValue - safeNumberToStabilizeAgainst;
 
     // Account for percent ownership by reducing total change by up to 50% when ownership is at 100%
