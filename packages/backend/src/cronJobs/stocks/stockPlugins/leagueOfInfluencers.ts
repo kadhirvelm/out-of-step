@@ -4,7 +4,6 @@ import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeIn
 import { IStockPricerPlugin } from "../types";
 
 interface ILeagueOfInfluencersCalculationNotes extends ILeagueOfInfluencersInputData {
-    previousAverageAirQualityIndex: number;
     previousTotalGovernmentBills: number;
 }
 
@@ -50,7 +49,7 @@ export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCa
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: ILeagueOfInfluencersInputData = {
-        airQualityIndex: averageAirQualityIndex ?? previousCalculationNotes.previousAverageAirQualityIndex ?? 35,
+        airQualityIndex: averageAirQualityIndex ?? previousCalculationNotes.airQualityIndex ?? 35,
         changeInGovernmentBills: getChangeInValueSinceLastMeasurement(
             totalGovernmentBillsCount,
             previousCalculationNotes.previousTotalGovernmentBills,
@@ -62,7 +61,6 @@ export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCa
 
     const calculationNotes: ILeagueOfInfluencersCalculationNotes = {
         ...inputToModel,
-        previousAverageAirQualityIndex: averageAirQualityIndex,
         previousTotalGovernmentBills: totalGovernmentBillsCount,
     };
 

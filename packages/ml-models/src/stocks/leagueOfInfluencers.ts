@@ -20,7 +20,7 @@ export interface ILeagueOfInfluencersInputData {
     previousPrice: number;
 }
 
-const BASE_AIR_QUALITY = 25;
+const BASE_AIR_QUALITY = 50;
 
 export const getPriceForLeagueOfInfluencers = (input: ILeagueOfInfluencersInputData) =>
     LeagueOfInfluencersModel.getPrice({ ...input, airQualityIndex: input.airQualityIndex - BASE_AIR_QUALITY });
