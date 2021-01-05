@@ -81,6 +81,13 @@ const UnconnectedTransactStock: React.FC<IStoreProps & IDispatchProps & IOwnProp
         <div className={styles.transactContainer}>
             <span className={styles.yourPortfolioLabel}>Your portfolio</span>
             <div className={styles.transactInformationContainer}>
+                <Button
+                    className={styles.viewTransactionHistory}
+                    minimal
+                    rightIcon="caret-right"
+                    onClick={viewTransactionHistory}
+                    text="View your investment history"
+                />
                 <div className={styles.rowContainer}>
                     <div className={styles.transactColumnContainer}>
                         <div className={styles.transactRowContainer}>
@@ -139,13 +146,6 @@ const UnconnectedTransactStock: React.FC<IStoreProps & IDispatchProps & IOwnProp
                         </div>
                     </div>
                 </div>
-                <Button
-                    className={styles.viewTransactionHistory}
-                    icon="history"
-                    minimal
-                    onClick={viewTransactionHistory}
-                    text="View your transaction history"
-                />
             </div>
         </div>
     );

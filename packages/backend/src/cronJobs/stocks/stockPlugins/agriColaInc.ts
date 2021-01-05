@@ -9,7 +9,7 @@ import { IStockPricerPlugin } from "../types";
 const DEFAULT_PRICE = 25;
 
 interface IAgriColaCalculationNotes extends IAgriColaIncInputData {
-    averagePrice: number;
+    previousAveragePrice: number;
 }
 
 function normalizeCelsiusIfDefined(maybeKelvinValue: number | undefined) {
@@ -38,19 +38,19 @@ export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = a
         previousPriceHistory?.calculationNotes ?? "{}",
     );
 
-    const currentAverageOfCTVA = averageOfNumberArray(historicalStockDataOfCTVA?.c ?? []);
-    const previousAverageOfCTVA = previousCalculationNotes.averagePrice ?? currentAverageOfCTVA ?? 0;
+    const currentAverageOfCTVA =
+        averageOfNumberArray(historicalStockDataOfCTVA?.c ?? []) ?? previousCalculationNotes.previousAveragePrice ?? 0;
 
     const previousAverageTemperatureInCelsius = previousCalculationNotes.averageTemperateInCelsius ?? 1;
-    const averageTemperateInCelsius = normalizeCelsiusIfDefined(weatherHistoricalCast.current?.temp);
+    const averageTemperateInCelsius = normalizeCelsiusIfDefined(weatherHistoricalCast?.current?.temp);
 
     const previousAverageWindSpeed = previousCalculationNotes.averageWindSpeed ?? 0;
-    const averageWindSpeed = weatherHistoricalCast.current?.wind_speed;
+    const averageWindSpeed = weatherHistoricalCast?.current?.wind_speed;
 
     const averageRainfall =
         averageOfObjectsArray(
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            _.compact((weatherHistoricalCast.hourly ?? []).map((h: any) => h.rain as { "1h": number } | undefined)),
+            _.compact((weatherHistoricalCast?.hourly ?? []).map((h: any) => h.rain as { "1h": number } | undefined)),
             "1h",
         ) ?? 0;
 
@@ -61,8 +61,8 @@ export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = a
         averageTemperateInCelsius: averageTemperateInCelsius ?? previousAverageTemperatureInCelsius,
         averageWindSpeed: averageWindSpeed ?? previousAverageWindSpeed,
         changeInAveragePrice: getChangeInValueSinceLastMeasurement(
-            currentAverageOfCTVA ?? previousAverageOfCTVA,
-            previousAverageOfCTVA,
+            currentAverageOfCTVA,
+            previousCalculationNotes.previousAveragePrice,
         ),
         previousPrice,
     };
@@ -70,7 +70,7 @@ export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = a
 
     const calculationNotes: IAgriColaCalculationNotes = {
         ...inputToModel,
-        averagePrice: currentAverageOfCTVA ?? previousAverageOfCTVA,
+        previousAveragePrice: currentAverageOfCTVA,
     };
 
     return {

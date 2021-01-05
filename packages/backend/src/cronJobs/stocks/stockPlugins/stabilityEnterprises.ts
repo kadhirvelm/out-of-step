@@ -33,12 +33,13 @@ export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprises
     );
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const allEarthquakeMagnitudes: number[] = earthquakeData.features.map((f: any) => f.properties.mag as number);
+    const allEarthquakeMagnitudes: number[] =
+        earthquakeData?.features?.map((f: any) => f.properties.mag as number) ?? [];
     const maximumMagnitude = Math.max(...allEarthquakeMagnitudes);
 
     const earthquakesMeasure = allEarthquakeMagnitudes.reduce((previous, next) => previous + next, 0);
 
-    const totalUpcomingElectionEvents: number = fecCalendarEvents.pagination.count ?? 0;
+    const totalUpcomingElectionEvents: number = fecCalendarEvents?.pagination?.count ?? 0;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 

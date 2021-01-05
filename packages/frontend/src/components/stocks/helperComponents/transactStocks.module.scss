@@ -72,10 +72,12 @@
 }
 
 .view-transaction-history {
-    margin-top: 15px;
+    margin-bottom: 10px;
 
-    :global(.bp3-button-text) {
-        text-decoration: underline;
+    &:global(.bp3-button) {
+        &:global(.bp3-minimal) {
+            background: rgba($light-gray3, 0.8);
+        }
     }
 }
 
@@ -115,5 +117,13 @@
 
     .has-been-acquired-description {
         color: $pt-dark-text-color-muted;
+    }
+
+    .view-transaction-history {
+        &:global(.bp3-button) {
+            &:global(.bp3-minimal) {
+                background: rgba($dark-gray3, 0.8);
+            }
+        }
     }
 }

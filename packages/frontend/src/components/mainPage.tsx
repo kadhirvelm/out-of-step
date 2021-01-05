@@ -1,24 +1,24 @@
 import { Classes, Icon } from "@blueprintjs/core";
 import { IGetAccountResponse } from "@stochastic-exchange/api";
+import { isTimeInMarketHours } from "@stochastic-exchange/utils";
 import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
-import { isTimeInMarketHours } from "@stochastic-exchange/utils";
 import { AccountServiceFrontend } from "../../../api/dist";
+import { Routes } from "../common/routes";
 import { SetUserAccountAndOwnedStocks } from "../store/account/actions";
 import { executePrivateEndpoint } from "../utils/executePrivateEndpoint";
-import styles from "./mainPage.module.scss";
-import { CurrentStandings } from "./standings/currentStandings";
-import { PortfolioManager } from "./portfolio/portfolioManager";
-import { StockInformation } from "./stocks/stockInformation";
-import { UserManager } from "./userManager/userManager";
-import { ViewTransactions } from "./transactions/viewTransaction";
-import { Routes } from "../common/routes";
-import { StockDetails } from "./stock-details/stockDetails";
 import { Help } from "./help/help";
 import { LimitOrders } from "./limitOrders/limitOrders";
+import styles from "./mainPage.module.scss";
+import { PortfolioManager } from "./portfolio/portfolioManager";
+import { CurrentStandings } from "./standings/currentStandings";
+import { StockDetails } from "./stock-details/stockDetails";
+import { StockInformation } from "./stocks/stockInformation";
+import { ViewTransactions } from "./transactions/viewTransaction";
+import { UserManager } from "./userManager/userManager";
 
 interface IDispatchProps {
     setUserAccountAndOwnedStocks: (userAccountAndOwnedStocks: IGetAccountResponse) => void;
