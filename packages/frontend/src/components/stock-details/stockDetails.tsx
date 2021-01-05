@@ -10,6 +10,7 @@ import { IStoreState } from "../../store/state";
 import { AgriColaInc } from "./helperComponents/agriColaInc";
 import { BitAndGamble } from "./helperComponents/bitAndGamble";
 import { DentalDamageAndCompany } from "./helperComponents/dentalDamageAndCompany";
+import { FirstNightTradingCompany } from "./helperComponents/firstNightTradingCompany";
 import { LeagueOfInfluencers } from "./helperComponents/leaugeOfInfluencers";
 import { StabilityEnterprises } from "./helperComponents/stabilityEnterprises";
 import { ViruzMeNot } from "./helperComponents/viruzMeNot";
@@ -27,6 +28,7 @@ const StockDetailsObject: IObjectForAllStocks<React.ReactElement | null> = {
     "Agri Cola Inc": <AgriColaInc />,
     "Bit & Gamble": <BitAndGamble />,
     "Dental Damage and Company": <DentalDamageAndCompany />,
+    "First Night Trading Company": <FirstNightTradingCompany />,
     "League of Influencers": <LeagueOfInfluencers />,
     "Stability Enterprises": <StabilityEnterprises />,
     "Viruz Me Not": <ViruzMeNot />,

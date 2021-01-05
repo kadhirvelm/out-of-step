@@ -79,12 +79,12 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
         0;
 
     const averagePalladiumPriceToday =
-        getAverageUsPriceOfMetal(palladiumPrices?.dataset?.data[0]) ??
+        getAverageUsPriceOfMetal(palladiumPrices?.dataset?.data?.[0]) ??
         previousCalculationNotes.previousAveragePalladiumPrice ??
         0;
 
     const averagePlatinumPriceToday =
-        getAverageUsPriceOfMetal(platinumPrices?.dataset?.data[0]) ??
+        getAverageUsPriceOfMetal(platinumPrices?.dataset?.data?.[0]) ??
         previousCalculationNotes.previousAveragePlatinumPrice ??
         0;
 
