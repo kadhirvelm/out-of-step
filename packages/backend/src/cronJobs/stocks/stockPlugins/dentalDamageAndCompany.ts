@@ -69,22 +69,22 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
     );
 
     const usDairyPricesAverageValue =
-        getAverageOf2020Values(usDairyPrices?.datatable.data) ??
+        getAverageOf2020Values(usDairyPrices?.datatable?.data) ??
         previousCalculationNotes.previousUsDairyPricesAverage ??
         0;
 
     const usMilkSupplyAverageValue =
-        getAverageOf2020Values(usMilkSupply?.datatable.data) ??
+        getAverageOf2020Values(usMilkSupply?.datatable?.data) ??
         previousCalculationNotes.previousUsMilkSupplyAverage ??
         0;
 
     const averagePalladiumPriceToday =
-        getAverageUsPriceOfMetal(palladiumPrices?.dataset.data[0]) ??
+        getAverageUsPriceOfMetal(palladiumPrices?.dataset?.data?.[0]) ??
         previousCalculationNotes.previousAveragePalladiumPrice ??
         0;
 
     const averagePlatinumPriceToday =
-        getAverageUsPriceOfMetal(platinumPrices?.dataset.data[0]) ??
+        getAverageUsPriceOfMetal(platinumPrices?.dataset?.data?.[0]) ??
         previousCalculationNotes.previousAveragePlatinumPrice ??
         0;
 
