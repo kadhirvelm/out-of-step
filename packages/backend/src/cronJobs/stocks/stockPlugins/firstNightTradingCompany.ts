@@ -39,14 +39,15 @@ export const priceFirstNightTradingCompany: IStockPricerPlugin<IFirstNightTradin
         previousPriceHistory?.calculationNotes ?? "{}",
     );
 
+    const currentGoldPrice = goldRates?.dataset?.data?.[0]?.[1] ?? previousCalculationNotes.previousGoldPrice ?? 0;
+
+    const currentSilverPrice =
+        silverRates?.dataset?.data?.[0]?.[1] ?? previousCalculationNotes.previousSilverPrice ?? 0;
+
     const currentTreasuryYieldRate =
-        treasuryRealYieldCurveRate?.dataset?.data?.[1] ??
+        treasuryRealYieldCurveRate?.dataset?.data?.[0]?.[1] ??
         previousCalculationNotes.previousTreasuryRealYieldCurveRate ??
         0;
-
-    const currentGoldPrice = goldRates?.dataset?.data?.[1] ?? previousCalculationNotes.previousGoldPrice ?? 0;
-
-    const currentSilverPrice = silverRates?.dataset?.data?.[1] ?? previousCalculationNotes.previousSilverPrice ?? 0;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
