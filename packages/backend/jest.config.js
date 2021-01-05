@@ -3,6 +3,7 @@ export default {
     transform: {
         "^.+\\.tsx?$": "ts-jest",
     },
+    testEnvironment: "node",
     roots: ["<rootDir>/src"],
     coverageReporters: ["json", "lcov", "text", "clover"],
 };

@@ -25,8 +25,8 @@ const BASE_AIR_QUALITY = 50;
 export const getPriceForLeagueOfInfluencers = (input: ILeagueOfInfluencersInputData) =>
     LeagueOfInfluencersModel.getPrice({ ...input, airQualityIndex: input.airQualityIndex - BASE_AIR_QUALITY });
 
-const CHANGE_IN_GOVERNMENT_BILLS = 5;
-const CHANGE_IN_AIR_QUALITY = 10;
+const CHANGE_IN_GOVERNMENT_BILLS = 2;
+const CHANGE_IN_AIR_QUALITY = 15;
 
 export const trainModelForLeagueOfInfluencers = LeagueOfInfluencersModel.trainModel([
     {
