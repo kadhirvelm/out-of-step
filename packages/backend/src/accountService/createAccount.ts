@@ -20,7 +20,9 @@ export async function createAccount(
     }
 
     try {
-        const doAnyAccountsExist = await postgresPool.query("SELECT * FROM account WHERE username = $1", [username]);
+        const doAnyAccountsExist = await postgresPool.query("SELECT * FROM account WHERE LOWER(username) = LOWER($1)", [
+            username,
+        ]);
         if (doAnyAccountsExist.rows.length !== 0) {
             throw new Error("That user ID already exists, please pick another one.");
         }

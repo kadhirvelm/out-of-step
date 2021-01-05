@@ -19,7 +19,11 @@ describe("stabilize dollar", () => {
         );
 
         expect(calculationNotes).toEqual(
-            JSON.stringify({ someObjectHere: "test-field", adjustedChangeByPercentOwnership: 1 }),
+            JSON.stringify({
+                someObjectHere: "test-field",
+                adjustedChangeByPercentOwnership: 1,
+                didRandomlyAssign: false,
+            }),
         );
         expect(stabilizedDollar).toEqual(10);
     });
@@ -41,7 +45,11 @@ describe("stabilize dollar", () => {
         );
 
         expect(calculationNotes).toEqual(
-            JSON.stringify({ someObjectHere: "test-field", adjustedChangeByPercentOwnership: 1 }),
+            JSON.stringify({
+                someObjectHere: "test-field",
+                adjustedChangeByPercentOwnership: 1,
+                didRandomlyAssign: false,
+            }),
         );
         expect(stabilizedDollar).toEqual(17);
     });
@@ -63,7 +71,11 @@ describe("stabilize dollar", () => {
         );
 
         expect(calculationNotes).toEqual(
-            JSON.stringify({ someObjectHere: "test-field", adjustedChangeByPercentOwnership: 1 }),
+            JSON.stringify({
+                someObjectHere: "test-field",
+                adjustedChangeByPercentOwnership: 1,
+                didRandomlyAssign: false,
+            }),
         );
         expect(stabilizedDollar).toEqual(11.5);
     });
@@ -85,7 +97,11 @@ describe("stabilize dollar", () => {
         );
 
         expect(calculationNotes).toEqual(
-            JSON.stringify({ someObjectHere: "test-field", adjustedChangeByPercentOwnership: 0.1 }),
+            JSON.stringify({
+                someObjectHere: "test-field",
+                adjustedChangeByPercentOwnership: 0.1,
+                didRandomlyAssign: false,
+            }),
         );
         expect(stabilizedDollar).toEqual(9.1);
     });
@@ -107,8 +123,38 @@ describe("stabilize dollar", () => {
         );
 
         expect(calculationNotes).toEqual(
-            JSON.stringify({ someObjectHere: "test-field", adjustedChangeByPercentOwnership: 0.1 }),
+            JSON.stringify({
+                someObjectHere: "test-field",
+                adjustedChangeByPercentOwnership: 0.1,
+                didRandomlyAssign: false,
+            }),
         );
         expect(stabilizedDollar).toEqual(9.9);
+    });
+
+    it("randomly changes the stock when the change is less than 0.5%", () => {
+        const nextDollarValue: IStockPriceReturnType<{}> = {
+            dollarValue: 9.95,
+            calculationNotes: { someObjectHere: "test-field" },
+        };
+        const stock = { totalQuantity: 10000 } as any;
+        const totalOwnedStock = 0;
+        const previousPricePoint = { dollarValue: 10 } as any;
+
+        const { calculationNotes, stabilizedDollar } = stabilizeNextDollarValue(
+            nextDollarValue,
+            stock,
+            totalOwnedStock,
+            previousPricePoint,
+        );
+
+        expect(calculationNotes).toEqual(
+            JSON.stringify({
+                someObjectHere: "test-field",
+                adjustedChangeByPercentOwnership: 1,
+                didRandomlyAssign: true,
+            }),
+        );
+        expect(stabilizedDollar).not.toEqual(9.95);
     });
 });

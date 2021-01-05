@@ -19,7 +19,7 @@ export async function forgotPassword(
     try {
         const user = await postgresPool.query<IAccount>(
             // eslint-disable-next-line prettier/prettier
-            "SELECT id FROM account WHERE username = $1 AND email = $2",
+            "SELECT id FROM account WHERE LOWER(username) = LOWER($1) AND LOWER(email) = LOWER($2)",
             [username, email],
         );
 
