@@ -1,0 +1,6 @@
+.global-toaster {
+    :global(.bp3-toast.bp3-overlay-content) {
+        position: fixed;
+        top: 20px;
+    }
+}

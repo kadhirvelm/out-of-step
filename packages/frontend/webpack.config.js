@@ -130,7 +130,7 @@ module.exports = {
                 "og:title": "stochastic exchange",
                 // "og:image": path.resolve(__dirname, "public/og-image.png"),
                 title: "stochastic exchange.",
-                viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.2",
+                viewport: "width=device-width, initial-scale=1",
             },
             template: "./src/index.html",
         }),
