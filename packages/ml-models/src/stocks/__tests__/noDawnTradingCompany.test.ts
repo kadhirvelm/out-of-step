@@ -1,16 +1,16 @@
 import { assert } from "../../utils/testUtils";
-import { getPriceForFirstNightTradingCompany } from "../firstNightTradingCompany";
+import { getPriceForNoDawnTradingCompany } from "../noDawnTradingCompany";
 
-describe("it can price First Night Trading Company as expected", () => {
+describe("it can price No Dawn Trading Company as expected", () => {
     it("increases the price when gold goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 0,
                 changeInSilverPrice: 0,
                 changeInTreasuryRealYieldCurveRate: 0,
                 previousPrice: 14,
             }),
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 5,
                 changeInSilverPrice: 0,
                 changeInTreasuryRealYieldCurveRate: 0,
@@ -24,13 +24,13 @@ describe("it can price First Night Trading Company as expected", () => {
 
     it("decreases the price when gold goes down", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 0,
                 changeInSilverPrice: 0,
                 changeInTreasuryRealYieldCurveRate: 0,
                 previousPrice: 14,
             }),
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: -5,
                 changeInSilverPrice: 0,
                 changeInTreasuryRealYieldCurveRate: 0,
@@ -44,13 +44,13 @@ describe("it can price First Night Trading Company as expected", () => {
 
     it("increases the price when silver goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 0,
                 changeInSilverPrice: 0,
                 changeInTreasuryRealYieldCurveRate: 0,
                 previousPrice: 14,
             }),
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 0,
                 changeInSilverPrice: 0.2,
                 changeInTreasuryRealYieldCurveRate: 0,
@@ -64,13 +64,13 @@ describe("it can price First Night Trading Company as expected", () => {
 
     it("decreases the price when silver goes down", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 0,
                 changeInSilverPrice: 0,
                 changeInTreasuryRealYieldCurveRate: 0,
                 previousPrice: 14,
             }),
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 0,
                 changeInSilverPrice: -0.2,
                 changeInTreasuryRealYieldCurveRate: 0,
@@ -84,13 +84,13 @@ describe("it can price First Night Trading Company as expected", () => {
 
     it("increases the price when the treasury yield goes down", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 0,
                 changeInSilverPrice: 0,
                 changeInTreasuryRealYieldCurveRate: 0,
                 previousPrice: 14,
             }),
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 0,
                 changeInSilverPrice: 0,
                 changeInTreasuryRealYieldCurveRate: -0.05,
@@ -104,13 +104,13 @@ describe("it can price First Night Trading Company as expected", () => {
 
     it("decreases the price when the treasury yield goes up", async () => {
         const [originalPrice, changedPrice] = await Promise.all([
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 0,
                 changeInSilverPrice: 0,
                 changeInTreasuryRealYieldCurveRate: 0,
                 previousPrice: 14,
             }),
-            getPriceForFirstNightTradingCompany({
+            getPriceForNoDawnTradingCompany({
                 changeInGoldPrice: 0,
                 changeInSilverPrice: 0,
                 changeInTreasuryRealYieldCurveRate: 0.05,

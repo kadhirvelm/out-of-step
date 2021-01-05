@@ -1,24 +1,22 @@
-import {
-    getPriceForFirstNightTradingCompany,
-    IFirstNightTradingCompanyInputData,
-} from "@stochastic-exchange/ml-models";
+import { getPriceForNoDawnTradingCompany, INoDawnTradingCompanyInputData } from "@stochastic-exchange/ml-models";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 
 const DEFAULT_PRICE = 25;
 
-interface IFirstNightTradingCompanyCalculationNotes extends IFirstNightTradingCompanyInputData {
+interface INoDawnTradingCompanyCalculationNotes extends INoDawnTradingCompanyInputData {
     previousGoldPrice: number;
     previousSilverPrice: number;
     previousTreasuryRealYieldCurveRate: number;
 }
 
-export const priceFirstNightTradingCompany: IStockPricerPlugin<IFirstNightTradingCompanyCalculationNotes> = async (
+export const priceNoDawnTradingCompany: IStockPricerPlugin<INoDawnTradingCompanyCalculationNotes> = async (
     date,
     previousPriceHistory,
 ) => {
-    const dateHyphenated = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    const theDayBefore = new Date(date.valueOf() - 1000 * 60 * 60 * 24);
+    const dateHyphenated = `${theDayBefore.getFullYear()}-${theDayBefore.getMonth() + 1}-${theDayBefore.getDate()}`;
 
     const [goldRates, silverRates, treasuryRealYieldCurveRate] = await Promise.all([
         callOnExternalEndpoint(
@@ -35,7 +33,7 @@ export const priceFirstNightTradingCompany: IStockPricerPlugin<IFirstNightTradin
         ),
     ]);
 
-    const previousCalculationNotes: Partial<IFirstNightTradingCompanyCalculationNotes> = JSON.parse(
+    const previousCalculationNotes: Partial<INoDawnTradingCompanyCalculationNotes> = JSON.parse(
         previousPriceHistory?.calculationNotes ?? "{}",
     );
 
@@ -51,7 +49,7 @@ export const priceFirstNightTradingCompany: IStockPricerPlugin<IFirstNightTradin
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
-    const inputToModel: IFirstNightTradingCompanyInputData = {
+    const inputToModel: INoDawnTradingCompanyInputData = {
         changeInGoldPrice: getChangeInValueSinceLastMeasurement(
             currentGoldPrice,
             previousCalculationNotes.previousGoldPrice,
@@ -67,9 +65,9 @@ export const priceFirstNightTradingCompany: IStockPricerPlugin<IFirstNightTradin
         previousPrice,
     };
 
-    const dollarValue = await getPriceForFirstNightTradingCompany(inputToModel);
+    const dollarValue = await getPriceForNoDawnTradingCompany(inputToModel);
 
-    const calculationNotes: IFirstNightTradingCompanyCalculationNotes = {
+    const calculationNotes: INoDawnTradingCompanyCalculationNotes = {
         ...inputToModel,
         previousGoldPrice: currentGoldPrice,
         previousSilverPrice: currentSilverPrice,

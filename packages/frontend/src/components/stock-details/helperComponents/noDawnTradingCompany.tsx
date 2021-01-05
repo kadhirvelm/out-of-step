@@ -2,7 +2,7 @@ import * as React from "react";
 import { createGoogleNewsLink } from "../../../utils/createGoogleNewsLink";
 import styles from "./common.module.scss";
 
-export const FirstNightTradingCompany: React.FC<{}> = () => {
+export const NoDawnTradingCompany: React.FC<{}> = () => {
     return (
         <div className={styles.informationContainer}>
             <div className={styles.firstSectionLabel}>Overview</div>
@@ -12,7 +12,7 @@ export const FirstNightTradingCompany: React.FC<{}> = () => {
                 to make money during periods of high instability through highly classified investing mechanisms, but in
                 truth it&apos;s just secretly a rare metals commodities trader. In other words as individuals believe
                 there is less and less stability in the world, they withdraw their money from the traditional markets,
-                give it to the First Night Trading Company, who in turn just invest in rare metals.
+                give it to the No Dawn Trading Company, who in turn just invest in rare metals.
             </div>
             <div className={styles.sectionLabel}>History</div>
             <div className={styles.underline} />
