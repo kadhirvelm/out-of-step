@@ -38,18 +38,20 @@ export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCa
         previousPriceHistory?.calculationNotes ?? "{}",
     );
 
-    const totalGovernmentBillsCount = totalGovernmentBills.count;
+    const totalGovernmentBillsCount =
+        totalGovernmentBills?.count ?? previousCalculationNotes.previousTotalGovernmentBills ?? 0;
 
-    const airQualityIndexInDC: number = airPollutionInDC.data.current.pollution.aqius;
-    const airQualityIndexInSF: number = airPollutionInSF.data.current.pollution.aqius;
-    const airQualityIndexInNY: number = airPollutionInNY.data.current.pollution.aqius;
+    const airQualityIndexInDC: number = airPollutionInDC?.data?.current?.pollution?.aqius;
+    const airQualityIndexInSF: number = airPollutionInSF?.data?.current?.pollution?.aqius;
+    const airQualityIndexInNY: number = airPollutionInNY?.data?.current?.pollution?.aqius;
 
+    const previousAirQualityIndex = previousCalculationNotes.airQualityIndex ?? 50;
     const averageAirQualityIndex = (airQualityIndexInDC + airQualityIndexInSF + airQualityIndexInNY) / 3;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
     const inputToModel: ILeagueOfInfluencersInputData = {
-        airQualityIndex: averageAirQualityIndex ?? previousCalculationNotes.airQualityIndex ?? 35,
+        airQualityIndex: averageAirQualityIndex ?? previousAirQualityIndex,
         changeInGovernmentBills: getChangeInValueSinceLastMeasurement(
             totalGovernmentBillsCount,
             previousCalculationNotes.previousTotalGovernmentBills,

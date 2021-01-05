@@ -55,7 +55,8 @@ export const priceBitAndGamble: IStockPricerPlugin<IBitAndGambleCalculationNotes
         previousCalculationNotes.previousAverageInitialClaimsForUnemployment ??
         0;
 
-    const currentBitCoinPrice = currentBitCoinValue.bpi.USD.rate_float;
+    const currentBitCoinPrice =
+        currentBitCoinValue?.bpi?.USD?.rate_float ?? previousCalculationNotes.previousBitCoinValue ?? 0;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 

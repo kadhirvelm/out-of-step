@@ -11,7 +11,7 @@ interface IViruzMeNotCalculationNotes extends IViruzMeNotInputData {
 }
 
 export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = async (_date, previousPriceHistory) => {
-    const [[currentCovidNumbers], criticalCommunityThreatsFromIpAddresses] = await Promise.all([
+    const [rawCovidResult, criticalCommunityThreatsFromIpAddresses] = await Promise.all([
         callOnExternalEndpoint("https://api.covidtracking.com/v1/us/current.json"),
         callOnExternalEndpoint(
             "https://pulsedive.com/api/search.php?type%5B%5D=ip&risk%5B%5D=critical&retired=false&limit=hundred&lastseen=day&search=indicators&pretty=true",
@@ -22,9 +22,13 @@ export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = 
         previousPriceHistory?.calculationNotes ?? "{}",
     );
 
-    const currentlyHospitalized: number = currentCovidNumbers.hospitalizedCurrently;
+    const currentlyHospitalized: number =
+        rawCovidResult?.[0]?.hospitalizedCurrently ?? previousCalculationNotes.previouslyHospitalized ?? 0;
 
-    const totalCriticalCommunityThreatsFromIpAddresses = criticalCommunityThreatsFromIpAddresses.results.length;
+    const totalCriticalCommunityThreatsFromIpAddresses =
+        criticalCommunityThreatsFromIpAddresses?.results?.length ??
+        previousCalculationNotes.previousCriticalCommunityThreatsFromIpAddresses ??
+        0;
 
     const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
 
