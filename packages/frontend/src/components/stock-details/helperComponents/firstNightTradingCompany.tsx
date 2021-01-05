@@ -28,7 +28,7 @@ export const FirstNightTradingCompany: React.FC<{}> = () => {
             <div className={styles.underline} />
             <div className={styles.row}>
                 <div className={styles.rowLabel}>Headquarters:</div>
-                <div>Charleston, WV</div>
+                <div>Wasco County, OR</div>
             </div>
             <div className={styles.row}>
                 <div className={styles.rowLabel}>Founded:</div>
