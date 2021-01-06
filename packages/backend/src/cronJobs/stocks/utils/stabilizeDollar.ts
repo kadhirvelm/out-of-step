@@ -20,8 +20,8 @@ export function stabilizeNextDollarValue(
     const stabilizedDollarValue = Math.max(
         getNumberWithinRange(
             nextDollarValue.dollarValue,
-            safeNumberToStabilizeAgainst * 0.85,
-            safeNumberToStabilizeAgainst * 1.15,
+            safeNumberToStabilizeAgainst * 0.75,
+            safeNumberToStabilizeAgainst * 1.25,
         ),
         0.1,
     );
