@@ -51,7 +51,7 @@ describe("stabilize dollar", () => {
                 didRandomlyAssign: false,
             }),
         );
-        expect(stabilizedDollar).toEqual(17);
+        expect(stabilizedDollar).toEqual(15);
     });
 
     it("stabilizes the price with more than a 20% increase", () => {
@@ -77,7 +77,7 @@ describe("stabilize dollar", () => {
                 didRandomlyAssign: false,
             }),
         );
-        expect(stabilizedDollar).toEqual(11.5);
+        expect(stabilizedDollar).toEqual(12.5);
     });
 
     it("decreases the change when the percent ownership is up and stock is up", () => {
