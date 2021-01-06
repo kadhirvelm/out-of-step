@@ -41,7 +41,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
     date,
     previousPriceHistory,
 ) => {
-    const previousDay = changeDateByDays(date, -1);
+    const previousDay = changeDateByDays(date, -2);
     const previousDayHyphenated = `${previousDay.getFullYear()}-${previousDay.getMonth() + 1}-${previousDay.getDate()}`;
 
     const [usDairyPrices, usMilkSupply] = await Promise.all([

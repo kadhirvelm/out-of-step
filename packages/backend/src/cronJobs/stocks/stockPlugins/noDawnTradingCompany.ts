@@ -16,7 +16,7 @@ export const priceNoDawnTradingCompany: IStockPricerPlugin<INoDawnTradingCompany
     date,
     previousPriceHistory,
 ) => {
-    const theDayBefore = changeDateByDays(date, -1);
+    const theDayBefore = changeDateByDays(date, -2);
     const dateHyphenated = `${theDayBefore.getFullYear()}-${theDayBefore.getMonth() + 1}-${theDayBefore.getDate()}`;
 
     const [goldRates, silverRates, treasuryRealYieldCurveRate] = await Promise.all([
