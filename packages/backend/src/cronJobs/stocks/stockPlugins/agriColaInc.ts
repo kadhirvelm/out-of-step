@@ -24,7 +24,7 @@ export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = a
     const [historicalStockDataOfCTVA, weatherHistoricalCast] = await Promise.all([
         callOnExternalEndpoint(
             `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${Math.round(
-                changeDateByDays(new Date(), -10).valueOf() / 1000,
+                changeDateByDays(new Date(), -2).valueOf() / 1000,
             )}&to=${Math.round(date.valueOf() / 1000)}&token=${process.env.FINNHUB_TOKEN ?? ""}`,
         ),
         callOnExternalEndpoint(

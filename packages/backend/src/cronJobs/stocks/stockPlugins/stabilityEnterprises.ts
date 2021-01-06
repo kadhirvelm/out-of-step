@@ -19,7 +19,7 @@ export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprises
         callOnExternalEndpoint(
             `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${changeDateByDays(
                 date,
-                -1,
+                -2,
             ).toLocaleDateString()}&endtime=${date.toLocaleDateString()}&minmagnitude=4`,
         ),
         callOnExternalEndpoint(
