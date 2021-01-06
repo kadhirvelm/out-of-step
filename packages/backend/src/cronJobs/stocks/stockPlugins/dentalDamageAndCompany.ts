@@ -32,7 +32,9 @@ function getAverageUsPriceOfMetal(data: any[]) {
         return undefined;
     }
 
-    return ((data[1] as number) + (data[4] as number)) / 2;
+    const firstNumber = data[1] as number;
+
+    return (firstNumber + ((data[4] as number) ?? firstNumber)) / 2;
 }
 
 export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCompanyCalculationNotes> = async (
@@ -44,12 +46,12 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
 
     const [usDairyPrices, usMilkSupply] = await Promise.all([
         callOnExternalEndpoint(
-            `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=DAIRY_US_34&report_month=${date.getFullYear()}-${date.getMonth()}&api_key=${process
-                .env.QUANDL_KEY ?? ""}`,
+            `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=DAIRY_US_34&report_month=${date.getFullYear()}-${date.getMonth() +
+                1}&api_key=${process.env.QUANDL_KEY ?? ""}`,
         ),
         callOnExternalEndpoint(
-            `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=MILK_US_33&report_month=${date.getFullYear()}-${date.getMonth()}&api_key=${process
-                .env.QUANDL_KEY ?? ""}`,
+            `https://www.quandl.com/api/v3/datatables/WASDE/DATA?code=MILK_US_33&report_month=${date.getFullYear()}-${date.getMonth() +
+                1}&api_key=${process.env.QUANDL_KEY ?? ""}`,
         ),
     ]);
 
