@@ -22,7 +22,7 @@ export interface IFortyEightUtilitiesInputData {
 
 export const getPriceForFortyEightUtilities = FortyEightUtilitiesModel.getPrice;
 
-const CHANGE_IN_PERCENT = 5;
+const CHANGE_IN_PERCENT = 2;
 
 export const trainModelForFortyEightUtilities = FortyEightUtilitiesModel.trainModel([
     {
