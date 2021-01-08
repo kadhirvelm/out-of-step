@@ -15,6 +15,7 @@ import { LeagueOfInfluencers } from "./helperComponents/leaugeOfInfluencers";
 import { StabilityEnterprises } from "./helperComponents/stabilityEnterprises";
 import { ViruzMeNot } from "./helperComponents/viruzMeNot";
 import styles from "./stockDetails.module.scss";
+import { FortyEightUtilities } from "./helperComponents/fortyEightUtilities";
 
 interface IStoreProps {
     viewStockDetails: IStockWithDollarValue | undefined;
@@ -28,6 +29,7 @@ const StockDetailsObject: IObjectForAllStocks<React.ReactElement | null> = {
     "Agri Cola Inc": <AgriColaInc />,
     "Bit & Gamble": <BitAndGamble />,
     "Dental Damage and Company": <DentalDamageAndCompany />,
+    "Forty Eight Utilities": <FortyEightUtilities />,
     "League of Influencers": <LeagueOfInfluencers />,
     "No Dawn Trading Company": <NoDawnTradingCompany />,
     "Stability Enterprises": <StabilityEnterprises />,
