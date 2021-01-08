@@ -8,6 +8,9 @@ const RANDOMLY_ADJUST_BY_PERCENT_OF_ORIGINAL_PRICE = 3;
 
 const randomlyAssignPositiveOrNegative = () => (Math.random() >= 0.5 ? 1 : -1);
 
+// eslint-disable-next-line no-restricted-globals
+const alwaysEnsureNumber = (num: number, backupNumber?: number) => (isNaN(num) ? backupNumber ?? 0.1 : num);
+
 export function stabilizeNextDollarValue(
     nextDollarValue: IStockPriceReturnType<{}>,
     stock: IStock,
@@ -16,10 +19,18 @@ export function stabilizeNextDollarValue(
 ) {
     const totalOwnedStockPercent = (totalOwnedStock ?? 0) / stock.totalQuantity;
 
-    const safeNumberToStabilizeAgainst = previousPricePoint?.dollarValue ?? nextDollarValue.dollarValue;
+    const definitelyANumberNextDollarValue = alwaysEnsureNumber(
+        nextDollarValue.dollarValue,
+        previousPricePoint?.dollarValue ?? 0.1,
+    );
+
+    const safeNumberToStabilizeAgainst = alwaysEnsureNumber(
+        previousPricePoint?.dollarValue ?? definitelyANumberNextDollarValue,
+        definitelyANumberNextDollarValue,
+    );
     const stabilizedDollarValue = Math.max(
         getNumberWithinRange(
-            nextDollarValue.dollarValue,
+            definitelyANumberNextDollarValue,
             safeNumberToStabilizeAgainst * 0.75,
             safeNumberToStabilizeAgainst * 1.25,
         ),
