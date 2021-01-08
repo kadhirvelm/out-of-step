@@ -1,6 +1,7 @@
 import { ILeagueOfInfluencersInputData, getPriceForLeagueOfInfluencers } from "@stochastic-exchange/ml-models";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { changeDateByDays } from "../../../utils/dateUtil";
+import { formatDateWithSeparator } from "../../../utils/formatDateWithSeparator";
 import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 
@@ -15,7 +16,7 @@ export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCa
     previousPriceHistory,
 ) => {
     const previousDate = changeDateByDays(date, -2);
-    const todaysDate = `${previousDate.getFullYear()}-${previousDate.getMonth() + 1}-${previousDate.getDate()}`;
+    const todaysDate = formatDateWithSeparator(previousDate);
 
     const [totalGovernmentBills, airPollutionInDC, airPollutionInSF, airPollutionInNY] = await Promise.all([
         callOnExternalEndpoint(

@@ -1,6 +1,7 @@
 import { getPriceForNoDawnTradingCompany, INoDawnTradingCompanyInputData } from "@stochastic-exchange/ml-models";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { changeDateByDays } from "../../../utils/dateUtil";
+import { formatDateWithSeparator } from "../../../utils/formatDateWithSeparator";
 import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 
@@ -17,7 +18,7 @@ export const priceNoDawnTradingCompany: IStockPricerPlugin<INoDawnTradingCompany
     previousPriceHistory,
 ) => {
     const theDayBefore = changeDateByDays(date, -2);
-    const dateHyphenated = `${theDayBefore.getFullYear()}-${theDayBefore.getMonth() + 1}-${theDayBefore.getDate()}`;
+    const dateHyphenated = formatDateWithSeparator(theDayBefore);
 
     const [goldRates, silverRates, treasuryRealYieldCurveRate] = await Promise.all([
         callOnExternalEndpoint(

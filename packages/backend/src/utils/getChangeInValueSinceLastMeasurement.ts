@@ -7,3 +7,11 @@ export function getChangeInValueSinceLastMeasurement(
 ) {
     return currentMeasurement - (previousMeasurement ?? currentMeasurement);
 }
+
+export function getChangeInValueSinceLastMeasurementAsPercent(
+    currentMeasurement: number,
+    previousMeasurement: number | undefined,
+) {
+    const changeInMeasurement = getChangeInValueSinceLastMeasurement(currentMeasurement, previousMeasurement);
+    return changeInMeasurement / (previousMeasurement ?? currentMeasurement);
+}

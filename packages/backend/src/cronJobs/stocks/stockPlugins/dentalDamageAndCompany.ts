@@ -1,6 +1,7 @@
 import { getPriceForDentalDamageAndCompany, IDentalDamageAndCompanyInputData } from "@stochastic-exchange/ml-models";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { changeDateByDays } from "../../../utils/dateUtil";
+import { formatDateWithSeparator } from "../../../utils/formatDateWithSeparator";
 import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 
@@ -42,7 +43,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
     previousPriceHistory,
 ) => {
     const previousDay = changeDateByDays(date, -2);
-    const previousDayHyphenated = `${previousDay.getFullYear()}-${previousDay.getMonth() + 1}-${previousDay.getDate()}`;
+    const previousDayHyphenated = formatDateWithSeparator(previousDay);
 
     const [usDairyPrices, usMilkSupply] = await Promise.all([
         callOnExternalEndpoint(
