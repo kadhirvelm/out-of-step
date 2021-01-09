@@ -37,9 +37,9 @@ export const Help: React.FC<{}> = () => {
                 <div className={styles.paragraphSpacer} />
                 <div>
                     In the stochastic exchange however, we do not have this supply and demand based pricing. Instead our
-                    servers dynamically price each stock – based on real world data – from 6 AM PST to 9 PM PST, Monday
-                    through Friday. During this time, the servers will generate new prices at random intervals between
-                    10 and 45 minutes.
+                    servers dynamically price each stock – based on real world data – from 6 AM PST to 9 PM PST, 7 days
+                    a week. During this time, the servers will generate new prices at random intervals between 10 and 45
+                    minutes.
                 </div>
                 <div className={styles.spacer} />
                 <div className={styles.sectionTitle}>How does each stock get priced?</div>

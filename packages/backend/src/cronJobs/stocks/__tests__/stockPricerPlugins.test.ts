@@ -1,3 +1,4 @@
+import { IStockId } from "@stochastic-exchange/api";
 import { STOCK_PRICER_PLUGINS } from "../stockPricerPlugins";
 
 jest.mock("node-fetch", () => {
@@ -23,7 +24,10 @@ describe("Stock pricer plugins", () => {
     const newDate = new Date();
     Object.entries(STOCK_PRICER_PLUGINS).forEach(pricerPlugin => {
         it(`can price ${pricerPlugin[0]} resiliently`, async () => {
-            const pricedStock = await pricerPlugin[1](newDate);
+            const pricedStock = await pricerPlugin[1](newDate, {
+                isDevelopmentTest: true,
+                stockId: "invalid-stock-id" as IStockId,
+            });
             expect(pricedStock.dollarValue).toEqual(EXPECTED_DOLLAR_VALUE);
         });
     });

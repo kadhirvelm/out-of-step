@@ -10,7 +10,11 @@ interface IViruzMeNotCalculationNotes extends IViruzMeNotInputData {
     previouslyHospitalized: number;
 }
 
-export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = async (_date, previousPriceHistory) => {
+export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = async (
+    _date,
+    _metadata,
+    previousPriceHistory,
+) => {
     const [rawCovidResult, criticalCommunityThreatsFromIpAddresses] = await Promise.all([
         callOnExternalEndpoint("https://api.covidtracking.com/v1/us/current.json"),
         callOnExternalEndpoint(

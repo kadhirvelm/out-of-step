@@ -13,6 +13,7 @@ interface IStabilityEnterprisesCalculationNotes extends IStabilityEnterprisesInp
 
 export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprisesCalculationNotes> = async (
     date,
+    _metadata,
     previousPriceHistory,
 ) => {
     const [earthquakeData, fecCalendarEvents] = await Promise.all([

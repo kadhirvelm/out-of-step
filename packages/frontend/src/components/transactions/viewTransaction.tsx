@@ -19,6 +19,7 @@ import { useCallOnPrivateEndpoint } from "../../utils/useCallOnPrivateEndpoint";
 import { formatDollar } from "../../utils/formatNumber";
 import styles from "./viewTransaction.module.scss";
 import { getLimitOrderPrice } from "../../utils/getLimitOrderPrice";
+import { getTotalChangeInThisTransaction } from "./utils/getTotalChangeInThisTransaction";
 
 interface IStoreProps {
     userOwnedStockOfStockWithLatestPrice: IOwnedStock | undefined;
@@ -98,8 +99,35 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
         }
 
         if (transaction.type === "dividend-transaction") {
-            return null;
+            return (
+                <div className={classNames(styles.singleExchangeTransaction, styles.dividendPayment)}>
+                    <div className={styles.leftContainer}>
+                        <div className={styles.timestampAndExchangeContainer}>
+                            <span className={styles.timestamp}>{new Date(transaction.timestamp).toLocaleString()}</span>
+                            <div className={styles.dividendContainer}>
+                                Dividend for {transaction.quantity.toLocaleString()} shares at{" "}
+                                {formatDollar(transaction.dividendHistory.payoutPerShare)} per share
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.rightContainer}>
+                        <span className={classNames(styles.stockValueChangedByTransaction, styles.positiveStockValue)}>
+                            {formatDollar(transaction.dividendHistory.payoutPerShare * transaction.quantity)}
+                        </span>
+                        <span
+                            className={classNames(styles.stockValueAtTransaction, {
+                                [styles.positiveStockValue]: transaction.stockValueAtTransactionTime > 0,
+                                [styles.negativeStockValue]: transaction.stockValueAtTransactionTime < 0,
+                            })}
+                        >
+                            {formatDollar(transaction.stockValueAtTransactionTime)}
+                        </span>
+                    </div>
+                </div>
+            );
         }
+
+        const changeThisTransaction = getTotalChangeInThisTransaction(transaction);
 
         return (
             <div
@@ -129,6 +157,14 @@ const UnconnectViewTransactions: React.FC<IStoreProps & IDispatchProps> = ({
                     </div>
                 </div>
                 <div className={styles.rightContainer}>
+                    <span
+                        className={classNames(styles.stockValueChangedByTransaction, {
+                            [styles.positiveStockValue]: changeThisTransaction > 0,
+                            [styles.negativeStockValue]: changeThisTransaction < 0,
+                        })}
+                    >
+                        {formatDollar(changeThisTransaction)}
+                    </span>
                     <span
                         className={classNames(styles.stockValueAtTransaction, {
                             [styles.positiveStockValue]: transaction.stockValueAtTransactionTime > 0,

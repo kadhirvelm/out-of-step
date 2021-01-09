@@ -40,6 +40,7 @@ function getAverageUsPriceOfMetal(data: any[]) {
 
 export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCompanyCalculationNotes> = async (
     date,
+    _metadata,
     previousPriceHistory,
 ) => {
     const previousDay = changeDateByDays(date, -2);

@@ -15,6 +15,7 @@ interface INoDawnTradingCompanyCalculationNotes extends INoDawnTradingCompanyInp
 
 export const priceNoDawnTradingCompany: IStockPricerPlugin<INoDawnTradingCompanyCalculationNotes> = async (
     date,
+    _metadata,
     previousPriceHistory,
 ) => {
     const theDayBefore = changeDateByDays(date, -2);
