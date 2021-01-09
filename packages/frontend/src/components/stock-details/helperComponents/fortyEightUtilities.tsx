@@ -42,6 +42,20 @@ export const FortyEightUtilities: React.FC<{}> = () => {
                 <div className={styles.rowLabel}>IPO year:</div>
                 <div>1943</div>
             </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Pays out dividends</div>
+            </div>
+            <div className={styles.divider} />
+            <div className={styles.sectionLabel}>Stock data inputs</div>
+            <div className={styles.underline} />
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 1:</div>
+                <div>Electrical demand in mainland US</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 2:</div>
+                <div>Output of some west coast water plants</div>
+            </div>
             <div className={styles.divider} />
             <div className={styles.sectionLabel}>Possible sources</div>
             <div className={styles.underline} />

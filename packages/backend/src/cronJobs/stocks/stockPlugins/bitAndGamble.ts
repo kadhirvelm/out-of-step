@@ -4,7 +4,7 @@ import { changeDateByDays } from "../../../utils/dateUtil";
 import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 
-const DEFAULT_VALUE = 22000;
+const DEFAULT_PRICE = 22000;
 
 interface IBitAndGambleCalculationNotes extends IBitAndGambleInputData {
     previousAverageInitialClaimsForUnemployment: number;
@@ -59,7 +59,7 @@ export const priceBitAndGamble: IStockPricerPlugin<IBitAndGambleCalculationNotes
     const currentBitCoinPrice =
         currentBitCoinValue?.bpi?.USD?.rate_float ?? previousCalculationNotes.previousBitCoinValue ?? 0;
 
-    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
+    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: IBitAndGambleInputData = {
         averageEffectiveFederalFundsRate,
@@ -74,7 +74,7 @@ export const priceBitAndGamble: IStockPricerPlugin<IBitAndGambleCalculationNotes
         previousPrice,
     };
 
-    const dollarValue = getPriceForBitAndGamble(inputToModel);
+    const dollarValue = getPriceForBitAndGamble(inputToModel) ?? previousPrice;
 
     const calculationNotes: IBitAndGambleCalculationNotes = {
         ...inputToModel,
@@ -84,6 +84,6 @@ export const priceBitAndGamble: IStockPricerPlugin<IBitAndGambleCalculationNotes
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? previousPrice,
+        dollarValue,
     };
 };

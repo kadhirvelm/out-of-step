@@ -17,8 +17,8 @@ export const ViruzMeNot: React.FC<{}> = () => {
             <div className={styles.paragraph}>
                 During the COVID pandemic, the company saw an opportunity to expand its business from just scanning the
                 web for virtual viruses to &quot;scanning the world for physical viruses&quot;. The company has yet to
-                release exactly what it intends, but rest assured, there is a plan in place to release a product that
-                will address corona.
+                release exactly what it intends, but rest assured, there is a plan in place. In a recent press release
+                the company indicated it assist in handling COVID related hospitalizations.
             </div>
             <div className={styles.divider} />
             <div className={styles.sectionLabel}>Company information</div>
@@ -36,6 +36,17 @@ export const ViruzMeNot: React.FC<{}> = () => {
                 <div>2000</div>
             </div>
             <div className={styles.divider} />
+            <div className={styles.sectionLabel}>Stock data inputs</div>
+            <div className={styles.underline} />
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 1:</div>
+                <div>US COVID-related hospitalizations</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 2:</div>
+                <div>Critical community threats from IP addresses</div>
+            </div>
+            <div className={styles.divider} />
             <div className={styles.sectionLabel}>Possible sources</div>
             <div className={styles.underline} />
             <a
@@ -48,11 +59,11 @@ export const ViruzMeNot: React.FC<{}> = () => {
             </a>
             <a
                 className={styles.link}
-                href={createGoogleNewsLink("COVID cases in the United States")}
+                href={createGoogleNewsLink("COVID hospitalizations in the United States")}
                 target="_blank"
                 rel="noreferrer"
             >
-                COVID cases in the US
+                COVID hospitalizations in the US
             </a>
         </div>
     );

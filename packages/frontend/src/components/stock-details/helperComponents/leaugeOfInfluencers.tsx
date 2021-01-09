@@ -41,6 +41,17 @@ export const LeagueOfInfluencers: React.FC<{}> = () => {
                 <div>2018</div>
             </div>
             <div className={styles.divider} />
+            <div className={styles.sectionLabel}>Stock data inputs</div>
+            <div className={styles.underline} />
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 1:</div>
+                <div>Current government bills</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 2:</div>
+                <div>Air quality in select US cities</div>
+            </div>
+            <div className={styles.divider} />
             <div className={styles.sectionLabel}>Possible sources</div>
             <div className={styles.underline} />
             <a

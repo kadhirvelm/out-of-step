@@ -3,7 +3,7 @@ import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 
-const DEFAULT_VALUE = 0.78;
+const DEFAULT_PRICE = 0.78;
 
 interface IViruzMeNotCalculationNotes extends IViruzMeNotInputData {
     previousCriticalCommunityThreatsFromIpAddresses: number;
@@ -34,7 +34,7 @@ export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = 
         previousCalculationNotes.previousCriticalCommunityThreatsFromIpAddresses ??
         0;
 
-    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
+    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: IViruzMeNotInputData = {
         changeInCurrentlyHospitalized: getChangeInValueSinceLastMeasurement(
@@ -48,7 +48,7 @@ export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = 
         previousPrice,
     };
 
-    const dollarValue = await getPriceForViruzMeNot(inputToModel);
+    const dollarValue = (await getPriceForViruzMeNot(inputToModel)) ?? previousPrice;
 
     const calculationNotes: IViruzMeNotCalculationNotes = {
         ...inputToModel,
@@ -58,6 +58,6 @@ export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = 
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? previousPrice,
+        dollarValue,
     };
 };

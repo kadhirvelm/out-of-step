@@ -9,7 +9,7 @@ interface ILeagueOfInfluencersCalculationNotes extends ILeagueOfInfluencersInput
     previousTotalGovernmentBills: number;
 }
 
-const DEFAULT_VALUE = 200;
+const DEFAULT_PRICE = 200;
 
 export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCalculationNotes> = async (
     date,
@@ -53,7 +53,7 @@ export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCa
     const previousAirQualityIndex = previousCalculationNotes.airQualityIndex ?? 50;
     const averageAirQualityIndex = (airQualityIndexInDC + airQualityIndexInSF + airQualityIndexInNY) / 3;
 
-    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
+    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: ILeagueOfInfluencersInputData = {
         airQualityIndex: averageAirQualityIndex ?? previousAirQualityIndex,
@@ -64,7 +64,7 @@ export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCa
         previousPrice,
     };
 
-    const dollarValue = await getPriceForLeagueOfInfluencers(inputToModel);
+    const dollarValue = (await getPriceForLeagueOfInfluencers(inputToModel)) ?? previousPrice;
 
     const calculationNotes: ILeagueOfInfluencersCalculationNotes = {
         ...inputToModel,
@@ -73,6 +73,6 @@ export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCa
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? DEFAULT_VALUE,
+        dollarValue,
     };
 };

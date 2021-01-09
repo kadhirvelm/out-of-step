@@ -70,7 +70,7 @@ export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = a
         ),
         previousPrice,
     };
-    const dollarValue = await getPriceForAgriColaInc(inputToModel);
+    const dollarValue = (await getPriceForAgriColaInc(inputToModel)) ?? previousPrice;
 
     const calculationNotes: IAgriColaCalculationNotes = {
         ...inputToModel,
@@ -79,6 +79,6 @@ export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = a
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? previousPrice,
+        dollarValue,
     };
 };

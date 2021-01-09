@@ -37,15 +37,25 @@ export const BitAndGamble: React.FC<{}> = () => {
                 <div>2017</div>
             </div>
             <div className={styles.divider} />
+            <div className={styles.sectionLabel}>Stock data inputs</div>
+            <div className={styles.underline} />
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 1:</div>
+                <div>Effective federal funds rate</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 2:</div>
+                <div>Initial claims for unemployment</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 3:</div>
+                <div>Bitcoin value</div>
+            </div>
+            <div className={styles.divider} />
             <div className={styles.sectionLabel}>Possible sources</div>
             <div className={styles.underline} />
-            <a
-                className={styles.link}
-                href={createGoogleNewsLink("best crypto currencies")}
-                target="_blank"
-                rel="noreferrer"
-            >
-                Best crypto currencies
+            <a className={styles.link} href={createGoogleNewsLink("bitcoin news")} target="_blank" rel="noreferrer">
+                Bitcoin news
             </a>
             <a
                 className={styles.link}

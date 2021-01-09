@@ -10,9 +10,9 @@ export const NoDawnTradingCompany: React.FC<{}> = () => {
             <div className={styles.paragraph}>
                 The company has branded itself as the go to anti-long on the American government. It claims to be able
                 to make money during periods of high instability through highly classified investing mechanisms, but in
-                truth it&apos;s just secretly a rare metals commodities trader. In other words as individuals believe
-                there is less and less stability in the world, they withdraw their money from the traditional markets,
-                give it to the No Dawn Trading Company, who in turn just invest in rare metals.
+                truth it&apos;s just secretly a precious metals commodities trader. In other words as individuals
+                believe there is less and less stability in the world, they withdraw their money from the traditional
+                markets, give it to the No Dawn Trading Company, who in turn just invest in rare metals.
             </div>
             <div className={styles.sectionLabel}>History</div>
             <div className={styles.underline} />
@@ -39,6 +39,21 @@ export const NoDawnTradingCompany: React.FC<{}> = () => {
                 <div>2012</div>
             </div>
             <div className={styles.divider} />
+            <div className={styles.sectionLabel}>Stock data inputs</div>
+            <div className={styles.underline} />
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 1:</div>
+                <div>Gold price</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 2:</div>
+                <div>Silver price</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 3:</div>
+                <div>Treasury real yield curve rate</div>
+            </div>
+            <div className={styles.divider} />
             <div className={styles.sectionLabel}>Possible sources</div>
             <div className={styles.underline} />
             <a
@@ -47,15 +62,15 @@ export const NoDawnTradingCompany: React.FC<{}> = () => {
                 target="_blank"
                 rel="noreferrer"
             >
-                Current US treasury rates
+                Current US treasury real yield curve rate
             </a>
             <a
                 className={styles.link}
-                href={createGoogleNewsLink("latest rare metals market news")}
+                href={createGoogleNewsLink("latest gold and silver market news")}
                 target="_blank"
                 rel="noreferrer"
             >
-                Rare metals market
+                Precious metals market
             </a>
             <a
                 className={styles.link}

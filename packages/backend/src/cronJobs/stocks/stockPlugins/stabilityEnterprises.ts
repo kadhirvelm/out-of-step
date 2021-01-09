@@ -3,17 +3,23 @@ import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { changeDateByDays } from "../../../utils/dateUtil";
 import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
+import { maybePayoutDividend } from "./utils/maybePayoutDividend";
 
-const DEFAULT_VALUE = 12;
+const DEFAULT_PRICE = 12;
 
 interface IStabilityEnterprisesCalculationNotes extends IStabilityEnterprisesInputData {
+    previousDividendPayout: number | undefined;
     previousEarthquakesMeasure: number;
     previousElectionEvents: number;
 }
 
+const DIVIDEND_PAYOUTS_MINIMUM_GAP_IN_HOURS = 72;
+const PERCENT_OF_STOCK = 10;
+const PERCENT_PROBABILITY_OF_DIVIDEND = 5;
+
 export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprisesCalculationNotes> = async (
     date,
-    _metadata,
+    { isDevelopmentTest, stockId },
     previousPriceHistory,
 ) => {
     const [earthquakeData, fecCalendarEvents] = await Promise.all([
@@ -42,7 +48,7 @@ export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprises
 
     const totalUpcomingElectionEvents: number = fecCalendarEvents?.pagination?.count ?? 0;
 
-    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
+    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: IStabilityEnterprisesInputData = {
         changeInEarthquakesSinceLastMeasure: getChangeInValueSinceLastMeasurement(
@@ -57,16 +63,30 @@ export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprises
         ),
     };
 
-    const dollarValue = await getPriceForStabilityEnterprises(inputToModel);
+    const dollarValue = (await getPriceForStabilityEnterprises(inputToModel)) ?? previousPrice;
+
+    const previousDividendPayout = await maybePayoutDividend(
+        isDevelopmentTest,
+        stockId,
+        dollarValue,
+        date,
+        previousCalculationNotes.previousDividendPayout,
+        {
+            minimumGapInHours: DIVIDEND_PAYOUTS_MINIMUM_GAP_IN_HOURS,
+            percentOfValue: PERCENT_OF_STOCK,
+            percentProbabilityOfDividend: PERCENT_PROBABILITY_OF_DIVIDEND,
+        },
+    );
 
     const calculationNotes: IStabilityEnterprisesCalculationNotes = {
         ...inputToModel,
+        previousDividendPayout,
         previousEarthquakesMeasure: earthquakesMeasure,
         previousElectionEvents: totalUpcomingElectionEvents,
     };
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? previousPrice,
+        dollarValue,
     };
 };

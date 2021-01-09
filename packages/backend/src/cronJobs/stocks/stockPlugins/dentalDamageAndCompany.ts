@@ -4,12 +4,14 @@ import { changeDateByDays } from "../../../utils/dateUtil";
 import { formatDateWithSeparator } from "../../../utils/formatDateWithSeparator";
 import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
+import { maybePayoutDividend } from "./utils/maybePayoutDividend";
 
-const DEFAULT_VALUE = 450;
+const DEFAULT_PRICE = 450;
 
 interface IDentalDamageAndCompanyCalculationNotes extends IDentalDamageAndCompanyInputData {
     previousAveragePalladiumPrice: number;
     previousAveragePlatinumPrice: number;
+    previousDividendPayout: number | undefined;
     previousUsDairyPricesAverage: number;
     previousUsMilkSupplyAverage: number;
 }
@@ -38,9 +40,13 @@ function getAverageUsPriceOfMetal(data: any[]) {
     return (firstNumber + ((data[4] as number) ?? firstNumber)) / 2;
 }
 
+const DIVIDEND_PAYOUTS_MINIMUM_GAP_IN_HOURS = 24;
+const PERCENT_OF_STOCK = 3;
+const PERCENT_PROBABILITY_OF_DIVIDEND = 15;
+
 export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCompanyCalculationNotes> = async (
     date,
-    _metadata,
+    { isDevelopmentTest, stockId },
     previousPriceHistory,
 ) => {
     const previousDay = changeDateByDays(date, -2);
@@ -92,7 +98,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
         previousCalculationNotes.previousAveragePlatinumPrice ??
         0;
 
-    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
+    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: IDentalDamageAndCompanyInputData = {
         changeInPalladiumPrice: getChangeInValueSinceLastMeasurement(
@@ -114,18 +120,32 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
         previousPrice,
     };
 
-    const dollarValue = await getPriceForDentalDamageAndCompany(inputToModel);
+    const dollarValue = (await getPriceForDentalDamageAndCompany(inputToModel)) ?? previousPrice;
+
+    const previousDividendPayout = await maybePayoutDividend(
+        isDevelopmentTest,
+        stockId,
+        dollarValue,
+        date,
+        previousCalculationNotes.previousDividendPayout,
+        {
+            minimumGapInHours: DIVIDEND_PAYOUTS_MINIMUM_GAP_IN_HOURS,
+            percentOfValue: PERCENT_OF_STOCK,
+            percentProbabilityOfDividend: PERCENT_PROBABILITY_OF_DIVIDEND,
+        },
+    );
 
     const calculationNotes: IDentalDamageAndCompanyCalculationNotes = {
         ...inputToModel,
         previousAveragePalladiumPrice: averagePalladiumPriceToday,
         previousAveragePlatinumPrice: averagePlatinumPriceToday,
+        previousDividendPayout,
         previousUsDairyPricesAverage: usDairyPricesAverageValue,
         previousUsMilkSupplyAverage: usMilkSupplyAverageValue,
     };
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? previousPrice,
+        dollarValue,
     };
 };
