@@ -11,8 +11,8 @@ export const StabilityEnterprises: React.FC<{}> = () => {
                 A construction company that specializes in constructing low income housing around the world.
                 They&apos;re especially good at constructing for as cheaply as possible using efficiently sourced
                 material. This means the company runs quite a risk whenever they begin a new project because if there
-                happens to be a natural disaster while attempting to lay the building foundations down, there will be
-                inevitable damage that the company has to cover out of pocket.
+                happens to be a natural disaster, specifically an earthquake, while attempting to lay the building
+                foundations down, there will be inevitable damage that the company has to cover out of pocket.
             </div>
             <div className={styles.paragraph}>
                 As a side hustle, the company also plans and executes events for United States politicians. The company
@@ -36,15 +36,26 @@ export const StabilityEnterprises: React.FC<{}> = () => {
                 <div>2011</div>
             </div>
             <div className={styles.divider} />
+            <div className={styles.sectionLabel}>Stock data inputs</div>
+            <div className={styles.underline} />
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 1:</div>
+                <div>Current global earthquakes</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 2:</div>
+                <div>Federal election scheduled events</div>
+            </div>
+            <div className={styles.divider} />
             <div className={styles.sectionLabel}>Possible sources</div>
             <div className={styles.underline} />
             <a
                 className={styles.link}
-                href={createGoogleNewsLink("Natural disasters worldwide today")}
+                href={createGoogleNewsLink("Earthquakes worldwide today")}
                 target="_blank"
                 rel="noreferrer"
             >
-                Natural disasters worldwide today
+                Earthquakes worldwide today
             </a>
             <a
                 className={styles.link}

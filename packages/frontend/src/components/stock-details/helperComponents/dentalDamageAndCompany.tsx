@@ -38,11 +38,30 @@ export const DentalDamageAndCompany: React.FC<{}> = () => {
                 <div>2003</div>
             </div>
             <div className={styles.divider} />
+            <div className={styles.sectionLabel}>Stock data inputs</div>
+            <div className={styles.underline} />
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 1:</div>
+                <div>US dairy prices</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 2:</div>
+                <div>US milk supply</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 3:</div>
+                <div>Palladium prices</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 4:</div>
+                <div>Platinum prices</div>
+            </div>
+            <div className={styles.divider} />
             <div className={styles.sectionLabel}>Possible sources</div>
             <div className={styles.underline} />
             <a
                 className={styles.link}
-                href={createGoogleNewsLink("metals market today")}
+                href={createGoogleNewsLink("palladium and platinum market trends today")}
                 target="_blank"
                 rel="noreferrer"
             >

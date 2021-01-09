@@ -16,9 +16,10 @@ export const AgriColaInc: React.FC<{}> = () => {
             </div>
             <div className={styles.paragraph}>
                 The company struggled for many years before it recently managed to acquire a large and long lasting
-                contract with a currently unidentified customer. The majority of its business comes from this single
-                large partnership, a supposedly new, but well known player in the agricultural space. Agri Cola Inc
-                secured this contract by promising rapid delivery of product straight to the customer.
+                contract with a Corteva Agriscience. The majority of its business comes from this single large
+                partnership, a new, but well known player in the agricultural space given its a shoot off from
+                DowDuPoint. Agri Cola Inc secured this contract by promising rapid delivery of product straight to the
+                customer.
             </div>
             <div className={styles.divider} />
             <div className={styles.sectionLabel}>Company information</div>
@@ -36,26 +37,45 @@ export const AgriColaInc: React.FC<{}> = () => {
                 <div>2020</div>
             </div>
             <div className={styles.divider} />
-            <div className={styles.sectionLabel}>Possible sources</div>
+            <div className={styles.sectionLabel}>Stock data inputs</div>
+            <div className={styles.underline} />
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 1:</div>
+                <div>Price of CTVA</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 2:</div>
+                <div>Temperature in the NE</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 3:</div>
+                <div>Wind speed in the NE</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Input 4:</div>
+                <div>Rainfall in the NE</div>
+            </div>
+            <div className={styles.divider} />
+            <div className={styles.sectionLabel}>Possibly helpful sources</div>
             <div className={styles.underline} />
             <a
                 className={styles.link}
-                href={createGoogleNewsLink("top agricultural stocks news")}
+                href={createGoogleNewsLink("corteva agriscience news")}
                 target="_blank"
                 rel="noreferrer"
             >
-                Top agricultural stocks
+                Corteva Agriscience
             </a>
             <a className={styles.link} href="http://hint.fm/wind/" target="_blank" rel="noreferrer">
                 The wind map
             </a>
             <a
                 className={styles.link}
-                href={createGoogleNewsLink("temperature trends in the united states")}
+                href={createGoogleNewsLink("weather trends in the north eastern united states")}
                 target="_blank"
                 rel="noreferrer"
             >
-                Temperature trends
+                Weather trends in the north eastern US
             </a>
         </div>
     );
