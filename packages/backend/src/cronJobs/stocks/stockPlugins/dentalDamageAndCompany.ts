@@ -6,7 +6,7 @@ import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeIn
 import { IStockPricerPlugin } from "../types";
 import { maybePayoutDividend } from "./__tests__/maybePayoutDividend";
 
-const DEFAULT_VALUE = 450;
+const DEFAULT_PRICE = 450;
 
 interface IDentalDamageAndCompanyCalculationNotes extends IDentalDamageAndCompanyInputData {
     previousAveragePalladiumPrice: number;
@@ -98,7 +98,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
         previousCalculationNotes.previousAveragePlatinumPrice ??
         0;
 
-    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
+    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: IDentalDamageAndCompanyInputData = {
         changeInPalladiumPrice: getChangeInValueSinceLastMeasurement(

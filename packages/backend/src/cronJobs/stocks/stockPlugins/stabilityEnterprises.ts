@@ -5,7 +5,7 @@ import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeIn
 import { IStockPricerPlugin } from "../types";
 import { maybePayoutDividend } from "./__tests__/maybePayoutDividend";
 
-const DEFAULT_VALUE = 12;
+const DEFAULT_PRICE = 12;
 
 interface IStabilityEnterprisesCalculationNotes extends IStabilityEnterprisesInputData {
     previousDividendPayout: number | undefined;
@@ -48,7 +48,7 @@ export const priceStabilityEnterprises: IStockPricerPlugin<IStabilityEnterprises
 
     const totalUpcomingElectionEvents: number = fecCalendarEvents?.pagination?.count ?? 0;
 
-    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_VALUE;
+    const previousPrice = previousPriceHistory?.dollarValue ?? DEFAULT_PRICE;
 
     const inputToModel: IStabilityEnterprisesInputData = {
         changeInEarthquakesSinceLastMeasure: getChangeInValueSinceLastMeasurement(
