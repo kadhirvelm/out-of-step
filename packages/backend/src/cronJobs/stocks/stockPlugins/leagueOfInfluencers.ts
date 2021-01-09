@@ -64,7 +64,7 @@ export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCa
         previousPrice,
     };
 
-    const dollarValue = await getPriceForLeagueOfInfluencers(inputToModel);
+    const dollarValue = (await getPriceForLeagueOfInfluencers(inputToModel)) ?? previousPrice;
 
     const calculationNotes: ILeagueOfInfluencersCalculationNotes = {
         ...inputToModel,
@@ -73,6 +73,6 @@ export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCa
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? DEFAULT_VALUE,
+        dollarValue,
     };
 };

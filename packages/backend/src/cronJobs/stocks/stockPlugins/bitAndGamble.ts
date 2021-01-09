@@ -74,7 +74,7 @@ export const priceBitAndGamble: IStockPricerPlugin<IBitAndGambleCalculationNotes
         previousPrice,
     };
 
-    const dollarValue = getPriceForBitAndGamble(inputToModel);
+    const dollarValue = getPriceForBitAndGamble(inputToModel) ?? previousPrice;
 
     const calculationNotes: IBitAndGambleCalculationNotes = {
         ...inputToModel,
@@ -84,6 +84,6 @@ export const priceBitAndGamble: IStockPricerPlugin<IBitAndGambleCalculationNotes
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? previousPrice,
+        dollarValue,
     };
 };

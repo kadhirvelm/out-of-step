@@ -48,7 +48,7 @@ export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = 
         previousPrice,
     };
 
-    const dollarValue = await getPriceForViruzMeNot(inputToModel);
+    const dollarValue = (await getPriceForViruzMeNot(inputToModel)) ?? previousPrice;
 
     const calculationNotes: IViruzMeNotCalculationNotes = {
         ...inputToModel,
@@ -58,6 +58,6 @@ export const priceViruzMeNot: IStockPricerPlugin<IViruzMeNotCalculationNotes> = 
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? previousPrice,
+        dollarValue,
     };
 };

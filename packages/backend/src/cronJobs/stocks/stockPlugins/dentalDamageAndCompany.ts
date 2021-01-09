@@ -114,7 +114,7 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
         previousPrice,
     };
 
-    const dollarValue = await getPriceForDentalDamageAndCompany(inputToModel);
+    const dollarValue = (await getPriceForDentalDamageAndCompany(inputToModel)) ?? previousPrice;
 
     const calculationNotes: IDentalDamageAndCompanyCalculationNotes = {
         ...inputToModel,
@@ -126,6 +126,6 @@ export const priceDentalDamageAndCompany: IStockPricerPlugin<IDentalDamageAndCom
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? previousPrice,
+        dollarValue,
     };
 };

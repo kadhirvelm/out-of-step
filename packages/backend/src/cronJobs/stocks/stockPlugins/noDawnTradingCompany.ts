@@ -68,7 +68,7 @@ export const priceNoDawnTradingCompany: IStockPricerPlugin<INoDawnTradingCompany
         previousPrice,
     };
 
-    const dollarValue = await getPriceForNoDawnTradingCompany(inputToModel);
+    const dollarValue = (await getPriceForNoDawnTradingCompany(inputToModel)) ?? previousPrice;
 
     const calculationNotes: INoDawnTradingCompanyCalculationNotes = {
         ...inputToModel,
@@ -79,6 +79,6 @@ export const priceNoDawnTradingCompany: IStockPricerPlugin<INoDawnTradingCompany
 
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? DEFAULT_PRICE,
+        dollarValue,
     };
 };
