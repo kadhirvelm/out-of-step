@@ -1,17 +1,20 @@
 import _ from "lodash";
 import { IFortyEightUtilitiesInputData, getPriceForFortyEightUtilities } from "@stochastic-exchange/ml-models";
+import { IStockId } from "@stochastic-exchange/api";
 import { callOnExternalEndpoint } from "../../../utils/callOnExternalEndpoint";
 import { changeDateByDays } from "../../../utils/dateUtil";
 import { formatDateWithSeparator } from "../../../utils/formatDateWithSeparator";
 import { getChangeInValueSinceLastMeasurementAsPercent } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
 import { createNewDividend } from "../dividends/createNewDividend";
+import { hasAtLeastTimePassedInHours } from "../../../utils/hasAtLeastTimePassedInHours";
 
 // SF, LA, SD, Portland, Seattle
 
 const DEFAULT_PRICE = 15;
 
 interface IFortyEightUtilitiesCalculationNotes extends IFortyEightUtilitiesInputData {
+    previousDividendPayout: number | undefined;
     previousElectricalOutput: number;
     previousWaterOutput: number;
 }
@@ -36,6 +39,38 @@ const getAverageForWaterOutput = (
     );
 
     return allValues.reduce((previous, next) => previous + next, 0) / allValues.length;
+};
+
+const DIVIDEND_PAYOUTS_MINIMUM_GAP_IN_HOURS = 6;
+const PERCENT_OF_STOCK = 2.5;
+const PERCENT_PROBABILITY_OF_DIVIDEND = 10;
+
+const maybePayoutDividend = async (
+    isDevelopmentTest: boolean,
+    stockId: IStockId,
+    currentStockValue: number,
+    currentDate: Date,
+    previousDividendPayout: number | undefined,
+) => {
+    if (isDevelopmentTest) {
+        return previousDividendPayout;
+    }
+
+    if (
+        previousDividendPayout !== undefined &&
+        !hasAtLeastTimePassedInHours(currentDate, previousDividendPayout, DIVIDEND_PAYOUTS_MINIMUM_GAP_IN_HOURS)
+    ) {
+        return previousDividendPayout;
+    }
+
+    if (Math.random() > PERCENT_PROBABILITY_OF_DIVIDEND / 100) {
+        return previousDividendPayout;
+    }
+
+    const payout = (currentStockValue * PERCENT_OF_STOCK) / 100;
+    await createNewDividend(stockId, payout, { paidOutAt: currentStockValue, percent: PERCENT_OF_STOCK });
+
+    return currentDate.valueOf();
 };
 
 export const priceFortyEightUtilities: IStockPricerPlugin<IFortyEightUtilitiesCalculationNotes> = async (
@@ -88,16 +123,20 @@ export const priceFortyEightUtilities: IStockPricerPlugin<IFortyEightUtilitiesCa
     };
 
     const dollarValue = (await getPriceForFortyEightUtilities(inputToModel)) ?? DEFAULT_PRICE;
+    const previousDividendPayout = await maybePayoutDividend(
+        isDevelopmentTest,
+        stockId,
+        dollarValue,
+        date,
+        previousCalculationNotes.previousDividendPayout,
+    );
 
     const calculationNotes: IFortyEightUtilitiesCalculationNotes = {
         ...inputToModel,
+        previousDividendPayout,
         previousElectricalOutput: electricalOutputOf48,
         previousWaterOutput: waterOutputOfWestCoast,
     };
-
-    if (!isDevelopmentTest) {
-        await createNewDividend(stockId, dollarValue * 0.05, { paidOutAt: dollarValue, percent: "5%" });
-    }
 
     return {
         calculationNotes,
