@@ -13,6 +13,7 @@ const DEFAULT_VALUE = 200;
 
 export const priceLeagueOfInfluencers: IStockPricerPlugin<ILeagueOfInfluencersCalculationNotes> = async (
     date,
+    _metadata,
     previousPriceHistory,
 ) => {
     const previousDate = changeDateByDays(date, -2);

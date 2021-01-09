@@ -6,7 +6,10 @@ import { STOCK_PRICER_PLUGINS } from "./stockPricerPlugins";
 import { IStockPricerPlugin } from "./types";
 import { stabilizeNextDollarValue } from "./utils/stabilizeDollar";
 
-async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: IStockPricerPlugin<{}> }) {
+async function getAllPriceInserts(
+    stockPricerPlugins: { [stockName: string]: IStockPricerPlugin<{}> },
+    isDevelopmentTest: boolean = false,
+) {
     const [allStocks, latestPriceHistory, totalOwned] = await Promise.all([
         postgresPool.query<IStock>(`SELECT * FROM stock WHERE status = 'AVAILABLE'`),
         postgresPool.query<IPriceHistory>(
@@ -32,7 +35,11 @@ async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: ISt
 
                 try {
                     const previousPricePoint: IPriceHistory | undefined = latestPriceKeyedByStock[stock.id];
-                    const nextDollarValue = await pricingFunction(priceForDate, previousPricePoint);
+                    const nextDollarValue = await pricingFunction(
+                        priceForDate,
+                        { isDevelopmentTest, stockId: stock.id },
+                        previousPricePoint,
+                    );
 
                     const { calculationNotes, stabilizedDollar } = stabilizeNextDollarValue(
                         nextDollarValue,
@@ -56,7 +63,7 @@ async function getAllPriceInserts(stockPricerPlugins: { [stockName: string]: ISt
 }
 
 export async function testPriceChange(stockPricerPlugins: { [name: string]: IStockPricerPlugin<{}> }) {
-    const insertStatement = await getAllPriceInserts(stockPricerPlugins);
+    const insertStatement = await getAllPriceInserts(stockPricerPlugins, true);
     // eslint-disable-next-line no-console
     console.log(insertStatement);
 }

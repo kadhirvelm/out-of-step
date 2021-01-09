@@ -1,4 +1,4 @@
-import { IPriceHistory } from "@stochastic-exchange/api";
+import { IPriceHistory, IStockId } from "@stochastic-exchange/api";
 
 export type IStockPriceReturnType<InputToModel extends {}> = Pick<IPriceHistory, "dollarValue"> & {
     calculationNotes: InputToModel;
@@ -6,5 +6,6 @@ export type IStockPriceReturnType<InputToModel extends {}> = Pick<IPriceHistory,
 
 export type IStockPricerPlugin<InputToModel extends {}> = (
     date: Date,
+    metadata: { isDevelopmentTest: boolean; stockId: IStockId },
     previousPriceHistory?: Pick<IPriceHistory, "dollarValue" | "calculationNotes">,
 ) => Promise<IStockPriceReturnType<InputToModel>>;

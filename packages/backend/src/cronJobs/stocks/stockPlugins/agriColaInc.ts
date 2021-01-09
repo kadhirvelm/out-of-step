@@ -20,7 +20,11 @@ function normalizeCelsiusIfDefined(maybeKelvinValue: number | undefined) {
     return maybeKelvinValue - 273.15;
 }
 
-export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = async (date, previousPriceHistory) => {
+export const priceAgriColaInc: IStockPricerPlugin<IAgriColaCalculationNotes> = async (
+    date,
+    _metadata,
+    previousPriceHistory,
+) => {
     const [historicalStockDataOfCTVA, weatherHistoricalCast] = await Promise.all([
         callOnExternalEndpoint(
             `https://finnhub.io/api/v1/stock/candle?symbol=CTVA&resolution=60&from=${Math.round(

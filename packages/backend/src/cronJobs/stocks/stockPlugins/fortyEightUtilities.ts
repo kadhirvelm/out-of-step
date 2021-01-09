@@ -5,6 +5,7 @@ import { changeDateByDays } from "../../../utils/dateUtil";
 import { formatDateWithSeparator } from "../../../utils/formatDateWithSeparator";
 import { getChangeInValueSinceLastMeasurementAsPercent } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
+import { createNewDividend } from "../dividends/createNewDividend";
 
 // SF, LA, SD, Portland, Seattle
 
@@ -39,6 +40,7 @@ const getAverageForWaterOutput = (
 
 export const priceFortyEightUtilities: IStockPricerPlugin<IFortyEightUtilitiesCalculationNotes> = async (
     date,
+    { isDevelopmentTest, stockId },
     previousPriceHistory,
 ) => {
     const goBackTwoDays = changeDateByDays(date, -2);
@@ -85,7 +87,7 @@ export const priceFortyEightUtilities: IStockPricerPlugin<IFortyEightUtilitiesCa
         previousPrice,
     };
 
-    const dollarValue = await getPriceForFortyEightUtilities(inputToModel);
+    const dollarValue = (await getPriceForFortyEightUtilities(inputToModel)) ?? DEFAULT_PRICE;
 
     const calculationNotes: IFortyEightUtilitiesCalculationNotes = {
         ...inputToModel,
@@ -93,8 +95,12 @@ export const priceFortyEightUtilities: IStockPricerPlugin<IFortyEightUtilitiesCa
         previousWaterOutput: waterOutputOfWestCoast,
     };
 
+    if (!isDevelopmentTest) {
+        await createNewDividend(stockId, dollarValue * 0.05, { paidOutAt: dollarValue, percent: "5%" });
+    }
+
     return {
         calculationNotes,
-        dollarValue: dollarValue ?? DEFAULT_PRICE,
+        dollarValue,
     };
 };

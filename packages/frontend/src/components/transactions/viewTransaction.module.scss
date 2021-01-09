@@ -79,6 +79,10 @@
     background: rgba($blue3, 0.05);
 }
 
+.dividend-payment {
+    background: rgba($cobalt3, 0.1);
+}
+
 .net-hypothetical {
     background: rgba($orange3, 0.05);
 }
@@ -104,6 +108,11 @@
     align-items: center;
 }
 
+.dividend-container {
+    display: flex;
+    margin-right: 10px;
+}
+
 .at-price-container {
     margin-left: 3px;
 }
@@ -118,10 +127,19 @@
     flex-direction: column;
 }
 
+.stock-value-changed-by-transaction {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    box-shadow: 0 1px $pt-divider-black;
+    margin-bottom: 3px;
+}
+
 .stock-value-at-transaction {
     display: flex;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -156,6 +174,10 @@
 
     .net-sold {
         background: rgba($blue4, 0.1);
+    }
+
+    .dividend-payment {
+        background: rgba($cobalt4, 0.15);
     }
 
     .net-hypothetical {

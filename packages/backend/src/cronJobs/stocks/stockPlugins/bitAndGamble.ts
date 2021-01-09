@@ -22,6 +22,7 @@ function getAverageFromFREDData(data: any) {
 
 export const priceBitAndGamble: IStockPricerPlugin<IBitAndGambleCalculationNotes> = async (
     date,
+    _metadata,
     previousPriceHistory,
 ) => {
     const [effectiveFederalFundsRate, initialClaimsForUnemployment, currentBitCoinValue] = await Promise.all([
