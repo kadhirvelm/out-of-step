@@ -37,6 +37,9 @@ export const DentalDamageAndCompany: React.FC<{}> = () => {
                 <div className={styles.rowLabel}>IPO year:</div>
                 <div>2003</div>
             </div>
+            <div className={styles.row}>
+                <div className={styles.rowLabel}>Pays out dividends</div>
+            </div>
             <div className={styles.divider} />
             <div className={styles.sectionLabel}>Stock data inputs</div>
             <div className={styles.underline} />
