@@ -4,7 +4,7 @@ import { changeDateByDays } from "../../../utils/dateUtil";
 import { formatDateWithSeparator } from "../../../utils/formatDateWithSeparator";
 import { getChangeInValueSinceLastMeasurement } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
-import { maybePayoutDividend } from "./__tests__/maybePayoutDividend";
+import { maybePayoutDividend } from "./utils/maybePayoutDividend";
 
 const DEFAULT_PRICE = 450;
 

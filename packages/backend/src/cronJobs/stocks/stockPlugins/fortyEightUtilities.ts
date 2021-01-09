@@ -5,7 +5,7 @@ import { changeDateByDays } from "../../../utils/dateUtil";
 import { formatDateWithSeparator } from "../../../utils/formatDateWithSeparator";
 import { getChangeInValueSinceLastMeasurementAsPercent } from "../../../utils/getChangeInValueSinceLastMeasurement";
 import { IStockPricerPlugin } from "../types";
-import { maybePayoutDividend } from "./__tests__/maybePayoutDividend";
+import { maybePayoutDividend } from "./utils/maybePayoutDividend";
 
 // SF, LA, SD, Portland, Seattle
 
