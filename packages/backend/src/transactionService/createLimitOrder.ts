@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/quotes */
 import { IAccountId, ILimitOrder, ITransactionService } from "@stochastic-exchange/api";
 import { Response } from "express";
-import { IS_MARKET_SHUTDOWN } from "../utils/constants";
 import { postgresPool } from "../utils/getPostgresPool";
 
 type ICreateLimitOrder = ITransactionService["createLimitOrder"];
@@ -33,13 +32,6 @@ export async function createLimitOrder(
     response: Response<any>,
     accountId: IAccountId | null,
 ): Promise<ICreateLimitOrder["response"] | undefined> {
-    if (IS_MARKET_SHUTDOWN) {
-        response
-            .status(400)
-            .send({ error: "Sorry, the market is temporarily shutdown. Check the whatsapp for more details." });
-        return undefined;
-    }
-
     if (accountId == null) {
         response.status(400).send({ error: "Invalid account authorization, please login again." });
         return undefined;
