@@ -182,7 +182,12 @@ const NewLimitOrder: React.FC<IProps> = ({
                     <span className={styles.importantValue}>
                         {type === "buy-limit" ? "buy" : "sell"} {parsedQuantity?.toLocaleString() ?? 0}
                     </span>{" "}
-                    shares of <span className={styles.importantValue}>{stock.name}</span>.
+                    shares of <span className={styles.importantValue}>{stock.name}</span>. You will{" "}
+                    {type === "buy-limit" ? "use" : "gain"} {direction === "higher" ? "at least" : "at most"}{" "}
+                    <span className={styles.importantValue}>
+                        {formatDollar((parsedPrice ?? 0) * (parsedQuantity ?? 0))}
+                    </span>{" "}
+                    {type === "buy-limit" ? "from your" : "to your"} cash on hand.
                 </div>
                 <div className={styles.note}>
                     Please note this limit order will only be checked whenever the stock prices are updated. The

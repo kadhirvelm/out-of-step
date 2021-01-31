@@ -45,9 +45,7 @@ const UnconnectedCurrentStandings: React.FC<IStoreProps> = ({ userAccountId }) =
                             <span>{index + 1}</span>
                             <div className={styles.informationContainer}>
                                 <span className={styles.portfolioName}>{standing.portfolioName}</span>
-                                <span className={styles.netWorth}>
-                                    {standing.accountName} ({formatDollar(standing.netWorth)})
-                                </span>
+                                <span className={styles.netWorth}>{formatDollar(standing.netWorth)}</span>
                             </div>
                         </div>
                         <div>{standing.accountId === userAccountId ? "You" : ""}</div>
