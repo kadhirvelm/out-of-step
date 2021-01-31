@@ -9,7 +9,6 @@ import {
     ITransactionService,
 } from "@stochastic-exchange/api";
 import { Response } from "express";
-import { IS_MARKET_SHUTDOWN } from "../utils/constants";
 import { postgresPool } from "../utils/getPostgresPool";
 import { executePurchaseQuantity, executeSellQuantity } from "./utils/executeExchangeTransaction";
 
@@ -89,13 +88,6 @@ export async function createExchangeTransaction(
     response: Response<any>,
     accountId: IAccountId | null,
 ): Promise<ICreateTransactionService["response"] | undefined> {
-    if (IS_MARKET_SHUTDOWN) {
-        response
-            .status(400)
-            .send({ error: "Sorry, the market is temporarily shutdown. Check the whatsapp for more details." });
-        return undefined;
-    }
-
     if (accountId == null) {
         response.status(400).send({ error: "Invalid account authorization, please login again." });
         return undefined;
