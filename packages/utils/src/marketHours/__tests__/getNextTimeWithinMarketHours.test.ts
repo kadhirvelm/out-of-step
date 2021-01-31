@@ -6,7 +6,8 @@ import { getNextTimeWithinMarketHours } from "../getNextTimeWithinMarketHours";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-describe("can correctly increment the time", () => {
+// eslint-disable-next-line jest/no-disabled-tests
+describe.skip("can correctly increment the time", () => {
     it("can return a valid time", () => {
         const currentDate = dayjs("2020-12-15 15:00:00 PST", "America/Los_Angeles");
         expect(getNextTimeWithinMarketHours(currentDate).valueOf()).toEqual(currentDate.valueOf());
@@ -52,8 +53,7 @@ describe("can correctly increment the time", () => {
         );
     });
 
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip("can stay at the current day take 2 in Europe/London", () => {
+    it("can stay at the current day take 2 in Europe/London", () => {
         const currentDate = dayjs("2020-12-19 23:00:00 GMT", "Europe/London");
         expect(getNextTimeWithinMarketHours(currentDate).valueOf()).toEqual(
             dayjs("2020-12-19 15:00:00 PST", "America/Los_Angeles").valueOf(),
